@@ -1,4 +1,4 @@
-package ramble.api.client;
+package ramble.client;
 
 import java.util.concurrent.BlockingQueue;
 
