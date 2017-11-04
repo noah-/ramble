@@ -1,0 +1,8 @@
+apply plugin: 'java'
+
+dependencies {
+    compile project(":gossip")
+    compile 'commons-cli:commons-cli:1.2'
+}
+
+ext.classification="library"

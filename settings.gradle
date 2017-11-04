@@ -1,6 +1,6 @@
-include 'client'
+include 'core'
 include 'crypto'
-include 'daemon'
+include 'distribution'
 include 'gossip'
 
 rootProject.name = 'ramble'

@@ -1,17 +1,20 @@
 package ramble.gossip.api;
 
-
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+
 
 public interface GossipService {
 
-  public void gossip(String message);
+  void gossip(String message);
 
-  public void start();
+  void start();
 
-  public void shutdown();
+  void shutdown();
 
-  public void printMessages();
+  BlockingQueue<IncomingMessage> subscribe();
 
-  public List<String> getPeers();
+  List<String> getConnectedPeers();
+
+  String getURI();
 }
