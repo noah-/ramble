@@ -4,3 +4,10 @@
 .gradle
 build/
 **/build/
+*.tar.gz
+out/
+*.json
+*.iml
+*.ipr
+*.iws
+ramble-distribution

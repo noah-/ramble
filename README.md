@@ -30,3 +30,27 @@ Post Message:
 Type in a message and press `ENTER` to post a message.
 
 All service logs are printed to the file `ramble.log`.
+
+The current CLI options fot the `./bin/ramble-cli.sh` script are:
+
+```
+usage: ramble-cli
+ -f,--dumpfile <arg>   File to dump all received messages into
+ -h,--help             Prints out CLI options
+ -p,--peers <arg>      Comma-separated list of initial peers to connect to
+ -u,--port <arg>       URI for Gossip service
+```
+
+# Code Overview
+
+## Core Module
+
+Contains all the core logic to implement RAMBLE. The core interface for starting and interacting with RAMBLE is the `ramble.api.Ramble` class. This module contains a CLI wrapper around the `Ramble` interface that makes it easy for users to interface with RAMBLE via a command-line interface (see `RambleCli` for details).
+
+## Gossip Module
+
+Contains all Gossip related logic. The interface `GossipService` is the API for all Gossip related services. Currently, there is only one implementation called `ApacheGossipService` which is based on [Apache Gossip](https://github.com/apache/incubator-gossip).
+
+### Gossip Tests
+
+There are a few useful test classes under the `gossip` test module, which locally creates a small Gossip cluster. See `ApacheGossipCluster` and `RambleGossipCluster` for details.

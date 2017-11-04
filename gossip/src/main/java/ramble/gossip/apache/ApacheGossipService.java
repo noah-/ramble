@@ -7,7 +7,9 @@ import org.apache.gossip.RemoteMember;
 import org.apache.gossip.manager.GossipManager;
 import org.apache.gossip.manager.GossipManagerBuilder;
 import org.apache.gossip.model.PerNodeDataMessage;
+
 import org.apache.log4j.Logger;
+
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
 import ramble.gossip.api.IncomingMessage;
@@ -35,7 +37,7 @@ public class ApacheGossipService implements GossipService {
           throws IOException, URISyntaxException, InterruptedException {
 
     List<Member> gossipMembers = peers.stream()
-            .map(peer -> new RemoteMember(GOSSIP_CLUSTER_NAME, peer.getPeerURI(), UUID.randomUUID().toString()))
+            .map(peer -> new RemoteMember(GOSSIP_CLUSTER_NAME, peer.getPeerURI(), peer.getPeerURI().toString()))
             .collect(Collectors.toList());
 
     this.gossipURI = uri;
@@ -43,7 +45,7 @@ public class ApacheGossipService implements GossipService {
     this.gossipManager = GossipManagerBuilder.newBuilder()
             .cluster(GOSSIP_CLUSTER_NAME)
             .uri(uri)
-            .id(UUID.randomUUID().toString())
+            .id(uri.toString())
             .gossipMembers(gossipMembers)
             .gossipSettings(new GossipSettings())
             .build();
@@ -76,8 +78,8 @@ public class ApacheGossipService implements GossipService {
 
     Thread printMembersThread = new Thread(() -> {
       while (true) {
-        LOG.info("Live Peers: " + gossipManager.getLiveMembers());
-        LOG.info("Dead Peers: " + gossipManager.getDeadMembers());
+//        LOG.info("Live Peers: " + gossipManager.getLiveMembers());
+//        LOG.info("Dead Peers: " + gossipManager.getDeadMembers());
         try {
           Thread.sleep(10000);
         } catch (Exception e) {

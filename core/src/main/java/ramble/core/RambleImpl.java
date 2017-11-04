@@ -3,8 +3,9 @@ package ramble.core;
 import org.apache.commons.cli.ParseException;
 
 import org.apache.log4j.Logger;
+
 import ramble.api.Ramble;
-import ramble.gossip.GossipServiceFactory;
+import ramble.gossip.core.GossipServiceFactory;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
 import ramble.gossip.api.IncomingMessage;
@@ -17,6 +18,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
 
 
+/**
+ * Main implementation of {@link Ramble}. Currently just runs a {@link GossipService}. More RAMBLE-specific logic can
+ * be added here.
+ */
 public class RambleImpl implements Ramble {
 
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
@@ -34,14 +39,11 @@ public class RambleImpl implements Ramble {
     LOG.info("Running Gossip service on " + gossipService.getURI());
 
     this.gossipService = gossipService;
+  }
 
+  @Override
+  public void start() {
     this.gossipService.start();
-    Runtime.getRuntime().addShutdownHook(new Thread(){
-      @Override
-      public void run() {
-        RambleImpl.this.shutdown();
-      }
-    });
   }
 
   @Override
@@ -54,7 +56,8 @@ public class RambleImpl implements Ramble {
     return this.gossipService.subscribe();
   }
 
-  private void shutdown() {
+  @Override
+  public void shutdown() {
     this.gossipService.shutdown();
   }
 }

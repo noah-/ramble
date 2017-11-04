@@ -26,6 +26,13 @@ import java.util.List;
 import java.util.Scanner;
 
 
+/**
+ * Simple CLI service that allows users to launch and interact with RAMBLE via the command line. The CLI will write all
+ * incoming messages to a specified file. The CLI has a user-prompt so that users can write and post messages to
+ * RAMBLE. By default, the CLI starts a Gossip service on localhost port 50000. However, a different port number can
+ * be specified. By default, the CLI starts with no peers, in which case it is part of its own RAMBLE network. A list
+ * of known peers can be specified that RAMBLE will connect to on startup.
+ */
 public class RambleCli {
 
   private static final Logger LOG = Logger.getLogger(RambleCli.class);
@@ -34,11 +41,12 @@ public class RambleCli {
   private final File dumpFile;
 
   private RambleCli(String args[]) throws InterruptedException, IOException, URISyntaxException, ParseException {
+    // Parse the CLI options
     Options options = new Options();
     options.addOption("p", "peers", true, "Comma-separated list of initial peers to connect to");
     options.addOption("u", "port", true, "URI for Gossip service");
     options.addOption("f", "dumpfile", true, "File to dump all received messages into");
-    options.addOption("h", "help", true, "Prints out CLI options");
+    options.addOption("h", "help", false, "Prints out CLI options");
 
     CommandLineParser parser = new BasicParser();
     CommandLine cmd = parser.parse(options, args);
@@ -69,11 +77,22 @@ public class RambleCli {
       peers = new ArrayList<>();
     }
 
+    // Create the RAMBLE service
     this.ramble = new RambleImpl(gossipURI, peers);
     this.dumpFile = new File(cmd.getOptionValue('f'));
   }
 
   private void run() {
+    this.ramble.start();
+
+    Runtime.getRuntime().addShutdownHook(new Thread(){
+      @Override
+      public void run() {
+        ramble.shutdown();
+      }
+    });
+
+    // Create a thread that reads all incoming messages and writes it to a file
     Thread dumpThread = new Thread() {
       @Override
       public void run() {
@@ -101,6 +120,7 @@ public class RambleCli {
             + dumpFile, e));
     dumpThread.start();
 
+    // Scan System.in for any user input and post each line via RAMBLE
     Scanner sc = new Scanner(System.in);
     while (true) {
       System.out.print("Post Message: ");
