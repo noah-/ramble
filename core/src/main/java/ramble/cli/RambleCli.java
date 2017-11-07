@@ -96,26 +96,32 @@ public class RambleCli {
     Thread dumpThread = new Thread() {
       @Override
       public void run() {
-        IncomingMessage message;
-        BufferedWriter writer;
+        IncomingMessage message = null;
 
-        try {
-          writer = new BufferedWriter(new FileWriter(dumpFile));
-        } catch (IOException e) {
-          e.printStackTrace();
-          return;
-        }
-
-        try {
-          while ((message = ramble.listen().take()) != null) {
-            writer.write("Incoming Message: " + message.getSenderId() + " " + message.getMessage());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(dumpFile))) {
+          Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run() {
+              try {
+                writer.close();
+              } catch (IOException e) {
+                LOG.error("Unable to close dump file " + dumpFile);
+              }
+            }
+          });
+          try {
+            while ((message = ramble.listen().take()) != null) {
+              writer.write(message.getMessage());
+              writer.write('\n');
+            }
+          } catch (InterruptedException | IOException e) {
+            LOG.error("Unable to write message " + message + " to file " + dumpFile, e);
           }
-        } catch (InterruptedException | IOException e) {
-          e.printStackTrace();
+        } catch (IOException e) {
+          LOG.error("Unable to open file " + dumpFile);
         }
       }
     };
-    dumpThread.setDaemon(true);
     dumpThread.setUncaughtExceptionHandler((t, e) -> LOG.error("Exception while writing messages to the file "
             + dumpFile, e));
     dumpThread.start();
