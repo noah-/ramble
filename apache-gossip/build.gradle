@@ -1,0 +1,24 @@
+ext {
+    jacksonVersion = '2.8.5'
+    metricsVersion = '3.1.2'
+    commonsMathVersion = '1.2'
+    junitJupiterVersion = '5.0.0-M2'
+    junitPlatformVersion = '1.0.0-M2'
+    junitVintageVersion = '4.12.0-M2'
+    log4jVersion = '1.2.17'
+    tunitVersion = '0.0.0'
+    mockitoVersion = '2.8.9'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    dependencies {
+        testCompile 'org.junit.jupiter:junit-jupiter-api:' + junitJupiterVersion
+        testCompile 'org.junit.jupiter:junit-jupiter-engine:' + junitJupiterVersion
+        testCompile 'org.junit.vintage:junit-vintage-engine:' + junitVintageVersion
+        testCompile 'org.junit.platform:junit-platform-runner:' + junitPlatformVersion
+        testCompile 'io.teknek:tunit:' + tunitVersion
+        testCompile 'org.mockito:mockito-core:' + mockitoVersion
+    }
+}

@@ -1,4 +1,5 @@
-def modules = ['api',
+def modules = ['apache-gossip',
+               'api',
                'cluster',
                'core',
                'crypto',

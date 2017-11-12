@@ -1,10 +1,5 @@
-apply plugin: 'java'
-
 dependencies {
-    compile project(':api')
-    compile project(':crypto')
     compile project(':apache-gossip:gossip-base')
     compile project(':apache-gossip:gossip-protocol-jackson')
     compile project(':apache-gossip:gossip-transport-udp')
-    compile 'com.google.guava:guava:23.0'
 }

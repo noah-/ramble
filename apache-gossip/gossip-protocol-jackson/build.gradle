@@ -1,0 +1,3 @@
+dependencies {
+    compile project(':apache-gossip:gossip-base')
+}

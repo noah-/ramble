@@ -3,6 +3,7 @@ apply plugin: 'java'
 subprojects {
     repositories {
         jcenter()
+        mavenCentral()
     }
     version = '0.0.1'
 }
