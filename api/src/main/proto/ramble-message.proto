@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ramble.api;
+
+option java_package = "ramble.api";
+option java_outer_classname = "RambleMessage";
+
+message Message {
+  string sourceId = 1;
+  string messageId = 2;
+  string message = 3;
+  bytes signature = 4;
+}

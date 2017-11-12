@@ -1,6 +1,7 @@
 apply plugin: 'java'
 
 dependencies {
+    compile project(':api')
     compile project(':crypto')
     compile 'com.google.guava:guava:23.0'
     compile 'log4j:log4j:1.2.17'

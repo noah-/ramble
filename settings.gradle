@@ -1,6 +1,17 @@
-include 'core'
-include 'crypto'
-include 'distribution'
-include 'gossip'
+def modules = ['api',
+               'cluster',
+               'core',
+               'crypto',
+               'distribution',
+               'gossip']
+
+modules.each { module ->
+    include "${module}"
+    file(module).eachDir { submodule ->
+        if (!submodule.name.startsWith('.') && !submodule.name.equals('src')) {
+            include "${module}:${submodule.name}"
+        }
+    }
+}
 
 rootProject.name = 'ramble'

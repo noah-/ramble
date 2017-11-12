@@ -1,6 +1,7 @@
 apply plugin: 'java'
 
 dependencies {
+    compile project(":api")
     compile project(":gossip")
     compile 'commons-cli:commons-cli:1.2'
 }
