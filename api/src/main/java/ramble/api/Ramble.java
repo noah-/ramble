@@ -1,7 +1,5 @@
 package ramble.api;
 
-import ramble.gossip.api.IncomingMessage;
-
 import java.util.concurrent.BlockingQueue;
 
 
@@ -20,11 +18,17 @@ public interface Ramble {
    */
   void post(String message);
 
+//  void post(List<String> messages);
+//
+//  void getLatestMessage();
+//
+//  void importKey(String key);
+
   /**
    * Listen to messages coming in from other peers on the RAMBLE network. Incoming messages will be added to a
    * {@link BlockingQueue} that applications should query to get any incoming messages.
    */
-  BlockingQueue<IncomingMessage> listen();
+  BlockingQueue<RambleMessage.Message> listen();
 
   /**
    * Shutdown RAMBLE

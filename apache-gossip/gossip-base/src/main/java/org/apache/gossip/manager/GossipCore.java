@@ -30,6 +30,7 @@ import org.apache.gossip.event.data.UpdateNodeDataEventHandler;
 import org.apache.gossip.event.data.UpdateSharedDataEventHandler;
 import org.apache.gossip.model.Base;
 import org.apache.gossip.model.PerNodeDataMessage;
+import org.apache.gossip.model.RambleMessage;
 import org.apache.gossip.model.Response;
 import org.apache.gossip.model.SharedDataMessage;
 import org.apache.gossip.udp.Trackable;
@@ -39,7 +40,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.*;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class GossipCore implements GossipCoreConstants {
 
@@ -57,6 +61,7 @@ public class GossipCore implements GossipCoreConstants {
   private ConcurrentHashMap<String, LatchAndBase> requests;
   private final ConcurrentHashMap<String, ConcurrentHashMap<String, PerNodeDataMessage>> perNodeData;
   private final ConcurrentHashMap<String, SharedDataMessage> sharedData;
+  private final Set<RambleMessage> rambleMessages;
   private final Meter messageSerdeException;
   private final Meter transmissionException;
   private final Meter transmissionSuccess;
@@ -67,6 +72,7 @@ public class GossipCore implements GossipCoreConstants {
     requests = new ConcurrentHashMap<>();
     perNodeData = new ConcurrentHashMap<>();
     sharedData = new ConcurrentHashMap<>();
+    rambleMessages = ConcurrentHashMap.newKeySet();
     eventManager = new DataEventManager(metrics);
     metrics.register(PER_NODE_DATA_SIZE, (Gauge<Integer>)() -> perNodeData.size());
     metrics.register(SHARED_DATA_SIZE, (Gauge<Integer>)() ->  sharedData.size());
@@ -135,12 +141,20 @@ public class GossipCore implements GossipCoreConstants {
     }
   }
 
+  public void addRambleMessage(RambleMessage rambleMessage) {
+    rambleMessages.add(rambleMessage);
+  }
+
   public ConcurrentHashMap<String, ConcurrentHashMap<String, PerNodeDataMessage>> getPerNodeData(){
     return perNodeData;
   }
 
   public ConcurrentHashMap<String, SharedDataMessage> getSharedData() {
     return sharedData;
+  }
+
+  public Set<RambleMessage> getRambleMessages() {
+    return rambleMessages;
   }
 
   public void shutdown(){

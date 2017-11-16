@@ -7,6 +7,8 @@ import ramble.gossip.api.GossipService;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.List;
 
 
@@ -17,8 +19,9 @@ import java.util.List;
  */
 public class GossipServiceFactory {
 
-  public static GossipService buildGossipService(URI uri, List<GossipPeer> peers)
+  public static GossipService buildGossipService(URI uri, List<GossipPeer> peers, PublicKey publicKey,
+                                                 PrivateKey privateKey)
           throws InterruptedException, IOException, URISyntaxException {
-    return new ApacheGossipService(uri, peers);
+    return new ApacheGossipService(uri, peers, publicKey, privateKey);
   }
 }

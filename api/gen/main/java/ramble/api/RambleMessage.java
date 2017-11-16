@@ -29,16 +29,6 @@ public final class RambleMessage {
         getSourceIdBytes();
 
     /**
-     * <code>string messageId = 2;</code>
-     */
-    java.lang.String getMessageId();
-    /**
-     * <code>string messageId = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getMessageIdBytes();
-
-    /**
      * <code>string message = 3;</code>
      */
     java.lang.String getMessage();
@@ -49,9 +39,14 @@ public final class RambleMessage {
         getMessageBytes();
 
     /**
-     * <code>bytes signature = 4;</code>
+     * <code>bytes publicKey = 4;</code>
      */
-    com.google.protobuf.ByteString getSignature();
+    com.google.protobuf.ByteString getPublicKey();
+
+    /**
+     * <code>uint64 timestamp = 5;</code>
+     */
+    long getTimestamp();
   }
   /**
    * Protobuf type {@code ramble.api.Message}
@@ -67,9 +62,9 @@ public final class RambleMessage {
     }
     private Message() {
       sourceId_ = "";
-      messageId_ = "";
       message_ = "";
-      signature_ = com.google.protobuf.ByteString.EMPTY;
+      publicKey_ = com.google.protobuf.ByteString.EMPTY;
+      timestamp_ = 0L;
     }
 
     @java.lang.Override
@@ -106,12 +101,6 @@ public final class RambleMessage {
               sourceId_ = s;
               break;
             }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              messageId_ = s;
-              break;
-            }
             case 26: {
               java.lang.String s = input.readStringRequireUtf8();
 
@@ -120,7 +109,12 @@ public final class RambleMessage {
             }
             case 34: {
 
-              signature_ = input.readBytes();
+              publicKey_ = input.readBytes();
+              break;
+            }
+            case 40: {
+
+              timestamp_ = input.readUInt64();
               break;
             }
           }
@@ -181,40 +175,6 @@ public final class RambleMessage {
       }
     }
 
-    public static final int MESSAGEID_FIELD_NUMBER = 2;
-    private volatile java.lang.Object messageId_;
-    /**
-     * <code>string messageId = 2;</code>
-     */
-    public java.lang.String getMessageId() {
-      java.lang.Object ref = messageId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        messageId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string messageId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getMessageIdBytes() {
-      java.lang.Object ref = messageId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        messageId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     public static final int MESSAGE_FIELD_NUMBER = 3;
     private volatile java.lang.Object message_;
     /**
@@ -249,13 +209,22 @@ public final class RambleMessage {
       }
     }
 
-    public static final int SIGNATURE_FIELD_NUMBER = 4;
-    private com.google.protobuf.ByteString signature_;
+    public static final int PUBLICKEY_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString publicKey_;
     /**
-     * <code>bytes signature = 4;</code>
+     * <code>bytes publicKey = 4;</code>
      */
-    public com.google.protobuf.ByteString getSignature() {
-      return signature_;
+    public com.google.protobuf.ByteString getPublicKey() {
+      return publicKey_;
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 5;
+    private long timestamp_;
+    /**
+     * <code>uint64 timestamp = 5;</code>
+     */
+    public long getTimestamp() {
+      return timestamp_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -273,14 +242,14 @@ public final class RambleMessage {
       if (!getSourceIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, sourceId_);
       }
-      if (!getMessageIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, messageId_);
-      }
       if (!getMessageBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, message_);
       }
-      if (!signature_.isEmpty()) {
-        output.writeBytes(4, signature_);
+      if (!publicKey_.isEmpty()) {
+        output.writeBytes(4, publicKey_);
+      }
+      if (timestamp_ != 0L) {
+        output.writeUInt64(5, timestamp_);
       }
       unknownFields.writeTo(output);
     }
@@ -293,15 +262,16 @@ public final class RambleMessage {
       if (!getSourceIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, sourceId_);
       }
-      if (!getMessageIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, messageId_);
-      }
       if (!getMessageBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, message_);
       }
-      if (!signature_.isEmpty()) {
+      if (!publicKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, signature_);
+          .computeBytesSize(4, publicKey_);
+      }
+      if (timestamp_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(5, timestamp_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -321,12 +291,12 @@ public final class RambleMessage {
       boolean result = true;
       result = result && getSourceId()
           .equals(other.getSourceId());
-      result = result && getMessageId()
-          .equals(other.getMessageId());
       result = result && getMessage()
           .equals(other.getMessage());
-      result = result && getSignature()
-          .equals(other.getSignature());
+      result = result && getPublicKey()
+          .equals(other.getPublicKey());
+      result = result && (getTimestamp()
+          == other.getTimestamp());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -340,12 +310,13 @@ public final class RambleMessage {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + SOURCEID_FIELD_NUMBER;
       hash = (53 * hash) + getSourceId().hashCode();
-      hash = (37 * hash) + MESSAGEID_FIELD_NUMBER;
-      hash = (53 * hash) + getMessageId().hashCode();
       hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getMessage().hashCode();
-      hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
-      hash = (53 * hash) + getSignature().hashCode();
+      hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
+      hash = (53 * hash) + getPublicKey().hashCode();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTimestamp());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -477,11 +448,11 @@ public final class RambleMessage {
         super.clear();
         sourceId_ = "";
 
-        messageId_ = "";
-
         message_ = "";
 
-        signature_ = com.google.protobuf.ByteString.EMPTY;
+        publicKey_ = com.google.protobuf.ByteString.EMPTY;
+
+        timestamp_ = 0L;
 
         return this;
       }
@@ -506,9 +477,9 @@ public final class RambleMessage {
       public ramble.api.RambleMessage.Message buildPartial() {
         ramble.api.RambleMessage.Message result = new ramble.api.RambleMessage.Message(this);
         result.sourceId_ = sourceId_;
-        result.messageId_ = messageId_;
         result.message_ = message_;
-        result.signature_ = signature_;
+        result.publicKey_ = publicKey_;
+        result.timestamp_ = timestamp_;
         onBuilt();
         return result;
       }
@@ -554,16 +525,15 @@ public final class RambleMessage {
           sourceId_ = other.sourceId_;
           onChanged();
         }
-        if (!other.getMessageId().isEmpty()) {
-          messageId_ = other.messageId_;
-          onChanged();
-        }
         if (!other.getMessage().isEmpty()) {
           message_ = other.message_;
           onChanged();
         }
-        if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
-          setSignature(other.getSignature());
+        if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
+          setPublicKey(other.getPublicKey());
+        }
+        if (other.getTimestamp() != 0L) {
+          setTimestamp(other.getTimestamp());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -661,75 +631,6 @@ public final class RambleMessage {
         return this;
       }
 
-      private java.lang.Object messageId_ = "";
-      /**
-       * <code>string messageId = 2;</code>
-       */
-      public java.lang.String getMessageId() {
-        java.lang.Object ref = messageId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          messageId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string messageId = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getMessageIdBytes() {
-        java.lang.Object ref = messageId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          messageId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string messageId = 2;</code>
-       */
-      public Builder setMessageId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        messageId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string messageId = 2;</code>
-       */
-      public Builder clearMessageId() {
-        
-        messageId_ = getDefaultInstance().getMessageId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string messageId = 2;</code>
-       */
-      public Builder setMessageIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        messageId_ = value;
-        onChanged();
-        return this;
-      }
-
       private java.lang.Object message_ = "";
       /**
        * <code>string message = 3;</code>
@@ -799,31 +700,57 @@ public final class RambleMessage {
         return this;
       }
 
-      private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes signature = 4;</code>
+       * <code>bytes publicKey = 4;</code>
        */
-      public com.google.protobuf.ByteString getSignature() {
-        return signature_;
+      public com.google.protobuf.ByteString getPublicKey() {
+        return publicKey_;
       }
       /**
-       * <code>bytes signature = 4;</code>
+       * <code>bytes publicKey = 4;</code>
        */
-      public Builder setSignature(com.google.protobuf.ByteString value) {
+      public Builder setPublicKey(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        signature_ = value;
+        publicKey_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>bytes signature = 4;</code>
+       * <code>bytes publicKey = 4;</code>
        */
-      public Builder clearSignature() {
+      public Builder clearPublicKey() {
         
-        signature_ = getDefaultInstance().getSignature();
+        publicKey_ = getDefaultInstance().getPublicKey();
+        onChanged();
+        return this;
+      }
+
+      private long timestamp_ ;
+      /**
+       * <code>uint64 timestamp = 5;</code>
+       */
+      public long getTimestamp() {
+        return timestamp_;
+      }
+      /**
+       * <code>uint64 timestamp = 5;</code>
+       */
+      public Builder setTimestamp(long value) {
+        
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint64 timestamp = 5;</code>
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = 0L;
         onChanged();
         return this;
       }
@@ -876,11 +803,770 @@ public final class RambleMessage {
 
   }
 
+  public interface BulkMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ramble.api.BulkMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    java.util.List<ramble.api.RambleMessage.Message> 
+        getMessageList();
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    ramble.api.RambleMessage.Message getMessage(int index);
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    int getMessageCount();
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    java.util.List<? extends ramble.api.RambleMessage.MessageOrBuilder> 
+        getMessageOrBuilderList();
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    ramble.api.RambleMessage.MessageOrBuilder getMessageOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code ramble.api.BulkMessage}
+   */
+  public  static final class BulkMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ramble.api.BulkMessage)
+      BulkMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use BulkMessage.newBuilder() to construct.
+    private BulkMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private BulkMessage() {
+      message_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private BulkMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                message_ = new java.util.ArrayList<ramble.api.RambleMessage.Message>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              message_.add(
+                  input.readMessage(ramble.api.RambleMessage.Message.parser(), extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          message_ = java.util.Collections.unmodifiableList(message_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ramble.api.RambleMessage.internal_static_ramble_api_BulkMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ramble.api.RambleMessage.internal_static_ramble_api_BulkMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ramble.api.RambleMessage.BulkMessage.class, ramble.api.RambleMessage.BulkMessage.Builder.class);
+    }
+
+    public static final int MESSAGE_FIELD_NUMBER = 1;
+    private java.util.List<ramble.api.RambleMessage.Message> message_;
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    public java.util.List<ramble.api.RambleMessage.Message> getMessageList() {
+      return message_;
+    }
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    public java.util.List<? extends ramble.api.RambleMessage.MessageOrBuilder> 
+        getMessageOrBuilderList() {
+      return message_;
+    }
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    public int getMessageCount() {
+      return message_.size();
+    }
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    public ramble.api.RambleMessage.Message getMessage(int index) {
+      return message_.get(index);
+    }
+    /**
+     * <code>repeated .ramble.api.Message message = 1;</code>
+     */
+    public ramble.api.RambleMessage.MessageOrBuilder getMessageOrBuilder(
+        int index) {
+      return message_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < message_.size(); i++) {
+        output.writeMessage(1, message_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < message_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, message_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ramble.api.RambleMessage.BulkMessage)) {
+        return super.equals(obj);
+      }
+      ramble.api.RambleMessage.BulkMessage other = (ramble.api.RambleMessage.BulkMessage) obj;
+
+      boolean result = true;
+      result = result && getMessageList()
+          .equals(other.getMessageList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getMessageCount() > 0) {
+        hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getMessageList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ramble.api.RambleMessage.BulkMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ramble.api.RambleMessage.BulkMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ramble.api.BulkMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ramble.api.BulkMessage)
+        ramble.api.RambleMessage.BulkMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ramble.api.RambleMessage.internal_static_ramble_api_BulkMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ramble.api.RambleMessage.internal_static_ramble_api_BulkMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ramble.api.RambleMessage.BulkMessage.class, ramble.api.RambleMessage.BulkMessage.Builder.class);
+      }
+
+      // Construct using ramble.api.RambleMessage.BulkMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getMessageFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (messageBuilder_ == null) {
+          message_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          messageBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ramble.api.RambleMessage.internal_static_ramble_api_BulkMessage_descriptor;
+      }
+
+      public ramble.api.RambleMessage.BulkMessage getDefaultInstanceForType() {
+        return ramble.api.RambleMessage.BulkMessage.getDefaultInstance();
+      }
+
+      public ramble.api.RambleMessage.BulkMessage build() {
+        ramble.api.RambleMessage.BulkMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ramble.api.RambleMessage.BulkMessage buildPartial() {
+        ramble.api.RambleMessage.BulkMessage result = new ramble.api.RambleMessage.BulkMessage(this);
+        int from_bitField0_ = bitField0_;
+        if (messageBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            message_ = java.util.Collections.unmodifiableList(message_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.message_ = message_;
+        } else {
+          result.message_ = messageBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ramble.api.RambleMessage.BulkMessage) {
+          return mergeFrom((ramble.api.RambleMessage.BulkMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ramble.api.RambleMessage.BulkMessage other) {
+        if (other == ramble.api.RambleMessage.BulkMessage.getDefaultInstance()) return this;
+        if (messageBuilder_ == null) {
+          if (!other.message_.isEmpty()) {
+            if (message_.isEmpty()) {
+              message_ = other.message_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMessageIsMutable();
+              message_.addAll(other.message_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.message_.isEmpty()) {
+            if (messageBuilder_.isEmpty()) {
+              messageBuilder_.dispose();
+              messageBuilder_ = null;
+              message_ = other.message_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              messageBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMessageFieldBuilder() : null;
+            } else {
+              messageBuilder_.addAllMessages(other.message_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ramble.api.RambleMessage.BulkMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ramble.api.RambleMessage.BulkMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<ramble.api.RambleMessage.Message> message_ =
+        java.util.Collections.emptyList();
+      private void ensureMessageIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          message_ = new java.util.ArrayList<ramble.api.RambleMessage.Message>(message_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ramble.api.RambleMessage.Message, ramble.api.RambleMessage.Message.Builder, ramble.api.RambleMessage.MessageOrBuilder> messageBuilder_;
+
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public java.util.List<ramble.api.RambleMessage.Message> getMessageList() {
+        if (messageBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(message_);
+        } else {
+          return messageBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public int getMessageCount() {
+        if (messageBuilder_ == null) {
+          return message_.size();
+        } else {
+          return messageBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public ramble.api.RambleMessage.Message getMessage(int index) {
+        if (messageBuilder_ == null) {
+          return message_.get(index);
+        } else {
+          return messageBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder setMessage(
+          int index, ramble.api.RambleMessage.Message value) {
+        if (messageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMessageIsMutable();
+          message_.set(index, value);
+          onChanged();
+        } else {
+          messageBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder setMessage(
+          int index, ramble.api.RambleMessage.Message.Builder builderForValue) {
+        if (messageBuilder_ == null) {
+          ensureMessageIsMutable();
+          message_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          messageBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder addMessage(ramble.api.RambleMessage.Message value) {
+        if (messageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMessageIsMutable();
+          message_.add(value);
+          onChanged();
+        } else {
+          messageBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder addMessage(
+          int index, ramble.api.RambleMessage.Message value) {
+        if (messageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMessageIsMutable();
+          message_.add(index, value);
+          onChanged();
+        } else {
+          messageBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder addMessage(
+          ramble.api.RambleMessage.Message.Builder builderForValue) {
+        if (messageBuilder_ == null) {
+          ensureMessageIsMutable();
+          message_.add(builderForValue.build());
+          onChanged();
+        } else {
+          messageBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder addMessage(
+          int index, ramble.api.RambleMessage.Message.Builder builderForValue) {
+        if (messageBuilder_ == null) {
+          ensureMessageIsMutable();
+          message_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          messageBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder addAllMessage(
+          java.lang.Iterable<? extends ramble.api.RambleMessage.Message> values) {
+        if (messageBuilder_ == null) {
+          ensureMessageIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, message_);
+          onChanged();
+        } else {
+          messageBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder clearMessage() {
+        if (messageBuilder_ == null) {
+          message_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          messageBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public Builder removeMessage(int index) {
+        if (messageBuilder_ == null) {
+          ensureMessageIsMutable();
+          message_.remove(index);
+          onChanged();
+        } else {
+          messageBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public ramble.api.RambleMessage.Message.Builder getMessageBuilder(
+          int index) {
+        return getMessageFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public ramble.api.RambleMessage.MessageOrBuilder getMessageOrBuilder(
+          int index) {
+        if (messageBuilder_ == null) {
+          return message_.get(index);  } else {
+          return messageBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public java.util.List<? extends ramble.api.RambleMessage.MessageOrBuilder> 
+           getMessageOrBuilderList() {
+        if (messageBuilder_ != null) {
+          return messageBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(message_);
+        }
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public ramble.api.RambleMessage.Message.Builder addMessageBuilder() {
+        return getMessageFieldBuilder().addBuilder(
+            ramble.api.RambleMessage.Message.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public ramble.api.RambleMessage.Message.Builder addMessageBuilder(
+          int index) {
+        return getMessageFieldBuilder().addBuilder(
+            index, ramble.api.RambleMessage.Message.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .ramble.api.Message message = 1;</code>
+       */
+      public java.util.List<ramble.api.RambleMessage.Message.Builder> 
+           getMessageBuilderList() {
+        return getMessageFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          ramble.api.RambleMessage.Message, ramble.api.RambleMessage.Message.Builder, ramble.api.RambleMessage.MessageOrBuilder> 
+          getMessageFieldBuilder() {
+        if (messageBuilder_ == null) {
+          messageBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              ramble.api.RambleMessage.Message, ramble.api.RambleMessage.Message.Builder, ramble.api.RambleMessage.MessageOrBuilder>(
+                  message_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          message_ = null;
+        }
+        return messageBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ramble.api.BulkMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:ramble.api.BulkMessage)
+    private static final ramble.api.RambleMessage.BulkMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ramble.api.RambleMessage.BulkMessage();
+    }
+
+    public static ramble.api.RambleMessage.BulkMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<BulkMessage>
+        PARSER = new com.google.protobuf.AbstractParser<BulkMessage>() {
+      public BulkMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new BulkMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<BulkMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BulkMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public ramble.api.RambleMessage.BulkMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ramble_api_Message_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ramble_api_Message_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ramble_api_BulkMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ramble_api_BulkMessage_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -891,9 +1577,11 @@ public final class RambleMessage {
   static {
     java.lang.String[] descriptorData = {
       "\n\024ramble-message.proto\022\nramble.api\"R\n\007Me" +
-      "ssage\022\020\n\010sourceId\030\001 \001(\t\022\021\n\tmessageId\030\002 \001" +
-      "(\t\022\017\n\007message\030\003 \001(\t\022\021\n\tsignature\030\004 \001(\014B\033" +
-      "\n\nramble.apiB\rRambleMessageb\006proto3"
+      "ssage\022\020\n\010sourceId\030\001 \001(\t\022\017\n\007message\030\003 \001(\t" +
+      "\022\021\n\tpublicKey\030\004 \001(\014\022\021\n\ttimestamp\030\005 \001(\004\"3" +
+      "\n\013BulkMessage\022$\n\007message\030\001 \003(\0132\023.ramble." +
+      "api.MessageB\033\n\nramble.apiB\rRambleMessage" +
+      "b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -912,7 +1600,13 @@ public final class RambleMessage {
     internal_static_ramble_api_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_Message_descriptor,
-        new java.lang.String[] { "SourceId", "MessageId", "Message", "Signature", });
+        new java.lang.String[] { "SourceId", "Message", "PublicKey", "Timestamp", });
+    internal_static_ramble_api_BulkMessage_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_ramble_api_BulkMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ramble_api_BulkMessage_descriptor,
+        new java.lang.String[] { "Message", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

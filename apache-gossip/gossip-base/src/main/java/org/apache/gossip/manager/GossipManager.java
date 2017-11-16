@@ -32,6 +32,7 @@ import org.apache.gossip.lock.LockManager;
 import org.apache.gossip.lock.exceptions.VoteFailedException;
 import org.apache.gossip.manager.handlers.MessageHandler;
 import org.apache.gossip.model.PerNodeDataMessage;
+import org.apache.gossip.model.RambleMessage;
 import org.apache.gossip.model.SharedDataMessage;
 import org.apache.gossip.protocol.ProtocolManager;
 import org.apache.gossip.transport.TransportManager;
@@ -257,6 +258,10 @@ public abstract class GossipManager {
     Objects.nonNull(message.getPayload());
     message.setNodeId(me.getId());
     gossipCore.addSharedData(message);
+  }
+
+  public void gossipRambleMessage(RambleMessage rambleMessage) {
+    gossipCore.addRambleMessage(rambleMessage);
   }
 
   @SuppressWarnings("rawtypes")

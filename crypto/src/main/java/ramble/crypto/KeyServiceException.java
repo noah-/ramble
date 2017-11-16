@@ -1,6 +1,6 @@
 package ramble.crypto;
 
-public class KeyServiceException extends RuntimeException {
+public class KeyServiceException extends Exception {
 
   public KeyServiceException(Throwable cause) {
     super(cause);

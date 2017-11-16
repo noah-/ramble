@@ -7,7 +7,11 @@ option java_outer_classname = "RambleMessage";
 
 message Message {
   string sourceId = 1;
-  string messageId = 2;
   string message = 3;
-  bytes signature = 4;
+  bytes publicKey = 4;
+  uint64 timestamp = 5;
+}
+
+message BulkMessage {
+  repeated Message message = 1;
 }

@@ -17,20 +17,35 @@
  */
 package org.apache.gossip.model;
 
-public class SignedPayload extends Base{
+import org.apache.gossip.replication.Replicable;
+
+public class SignedPayload extends Base {
+
   private byte [] data;
   private byte [] signature;
+  private Replicable<SignedPayload> replicable;
+
   public byte[] getData() {
     return data;
   }
+
   public void setData(byte[] data) {
     this.data = data;
   }
+
   public byte[] getSignature() {
     return signature;
   }
+
   public void setSignature(byte[] signature) {
     this.signature = signature;
   }
-  
+
+  public Replicable<SignedPayload> getReplicable() {
+    return this.replicable;
+  }
+
+  public void setReplicable(Replicable<SignedPayload> replicable) {
+    this.replicable = replicable;
+  }
 }

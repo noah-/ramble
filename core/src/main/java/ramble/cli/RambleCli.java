@@ -1,19 +1,16 @@
 package ramble.cli;
 
 import com.google.common.base.Splitter;
-
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
 import org.apache.log4j.Logger;
-
 import ramble.api.Ramble;
+import ramble.api.RambleMessage;
 import ramble.core.RambleImpl;
-import ramble.gossip.api.IncomingMessage;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -47,6 +44,8 @@ public class RambleCli {
     options.addOption("u", "port", true, "URI for Gossip service");
     options.addOption("f", "dumpfile", true, "File to dump all received messages into");
     options.addOption("h", "help", false, "Prints out CLI options");
+    options.addOption("pu", "publickey", true, "Path to public key file");
+    options.addOption("pr", "privatekey", true, "Path to private key file");
 
     CommandLineParser parser = new BasicParser();
     CommandLine cmd = parser.parse(options, args);
@@ -78,7 +77,7 @@ public class RambleCli {
     }
 
     // Create the RAMBLE service
-    this.ramble = new RambleImpl(gossipURI, peers);
+    this.ramble = new RambleImpl(gossipURI, peers, null, null);
     this.dumpFile = new File(cmd.getOptionValue('f'));
   }
 
@@ -96,7 +95,7 @@ public class RambleCli {
     Thread dumpThread = new Thread() {
       @Override
       public void run() {
-        IncomingMessage message = null;
+        RambleMessage.Message message = null;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(dumpFile))) {
           Runtime.getRuntime().addShutdownHook(new Thread(){

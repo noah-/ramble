@@ -1,10 +1,7 @@
-package ramble.gossip.core;
-
-import ramble.gossip.api.GossipService;
+package ramble.cluster;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
 
 
 /**
@@ -14,8 +11,8 @@ import java.util.List;
 public class RambleCluster {
 
   private void run() throws InterruptedException, IOException, URISyntaxException {
-    RambleGossipCluster gossipCluster = new RambleGossipCluster();
-    List<GossipService> gossipServices = gossipCluster.createCluster();
+//    RambleGossipCluster gossipCluster = new RambleGossipCluster();
+//    List<GossipService> gossipServices = gossipCluster.createCluster();
 
     // TODO
   }

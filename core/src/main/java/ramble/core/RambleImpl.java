@@ -1,18 +1,18 @@
 package ramble.core;
 
 import org.apache.commons.cli.ParseException;
-
 import org.apache.log4j.Logger;
-
 import ramble.api.Ramble;
-import ramble.gossip.core.GossipServiceFactory;
+import ramble.api.RambleMessage;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
-import ramble.gossip.api.IncomingMessage;
+import ramble.gossip.core.GossipServiceFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
@@ -28,10 +28,13 @@ public class RambleImpl implements Ramble {
 
   private final GossipService gossipService;
 
-  public RambleImpl(URI gossipURI, List<String> peers)
+  public RambleImpl(URI gossipURI, List<String> peers, PublicKey publicKey, PrivateKey privateKey)
           throws InterruptedException, IOException, URISyntaxException, ParseException {
-    this(GossipServiceFactory.buildGossipService(gossipURI, peers.stream()
-            .map(p -> new GossipPeer(URI.create(p))).collect(Collectors.toList())));
+    this(GossipServiceFactory.buildGossipService(
+            gossipURI,
+            peers.stream().map(p -> new GossipPeer(URI.create(p))).collect(Collectors.toList()),
+            publicKey,
+            privateKey));
   }
 
   private RambleImpl(GossipService gossipService)
@@ -52,7 +55,7 @@ public class RambleImpl implements Ramble {
   }
 
   @Override
-  public BlockingQueue<IncomingMessage> listen() {
+  public BlockingQueue<RambleMessage.Message> listen() {
     return this.gossipService.subscribe();
   }
 

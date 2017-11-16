@@ -1,22 +1,22 @@
-package ramble.crypto;
+package ramble.cluster.crypto;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 
-public class KeyGenerator {
+public class JavaKeyGenerator {
 
-  private KeyPairGenerator keyGen;
+  private final KeyPairGenerator keyGen;
+
   private PrivateKey privateKey;
   private PublicKey publicKey;
 
-  public KeyGenerator(int keylength) throws NoSuchAlgorithmException, NoSuchProviderException {
+  public JavaKeyGenerator(int keyLength) throws NoSuchAlgorithmException {
     this.keyGen = KeyPairGenerator.getInstance("RSA");
-    this.keyGen.initialize(keylength);
+    this.keyGen.initialize(keyLength);
   }
 
   public void createKeys() {
@@ -32,4 +32,5 @@ public class KeyGenerator {
   public PublicKey getPublicKey() {
     return this.publicKey;
   }
+
 }

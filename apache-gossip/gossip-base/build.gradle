@@ -1,4 +1,5 @@
 dependencies {
+    compile project(':api')
     compile 'com.fasterxml.jackson.core:jackson-core:' + jacksonVersion
     compile 'commons-math:commons-math:' + commonsMathVersion
     compile 'com.fasterxml.jackson.core:jackson-databind:' + jacksonVersion

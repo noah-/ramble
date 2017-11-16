@@ -70,13 +70,14 @@ public class UdpTransportManager extends AbstractTransportManager implements Run
     while (keepRunning.get()) {
       try {
         byte[] buf = read();
+        Base message = null;
         try {
-          Base message = gossipManager.getProtocolManager().read(buf);
+          message = gossipManager.getProtocolManager().read(buf);
           gossipCore.receive(message);
           //TODO this is suspect
           gossipManager.getMemberStateRefresher().run();
         } catch (RuntimeException ex) {//TODO trap json exception
-          LOGGER.error("Unable to process message", ex);
+          LOGGER.error("Unable to process message " + message, ex);
         }
       } catch (IOException e) {
         // InterruptedException are completely normal here because of the blocking lifecycle.

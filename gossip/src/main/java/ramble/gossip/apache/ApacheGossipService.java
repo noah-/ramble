@@ -1,23 +1,25 @@
 package ramble.gossip.apache;
 
-import com.google.common.collect.Sets;
 import org.apache.gossip.GossipSettings;
 import org.apache.gossip.LocalMember;
 import org.apache.gossip.Member;
 import org.apache.gossip.RemoteMember;
-import org.apache.gossip.crdt.GrowOnlySet;
 import org.apache.gossip.manager.GossipManager;
 import org.apache.gossip.manager.GossipManagerBuilder;
-import org.apache.gossip.model.SharedDataMessage;
+import org.apache.gossip.manager.handlers.MessageHandlerFactory;
+import org.apache.gossip.manager.handlers.TypedMessageHandler;
+import org.apache.gossip.model.RambleBulkMessage;
 import org.apache.log4j.Logger;
+import ramble.api.RambleMessage;
+import ramble.crypto.URIUtils;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
-import ramble.gossip.api.IncomingMessage;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,15 +29,16 @@ import java.util.stream.Collectors;
 public class ApacheGossipService implements GossipService {
 
   private static final String GOSSIP_CLUSTER_NAME = "ramble";
-  private static final String CRDT_MESSAGE_KEY = "messageQueue";
   private static final Logger LOG = Logger.getLogger(ApacheGossipService.class);
 
   private final GossipManager gossipManager;
   private final URI gossipURI;
-  private final BlockingQueue<IncomingMessage> messageQueue;
+  private final BlockingQueue<RambleMessage.Message> messageQueue;
+  private final PublicKey publicKey;
+  private final PrivateKey privateKey;
 
   @SuppressWarnings("unchecked")
-  public ApacheGossipService(URI uri, List<GossipPeer> peers)
+  public ApacheGossipService(URI uri, List<GossipPeer> peers, PublicKey publicKey, PrivateKey privateKey)
           throws IOException, URISyntaxException, InterruptedException {
 
     List<Member> gossipMembers = peers.stream()
@@ -44,48 +47,36 @@ public class ApacheGossipService implements GossipService {
             .collect(Collectors.toList());
 
     this.gossipURI = uri;
+    this.messageQueue = new LinkedBlockingQueue<>();
+    this.publicKey = publicKey;
+    this.privateKey = privateKey;
 
     GossipSettings gossipSettings = new GossipSettings();
     gossipSettings.setDistribution("exponential");
+    gossipSettings.setProtocolManagerClass(RambleProtocolManager.class.getName());
+    gossipSettings.setActiveGossipClass(RambleGossiper.class.getName());
 
     this.gossipManager = GossipManagerBuilder.newBuilder()
             .cluster(GOSSIP_CLUSTER_NAME)
             .uri(uri)
-            .id(uri.getHost() + "-" + uri.getPort())
+            .id(URIUtils.uriToId(uri))
             .gossipMembers(gossipMembers)
             .gossipSettings(gossipSettings)
             .listener(((member, gossipState) -> LOG.info("Member " + member + " reported status " + gossipState)))
+            .messageHandler(MessageHandlerFactory.concurrentHandler(MessageHandlerFactory.defaultHandler(),
+                    new TypedMessageHandler(RambleBulkMessage.class, new RambleMessageHandler(messageQueue))))
             .build();
-
-    this.messageQueue = new LinkedBlockingQueue<>();
-    this.gossipManager.registerSharedDataSubscriber((key, oldValue, newValue) -> {
-      try {
-        if (key.equals(CRDT_MESSAGE_KEY)) {
-          if (oldValue == null) {
-            oldValue = new GrowOnlySet<>(new HashSet<String>());
-          }
-          for (String message : Sets.difference(((GrowOnlySet<String>) newValue).value(),
-                  ((GrowOnlySet<String>) oldValue).value())) {
-            LOG.info("Adding message " + message + " to the queue");
-            messageQueue.put(new IncomingMessage(message));
-          }
-        }
-      } catch (InterruptedException e) {
-        LOG.error("Interrupted while adding to message queue", e);
-      }
-    });
   }
 
   @Override
   public void gossip(String message) {
     LOG.info("Sending message: " + message);
-
-    SharedDataMessage sharedDataMessage = new SharedDataMessage();
-    sharedDataMessage.setExpireAt(Long.MAX_VALUE);
-    sharedDataMessage.setKey(CRDT_MESSAGE_KEY);
-    sharedDataMessage.setPayload(new GrowOnlySet<>(Sets.newHashSet(message)));
-    sharedDataMessage.setTimestamp(System.currentTimeMillis());
-    this.gossipManager.merge(sharedDataMessage);
+    this.gossipManager.gossipRambleMessage(new org.apache.gossip.model.RambleMessage(
+            RambleMessage.Message.newBuilder()
+                    .setMessage(message)
+                    .setTimestamp(System.currentTimeMillis())
+                    .setSourceId(this.gossipManager.getMyself().getId())
+                    .build()));
   }
 
   @Override
@@ -99,7 +90,7 @@ public class ApacheGossipService implements GossipService {
   }
 
   @Override
-  public BlockingQueue<IncomingMessage> subscribe() {
+  public BlockingQueue<RambleMessage.Message> subscribe() {
     return messageQueue;
   }
 

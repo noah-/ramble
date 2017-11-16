@@ -1,5 +1,7 @@
 package ramble.gossip.api;
 
+import ramble.api.RambleMessage;
+
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
@@ -16,7 +18,7 @@ public interface GossipService {
 
   void shutdown();
 
-  BlockingQueue<IncomingMessage> subscribe();
+  BlockingQueue<RambleMessage.Message> subscribe();
 
   List<String> getConnectedPeers();
 
