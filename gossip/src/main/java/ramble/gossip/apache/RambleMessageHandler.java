@@ -1,12 +1,18 @@
 package ramble.gossip.apache;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.gossip.manager.GossipCore;
 import org.apache.gossip.manager.GossipManager;
 import org.apache.gossip.manager.handlers.MessageHandler;
 import org.apache.gossip.model.Base;
 import org.apache.gossip.model.RambleBulkMessage;
 import ramble.api.RambleMessage;
+import ramble.crypto.MessageSigner;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.concurrent.BlockingQueue;
 
 
@@ -20,14 +26,24 @@ public class RambleMessageHandler implements MessageHandler {
 
   @Override
   public boolean invoke(GossipCore gossipCore, GossipManager gossipManager, Base base) {
-    RambleBulkMessage message = (RambleBulkMessage) base;
-    for (RambleMessage.Message rambleMessage : message.getBulkMessage().getMessageList()) {
+    RambleMessage.BulkSignedMessage bulkSignedMessage;
+    try {
+      bulkSignedMessage = RambleMessage.BulkSignedMessage.parseFrom(
+              ((RambleBulkMessage) base).getBulkSignedMessage());
+    } catch (InvalidProtocolBufferException e) {
+      throw new RuntimeException(e);
+    }
+
+    for (RambleMessage.SignedMessage signedMessage : bulkSignedMessage.getSignedMessageList()) {
       try {
-        messageQueue.put(rambleMessage);
-      } catch (InterruptedException e) {
+        if (MessageSigner.verify(signedMessage.getPublicKey().toByteArray(), signedMessage.getMessage().toByteArray(),
+                signedMessage.getSignature().toByteArray())) {
+          this.messageQueue.put(RambleMessage.Message.parseFrom(signedMessage.getMessage()));
+        }
+      } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException | InterruptedException | InvalidProtocolBufferException e) {
         throw new RuntimeException(e);
       }
     }
-    return false;
+    return true;
   }
 }

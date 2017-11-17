@@ -6,7 +6,6 @@ import org.apache.gossip.manager.GossipCore;
 import org.apache.gossip.manager.GossipManager;
 import org.apache.gossip.manager.SimpleActiveGossiper;
 import org.apache.gossip.model.RambleBulkMessage;
-import org.apache.gossip.model.RambleMessage;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -43,11 +42,11 @@ public class RambleGossiper extends SimpleActiveGossiper {
    */
   private void sendRambleMessages(LocalMember dest) {
     if (dest != null) {
-      RambleBulkMessage rambleBulkMessage = new RambleBulkMessage();
-      for (RambleMessage rambleMessage : this.gossipCore.getRambleMessages()) {
-        rambleBulkMessage.addMessage(rambleMessage);
+      ramble.api.RambleMessage.BulkSignedMessage.Builder builder = ramble.api.RambleMessage.BulkSignedMessage.newBuilder();
+      for (ramble.api.RambleMessage.SignedMessage rambleMessage : this.gossipCore.getRambleMessages()) {
+        builder.addSignedMessage(rambleMessage);
       }
-      this.gossipCore.sendOneWay(rambleBulkMessage, dest.getUri());
+      this.gossipCore.sendOneWay(new RambleBulkMessage(builder.build().toByteArray()), dest.getUri());
     }
   }
 }

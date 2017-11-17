@@ -30,7 +30,6 @@ import org.apache.gossip.event.data.UpdateNodeDataEventHandler;
 import org.apache.gossip.event.data.UpdateSharedDataEventHandler;
 import org.apache.gossip.model.Base;
 import org.apache.gossip.model.PerNodeDataMessage;
-import org.apache.gossip.model.RambleMessage;
 import org.apache.gossip.model.Response;
 import org.apache.gossip.model.SharedDataMessage;
 import org.apache.gossip.udp.Trackable;
@@ -61,7 +60,7 @@ public class GossipCore implements GossipCoreConstants {
   private ConcurrentHashMap<String, LatchAndBase> requests;
   private final ConcurrentHashMap<String, ConcurrentHashMap<String, PerNodeDataMessage>> perNodeData;
   private final ConcurrentHashMap<String, SharedDataMessage> sharedData;
-  private final Set<RambleMessage> rambleMessages;
+  private final Set<ramble.api.RambleMessage.SignedMessage> rambleMessages;
   private final Meter messageSerdeException;
   private final Meter transmissionException;
   private final Meter transmissionSuccess;
@@ -141,7 +140,7 @@ public class GossipCore implements GossipCoreConstants {
     }
   }
 
-  public void addRambleMessage(RambleMessage rambleMessage) {
+  public void addRambleMessage(ramble.api.RambleMessage.SignedMessage rambleMessage) {
     rambleMessages.add(rambleMessage);
   }
 
@@ -153,7 +152,7 @@ public class GossipCore implements GossipCoreConstants {
     return sharedData;
   }
 
-  public Set<RambleMessage> getRambleMessages() {
+  public Set<ramble.api.RambleMessage.SignedMessage> getRambleMessages() {
     return rambleMessages;
   }
 

@@ -1,5 +1,6 @@
 package ramble.gossip.apache;
 
+import com.google.protobuf.ByteString;
 import org.apache.gossip.GossipSettings;
 import org.apache.gossip.LocalMember;
 import org.apache.gossip.Member;
@@ -11,6 +12,7 @@ import org.apache.gossip.manager.handlers.TypedMessageHandler;
 import org.apache.gossip.model.RambleBulkMessage;
 import org.apache.log4j.Logger;
 import ramble.api.RambleMessage;
+import ramble.crypto.MessageSigner;
 import ramble.crypto.URIUtils;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
@@ -18,8 +20,11 @@ import ramble.gossip.api.GossipService;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SignatureException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -71,12 +76,25 @@ public class ApacheGossipService implements GossipService {
   @Override
   public void gossip(String message) {
     LOG.info("Sending message: " + message);
-    this.gossipManager.gossipRambleMessage(new org.apache.gossip.model.RambleMessage(
-            RambleMessage.Message.newBuilder()
-                    .setMessage(message)
-                    .setTimestamp(System.currentTimeMillis())
-                    .setSourceId(this.gossipManager.getMyself().getId())
-                    .build()));
+
+    ByteString rambleMessage = RambleMessage.Message.newBuilder()
+            .setMessage(message)
+            .setTimestamp(System.currentTimeMillis())
+            .setSourceId(this.gossipManager.getMyself().getId())
+            .build().toByteString();
+
+    RambleMessage.SignedMessage signedMessage;
+    try {
+      signedMessage = RambleMessage.SignedMessage.newBuilder()
+              .setMessage(rambleMessage)
+              .setSignature(ByteString.copyFrom(MessageSigner.sign(this.privateKey, rambleMessage.toByteArray())))
+              .setPublicKey(ByteString.copyFrom(this.publicKey.getEncoded()))
+              .build();
+    } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+
+    this.gossipManager.gossipRambleMessage(signedMessage);
   }
 
   @Override

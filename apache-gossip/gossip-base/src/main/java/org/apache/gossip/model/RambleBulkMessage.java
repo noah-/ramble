@@ -2,18 +2,13 @@ package org.apache.gossip.model;
 
 public class RambleBulkMessage extends Base {
 
-  private final ramble.api.RambleMessage.BulkMessage.Builder bulkMessage = ramble.api.RambleMessage.BulkMessage.newBuilder();
+  private final byte[] bulkSignedMessage;
 
-  public void addMessage(RambleMessage rambleMessage) {
-    this.bulkMessage.addMessage(rambleMessage.getMessage());
+  public RambleBulkMessage(byte[] bulkSignedMessage) {
+    this.bulkSignedMessage = bulkSignedMessage;
   }
 
-  public ramble.api.RambleMessage.BulkMessage getBulkMessage() {
-    return this.bulkMessage.build();
-  }
-
-  @Override
-  public String toString() {
-    return bulkMessage.build().toString();
+  public byte[] getBulkSignedMessage() {
+    return this.bulkSignedMessage;
   }
 }

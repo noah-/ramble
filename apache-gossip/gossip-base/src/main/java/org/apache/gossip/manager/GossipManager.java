@@ -260,7 +260,7 @@ public abstract class GossipManager {
     gossipCore.addSharedData(message);
   }
 
-  public void gossipRambleMessage(RambleMessage rambleMessage) {
+  public void gossipRambleMessage(ramble.api.RambleMessage.SignedMessage rambleMessage) {
     gossipCore.addRambleMessage(rambleMessage);
   }
 
