@@ -20,7 +20,9 @@ import ramble.gossip.api.GossipService;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -69,7 +71,7 @@ public class ApacheGossipService implements GossipService {
             .gossipSettings(gossipSettings)
             .listener(((member, gossipState) -> LOG.info("Member " + member + " reported status " + gossipState)))
             .messageHandler(MessageHandlerFactory.concurrentHandler(MessageHandlerFactory.defaultHandler(),
-                    new TypedMessageHandler(RambleBulkMessage.class, new RambleMessageHandler(messageQueue))))
+                    new TypedMessageHandler(RambleBulkMessage.class, new RambleMessageHandler(this.messageQueue))))
             .build();
   }
 
@@ -77,11 +79,21 @@ public class ApacheGossipService implements GossipService {
   public void gossip(String message) {
     LOG.info("Sending message: " + message);
 
-    ByteString rambleMessage = RambleMessage.Message.newBuilder()
+    byte[] digest;
+    try {
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      md.update(message.getBytes(StandardCharsets.UTF_8));
+      digest = md.digest();
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+
+    RambleMessage.Message rambleMessage = RambleMessage.Message.newBuilder()
             .setMessage(message)
             .setTimestamp(System.currentTimeMillis())
             .setSourceId(this.gossipManager.getMyself().getId())
-            .build().toByteString();
+            .setMessageDigest(ByteString.copyFrom(digest))
+            .build();
 
     RambleMessage.SignedMessage signedMessage;
     try {

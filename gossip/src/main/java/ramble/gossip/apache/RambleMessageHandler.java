@@ -8,6 +8,8 @@ import org.apache.gossip.model.Base;
 import org.apache.gossip.model.RambleBulkMessage;
 import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
+import ramble.db.DbStoreFactory;
+import ramble.db.api.DbStore;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -18,6 +20,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class RambleMessageHandler implements MessageHandler {
 
+  private final DbStore dbStore = DbStoreFactory.getDbStore();
   private final BlockingQueue<RambleMessage.Message> messageQueue;
 
   public RambleMessageHandler(BlockingQueue<RambleMessage.Message> messageQueue) {
@@ -38,9 +41,13 @@ public class RambleMessageHandler implements MessageHandler {
       try {
         if (MessageSigner.verify(signedMessage.getPublicKey().toByteArray(), signedMessage.getMessage().toByteArray(),
                 signedMessage.getSignature().toByteArray())) {
-          this.messageQueue.put(RambleMessage.Message.parseFrom(signedMessage.getMessage()));
+          gossipCore.addRambleMessage(signedMessage);
+          if (!this.dbStore.exists(signedMessage)) {
+            this.dbStore.store(signedMessage);
+            this.messageQueue.put(signedMessage.getMessage());
+          }
         }
-      } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException | InterruptedException | InvalidProtocolBufferException e) {
+      } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException | InterruptedException e) {
         throw new RuntimeException(e);
       }
     }

@@ -46,7 +46,9 @@ public class RambleGossiper extends SimpleActiveGossiper {
       for (ramble.api.RambleMessage.SignedMessage rambleMessage : this.gossipCore.getRambleMessages()) {
         builder.addSignedMessage(rambleMessage);
       }
-      this.gossipCore.sendOneWay(new RambleBulkMessage(builder.build().toByteArray()), dest.getUri());
+      RambleBulkMessage rambleBulkMessage = new RambleBulkMessage();
+      rambleBulkMessage.setBulkSignedMessage(builder.build().toByteArray());
+      this.gossipCore.sendOneWay(rambleBulkMessage, dest.getUri());
     }
   }
 }

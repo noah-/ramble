@@ -3,6 +3,7 @@ def modules = ['apache-gossip',
                'cluster',
                'core',
                'crypto',
+               'db',
                'distribution',
                'gossip']
 

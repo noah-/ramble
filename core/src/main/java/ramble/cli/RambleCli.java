@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import ramble.api.Ramble;
 import ramble.api.RambleMessage;
 import ramble.core.RambleImpl;
+import ramble.crypto.KeyReader;
+import ramble.crypto.KeyServiceException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +20,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -37,7 +44,9 @@ public class RambleCli {
   private final Ramble ramble;
   private final File dumpFile;
 
-  private RambleCli(String args[]) throws InterruptedException, IOException, URISyntaxException, ParseException {
+  private RambleCli(String args[])
+          throws InterruptedException, IOException, URISyntaxException, ParseException, KeyServiceException, NoSuchAlgorithmException, InvalidKeySpecException {
+
     // Parse the CLI options
     Options options = new Options();
     options.addOption("p", "peers", true, "Comma-separated list of initial peers to connect to");
@@ -62,6 +71,16 @@ public class RambleCli {
       formatter.printHelp("ramble-cli", options);
     }
 
+    if (!cmd.hasOption("pu")) {
+      System.out.println("Missing required option -pu!");
+      formatter.printHelp("ramble-cli", options);
+    }
+
+    if (!cmd.hasOption("pr")) {
+      System.out.println("Missing required option -pr!");
+      formatter.printHelp("ramble-cli", options);
+    }
+
     URI gossipURI;
     if (cmd.hasOption('u')) {
       gossipURI = URI.create("udp://127.0.0.1:" + cmd.getOptionValue('u'));
@@ -76,8 +95,12 @@ public class RambleCli {
       peers = new ArrayList<>();
     }
 
+    KeyReader keyReader = new KeyReader();
+    PublicKey publicKey = keyReader.getPublicKey(Paths.get(cmd.getOptionValue("pu")));
+    PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(cmd.getOptionValue("pu")));
+
     // Create the RAMBLE service
-    this.ramble = new RambleImpl(gossipURI, peers, null, null);
+    this.ramble = new RambleImpl(gossipURI, peers, publicKey, privateKey);
     this.dumpFile = new File(cmd.getOptionValue('f'));
   }
 
@@ -133,7 +156,8 @@ public class RambleCli {
     }
   }
 
-  public static void main(String args[]) throws InterruptedException, IOException, URISyntaxException, ParseException {
+  public static void main(String args[])
+          throws InterruptedException, IOException, URISyntaxException, ParseException, KeyServiceException, NoSuchAlgorithmException, InvalidKeySpecException {
     new RambleCli(args).run();
   }
 }

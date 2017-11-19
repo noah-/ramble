@@ -42,7 +42,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
         @Type(value = PerNodeDataMessage.class, name = "PerNodeDataMessage"),
         @Type(value = UdpPerNodeDataBulkMessage.class, name = "UdpPerNodeDataMessage"),
         @Type(value = SharedDataMessage.class, name = "SharedDataMessage"),
-        @Type(value = UdpSharedDataBulkMessage.class, name = "UdpSharedDataMessage")
+        @Type(value = UdpSharedDataBulkMessage.class, name = "UdpSharedDataMessage"),
+        @Type(value = RambleBulkMessage.class, name = "RambleBulMessage")
         })
 public class Base {
 
