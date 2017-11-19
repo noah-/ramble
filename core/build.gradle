@@ -4,6 +4,7 @@ dependencies {
     compile project(":api")
     compile project(":gossip")
     compile 'commons-cli:commons-cli:1.2'
+    compile 'io.netty:netty-all:4.1.17.Final'
 }
 
 ext.classification="library"

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package ramble.api;
+
+option java_package = "ramble.api";
+option java_outer_classname = "MessageSyncProtocol";
+
+message Request {
+    string requestMsg = 1;
+}
+
+message Response {
+  uint32 ret = 1;
+  string responseMsg = 2;
+}
