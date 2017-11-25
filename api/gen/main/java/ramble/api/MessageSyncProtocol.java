@@ -17,16 +17,6 @@ public final class MessageSyncProtocol {
   public interface RequestOrBuilder extends
       // @@protoc_insertion_point(interface_extends:ramble.api.Request)
       com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string requestMsg = 1;</code>
-     */
-    java.lang.String getRequestMsg();
-    /**
-     * <code>string requestMsg = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getRequestMsgBytes();
   }
   /**
    * Protobuf type {@code ramble.api.Request}
@@ -41,7 +31,6 @@ public final class MessageSyncProtocol {
       super(builder);
     }
     private Request() {
-      requestMsg_ = "";
     }
 
     @java.lang.Override
@@ -54,7 +43,6 @@ public final class MessageSyncProtocol {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -70,12 +58,6 @@ public final class MessageSyncProtocol {
                   input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
-              break;
-            }
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              requestMsg_ = s;
               break;
             }
           }
@@ -102,40 +84,6 @@ public final class MessageSyncProtocol {
               ramble.api.MessageSyncProtocol.Request.class, ramble.api.MessageSyncProtocol.Request.Builder.class);
     }
 
-    public static final int REQUESTMSG_FIELD_NUMBER = 1;
-    private volatile java.lang.Object requestMsg_;
-    /**
-     * <code>string requestMsg = 1;</code>
-     */
-    public java.lang.String getRequestMsg() {
-      java.lang.Object ref = requestMsg_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        requestMsg_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string requestMsg = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getRequestMsgBytes() {
-      java.lang.Object ref = requestMsg_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        requestMsg_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -148,9 +96,6 @@ public final class MessageSyncProtocol {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getRequestMsgBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, requestMsg_);
-      }
       unknownFields.writeTo(output);
     }
 
@@ -159,9 +104,6 @@ public final class MessageSyncProtocol {
       if (size != -1) return size;
 
       size = 0;
-      if (!getRequestMsgBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, requestMsg_);
-      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -178,8 +120,6 @@ public final class MessageSyncProtocol {
       ramble.api.MessageSyncProtocol.Request other = (ramble.api.MessageSyncProtocol.Request) obj;
 
       boolean result = true;
-      result = result && getRequestMsg()
-          .equals(other.getRequestMsg());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -191,8 +131,6 @@ public final class MessageSyncProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + REQUESTMSG_FIELD_NUMBER;
-      hash = (53 * hash) + getRequestMsg().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -322,8 +260,6 @@ public final class MessageSyncProtocol {
       }
       public Builder clear() {
         super.clear();
-        requestMsg_ = "";
-
         return this;
       }
 
@@ -346,7 +282,6 @@ public final class MessageSyncProtocol {
 
       public ramble.api.MessageSyncProtocol.Request buildPartial() {
         ramble.api.MessageSyncProtocol.Request result = new ramble.api.MessageSyncProtocol.Request(this);
-        result.requestMsg_ = requestMsg_;
         onBuilt();
         return result;
       }
@@ -388,10 +323,6 @@ public final class MessageSyncProtocol {
 
       public Builder mergeFrom(ramble.api.MessageSyncProtocol.Request other) {
         if (other == ramble.api.MessageSyncProtocol.Request.getDefaultInstance()) return this;
-        if (!other.getRequestMsg().isEmpty()) {
-          requestMsg_ = other.requestMsg_;
-          onChanged();
-        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -416,75 +347,6 @@ public final class MessageSyncProtocol {
             mergeFrom(parsedMessage);
           }
         }
-        return this;
-      }
-
-      private java.lang.Object requestMsg_ = "";
-      /**
-       * <code>string requestMsg = 1;</code>
-       */
-      public java.lang.String getRequestMsg() {
-        java.lang.Object ref = requestMsg_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          requestMsg_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string requestMsg = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getRequestMsgBytes() {
-        java.lang.Object ref = requestMsg_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          requestMsg_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string requestMsg = 1;</code>
-       */
-      public Builder setRequestMsg(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        requestMsg_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string requestMsg = 1;</code>
-       */
-      public Builder clearRequestMsg() {
-        
-        requestMsg_ = getDefaultInstance().getRequestMsg();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string requestMsg = 1;</code>
-       */
-      public Builder setRequestMsgBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        requestMsg_ = value;
-        onChanged();
         return this;
       }
       public final Builder setUnknownFields(
@@ -541,19 +403,17 @@ public final class MessageSyncProtocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>uint32 ret = 1;</code>
+     * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
      */
-    int getRet();
-
+    boolean hasMessages();
     /**
-     * <code>string responseMsg = 2;</code>
+     * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
      */
-    java.lang.String getResponseMsg();
+    ramble.api.RambleMessage.BulkSignedMessage getMessages();
     /**
-     * <code>string responseMsg = 2;</code>
+     * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getResponseMsgBytes();
+    ramble.api.RambleMessage.BulkSignedMessageOrBuilder getMessagesOrBuilder();
   }
   /**
    * Protobuf type {@code ramble.api.Response}
@@ -568,8 +428,6 @@ public final class MessageSyncProtocol {
       super(builder);
     }
     private Response() {
-      ret_ = 0;
-      responseMsg_ = "";
     }
 
     @java.lang.Override
@@ -600,15 +458,17 @@ public final class MessageSyncProtocol {
               }
               break;
             }
-            case 8: {
+            case 10: {
+              ramble.api.RambleMessage.BulkSignedMessage.Builder subBuilder = null;
+              if (messages_ != null) {
+                subBuilder = messages_.toBuilder();
+              }
+              messages_ = input.readMessage(ramble.api.RambleMessage.BulkSignedMessage.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(messages_);
+                messages_ = subBuilder.buildPartial();
+              }
 
-              ret_ = input.readUInt32();
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              responseMsg_ = s;
               break;
             }
           }
@@ -635,47 +495,25 @@ public final class MessageSyncProtocol {
               ramble.api.MessageSyncProtocol.Response.class, ramble.api.MessageSyncProtocol.Response.Builder.class);
     }
 
-    public static final int RET_FIELD_NUMBER = 1;
-    private int ret_;
+    public static final int MESSAGES_FIELD_NUMBER = 1;
+    private ramble.api.RambleMessage.BulkSignedMessage messages_;
     /**
-     * <code>uint32 ret = 1;</code>
+     * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
      */
-    public int getRet() {
-      return ret_;
-    }
-
-    public static final int RESPONSEMSG_FIELD_NUMBER = 2;
-    private volatile java.lang.Object responseMsg_;
-    /**
-     * <code>string responseMsg = 2;</code>
-     */
-    public java.lang.String getResponseMsg() {
-      java.lang.Object ref = responseMsg_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        responseMsg_ = s;
-        return s;
-      }
+    public boolean hasMessages() {
+      return messages_ != null;
     }
     /**
-     * <code>string responseMsg = 2;</code>
+     * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getResponseMsgBytes() {
-      java.lang.Object ref = responseMsg_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        responseMsg_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public ramble.api.RambleMessage.BulkSignedMessage getMessages() {
+      return messages_ == null ? ramble.api.RambleMessage.BulkSignedMessage.getDefaultInstance() : messages_;
+    }
+    /**
+     * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
+     */
+    public ramble.api.RambleMessage.BulkSignedMessageOrBuilder getMessagesOrBuilder() {
+      return getMessages();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -690,11 +528,8 @@ public final class MessageSyncProtocol {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (ret_ != 0) {
-        output.writeUInt32(1, ret_);
-      }
-      if (!getResponseMsgBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, responseMsg_);
+      if (messages_ != null) {
+        output.writeMessage(1, getMessages());
       }
       unknownFields.writeTo(output);
     }
@@ -704,12 +539,9 @@ public final class MessageSyncProtocol {
       if (size != -1) return size;
 
       size = 0;
-      if (ret_ != 0) {
+      if (messages_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, ret_);
-      }
-      if (!getResponseMsgBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, responseMsg_);
+          .computeMessageSize(1, getMessages());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -727,10 +559,11 @@ public final class MessageSyncProtocol {
       ramble.api.MessageSyncProtocol.Response other = (ramble.api.MessageSyncProtocol.Response) obj;
 
       boolean result = true;
-      result = result && (getRet()
-          == other.getRet());
-      result = result && getResponseMsg()
-          .equals(other.getResponseMsg());
+      result = result && (hasMessages() == other.hasMessages());
+      if (hasMessages()) {
+        result = result && getMessages()
+            .equals(other.getMessages());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -742,10 +575,10 @@ public final class MessageSyncProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + RET_FIELD_NUMBER;
-      hash = (53 * hash) + getRet();
-      hash = (37 * hash) + RESPONSEMSG_FIELD_NUMBER;
-      hash = (53 * hash) + getResponseMsg().hashCode();
+      if (hasMessages()) {
+        hash = (37 * hash) + MESSAGES_FIELD_NUMBER;
+        hash = (53 * hash) + getMessages().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -875,10 +708,12 @@ public final class MessageSyncProtocol {
       }
       public Builder clear() {
         super.clear();
-        ret_ = 0;
-
-        responseMsg_ = "";
-
+        if (messagesBuilder_ == null) {
+          messages_ = null;
+        } else {
+          messages_ = null;
+          messagesBuilder_ = null;
+        }
         return this;
       }
 
@@ -901,8 +736,11 @@ public final class MessageSyncProtocol {
 
       public ramble.api.MessageSyncProtocol.Response buildPartial() {
         ramble.api.MessageSyncProtocol.Response result = new ramble.api.MessageSyncProtocol.Response(this);
-        result.ret_ = ret_;
-        result.responseMsg_ = responseMsg_;
+        if (messagesBuilder_ == null) {
+          result.messages_ = messages_;
+        } else {
+          result.messages_ = messagesBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -944,12 +782,8 @@ public final class MessageSyncProtocol {
 
       public Builder mergeFrom(ramble.api.MessageSyncProtocol.Response other) {
         if (other == ramble.api.MessageSyncProtocol.Response.getDefaultInstance()) return this;
-        if (other.getRet() != 0) {
-          setRet(other.getRet());
-        }
-        if (!other.getResponseMsg().isEmpty()) {
-          responseMsg_ = other.responseMsg_;
-          onChanged();
+        if (other.hasMessages()) {
+          mergeMessages(other.getMessages());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -978,99 +812,121 @@ public final class MessageSyncProtocol {
         return this;
       }
 
-      private int ret_ ;
+      private ramble.api.RambleMessage.BulkSignedMessage messages_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ramble.api.RambleMessage.BulkSignedMessage, ramble.api.RambleMessage.BulkSignedMessage.Builder, ramble.api.RambleMessage.BulkSignedMessageOrBuilder> messagesBuilder_;
       /**
-       * <code>uint32 ret = 1;</code>
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
        */
-      public int getRet() {
-        return ret_;
+      public boolean hasMessages() {
+        return messagesBuilder_ != null || messages_ != null;
       }
       /**
-       * <code>uint32 ret = 1;</code>
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
        */
-      public Builder setRet(int value) {
-        
-        ret_ = value;
-        onChanged();
-        return this;
+      public ramble.api.RambleMessage.BulkSignedMessage getMessages() {
+        if (messagesBuilder_ == null) {
+          return messages_ == null ? ramble.api.RambleMessage.BulkSignedMessage.getDefaultInstance() : messages_;
+        } else {
+          return messagesBuilder_.getMessage();
+        }
       }
       /**
-       * <code>uint32 ret = 1;</code>
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
        */
-      public Builder clearRet() {
-        
-        ret_ = 0;
-        onChanged();
-        return this;
-      }
+      public Builder setMessages(ramble.api.RambleMessage.BulkSignedMessage value) {
+        if (messagesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          messages_ = value;
+          onChanged();
+        } else {
+          messagesBuilder_.setMessage(value);
+        }
 
-      private java.lang.Object responseMsg_ = "";
+        return this;
+      }
       /**
-       * <code>string responseMsg = 2;</code>
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
        */
-      public java.lang.String getResponseMsg() {
-        java.lang.Object ref = responseMsg_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          responseMsg_ = s;
-          return s;
+      public Builder setMessages(
+          ramble.api.RambleMessage.BulkSignedMessage.Builder builderForValue) {
+        if (messagesBuilder_ == null) {
+          messages_ = builderForValue.build();
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          messagesBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
+       */
+      public Builder mergeMessages(ramble.api.RambleMessage.BulkSignedMessage value) {
+        if (messagesBuilder_ == null) {
+          if (messages_ != null) {
+            messages_ =
+              ramble.api.RambleMessage.BulkSignedMessage.newBuilder(messages_).mergeFrom(value).buildPartial();
+          } else {
+            messages_ = value;
+          }
+          onChanged();
+        } else {
+          messagesBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
+       */
+      public Builder clearMessages() {
+        if (messagesBuilder_ == null) {
+          messages_ = null;
+          onChanged();
+        } else {
+          messages_ = null;
+          messagesBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
+       */
+      public ramble.api.RambleMessage.BulkSignedMessage.Builder getMessagesBuilder() {
+        
+        onChanged();
+        return getMessagesFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
+       */
+      public ramble.api.RambleMessage.BulkSignedMessageOrBuilder getMessagesOrBuilder() {
+        if (messagesBuilder_ != null) {
+          return messagesBuilder_.getMessageOrBuilder();
+        } else {
+          return messages_ == null ?
+              ramble.api.RambleMessage.BulkSignedMessage.getDefaultInstance() : messages_;
         }
       }
       /**
-       * <code>string responseMsg = 2;</code>
+       * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getResponseMsgBytes() {
-        java.lang.Object ref = responseMsg_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          responseMsg_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ramble.api.RambleMessage.BulkSignedMessage, ramble.api.RambleMessage.BulkSignedMessage.Builder, ramble.api.RambleMessage.BulkSignedMessageOrBuilder> 
+          getMessagesFieldBuilder() {
+        if (messagesBuilder_ == null) {
+          messagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              ramble.api.RambleMessage.BulkSignedMessage, ramble.api.RambleMessage.BulkSignedMessage.Builder, ramble.api.RambleMessage.BulkSignedMessageOrBuilder>(
+                  getMessages(),
+                  getParentForChildren(),
+                  isClean());
+          messages_ = null;
         }
-      }
-      /**
-       * <code>string responseMsg = 2;</code>
-       */
-      public Builder setResponseMsg(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        responseMsg_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string responseMsg = 2;</code>
-       */
-      public Builder clearResponseMsg() {
-        
-        responseMsg_ = getDefaultInstance().getResponseMsg();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string responseMsg = 2;</code>
-       */
-      public Builder setResponseMsgBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        responseMsg_ = value;
-        onChanged();
-        return this;
+        return messagesBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1140,10 +996,11 @@ public final class MessageSyncProtocol {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\022message-sync.proto\022\nramble.api\"\035\n\007Requ" +
-      "est\022\022\n\nrequestMsg\030\001 \001(\t\",\n\010Response\022\013\n\003r" +
-      "et\030\001 \001(\r\022\023\n\013responseMsg\030\002 \001(\tB!\n\nramble." +
-      "apiB\023MessageSyncProtocolb\006proto3"
+      "\n\022message-sync.proto\022\nramble.api\032\024ramble" +
+      "-message.proto\"\t\n\007Request\";\n\010Response\022/\n" +
+      "\010messages\030\001 \001(\0132\035.ramble.api.BulkSignedM" +
+      "essageB!\n\nramble.apiB\023MessageSyncProtoco" +
+      "lb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1156,19 +1013,21 @@ public final class MessageSyncProtocol {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          ramble.api.RambleMessage.getDescriptor(),
         }, assigner);
     internal_static_ramble_api_Request_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_ramble_api_Request_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_Request_descriptor,
-        new java.lang.String[] { "RequestMsg", });
+        new java.lang.String[] { });
     internal_static_ramble_api_Response_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_ramble_api_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_Response_descriptor,
-        new java.lang.String[] { "Ret", "ResponseMsg", });
+        new java.lang.String[] { "Messages", });
+    ramble.api.RambleMessage.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -9,7 +9,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import ramble.api.MessageSyncProtocol;
 
-public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
+public class NettyMessageSyncClientInitializer extends ChannelInitializer<SocketChannel> {
 
   @Override
   protected void initChannel(SocketChannel ch) throws Exception {
@@ -21,6 +21,6 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
     p.addLast(new ProtobufVarint32LengthFieldPrepender());
     p.addLast(new ProtobufEncoder());
 
-    p.addLast(new NettyClientHandler());
+    p.addLast(new NettyMessageSyncClientHandler());
   }
 }

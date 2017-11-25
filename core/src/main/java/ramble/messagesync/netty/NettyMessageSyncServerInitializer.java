@@ -8,8 +8,17 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import ramble.api.MessageSyncProtocol;
+import ramble.api.RambleMessage;
 
-public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
+import java.util.Set;
+
+public class NettyMessageSyncServerInitializer extends ChannelInitializer<SocketChannel> {
+
+  private final Set<RambleMessage.SignedMessage> messages;
+
+  NettyMessageSyncServerInitializer(Set<RambleMessage.SignedMessage> messages) {
+    this.messages = messages;
+  }
 
   @Override
   protected void initChannel(SocketChannel ch) throws Exception {
@@ -20,6 +29,6 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
     p.addLast(new ProtobufVarint32LengthFieldPrepender());
     p.addLast(new ProtobufEncoder());
 
-    p.addLast(new NettyServerHandler());
+    p.addLast(new NettyMessageSyncServerHandler(messages));
   }
 }

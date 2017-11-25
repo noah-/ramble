@@ -8,23 +8,23 @@ import ramble.api.MessageSyncProtocol;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class NettyClientHandler extends SimpleChannelInboundHandler<MessageSyncProtocol.Response> {
+public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<MessageSyncProtocol.Response> {
 
   private Channel channel;
-  private MessageSyncProtocol.Response resp;
-  BlockingQueue<MessageSyncProtocol.Response> resps = new LinkedBlockingQueue<>();
+  private BlockingQueue<MessageSyncProtocol.Response> resps = new LinkedBlockingQueue<>();
 
-  public MessageSyncProtocol.Response sendRequest() {
-    MessageSyncProtocol.Request req = MessageSyncProtocol.Request.newBuilder().setRequestMsg("From Client").build();
+  MessageSyncProtocol.Response sendRequest() {
+    MessageSyncProtocol.Request req = MessageSyncProtocol.Request.newBuilder().build();
 
     // Send request
-    channel.writeAndFlush(req);
+    this.channel.writeAndFlush(req);
 
     // Now wait for response from server
     boolean interrupted = false;
-    for (; ; ) {
+    MessageSyncProtocol.Response resp;
+    while (true) {
       try {
-        resp = resps.take();
+        resp = this.resps.take();
         break;
       } catch (InterruptedException ignore) {
         interrupted = true;
@@ -46,7 +46,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<MessageSyncP
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Response msg)
           throws Exception {
-    resps.add(msg);
+    this.resps.add(msg);
   }
 
   @Override
