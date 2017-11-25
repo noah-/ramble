@@ -1,0 +1,11 @@
+How to test:
+1. Install dependencies. Run
+	sudo ./setup_test_env.sh.
+2. To start a swarm:
+	sudo docker swarm init
+   Then copy and paste the swarm join command to other hosts
+3. Run test.
+	run_test.sh
+
+Scripts:
+create_testnet.sh	create the multi-host testnet
