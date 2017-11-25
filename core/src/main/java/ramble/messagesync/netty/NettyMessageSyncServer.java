@@ -31,7 +31,7 @@ public class NettyMessageSyncServer implements MessageSyncServer {
     this.bootStrap.group(serverGroup, workerGroup)
             .channel(NioServerSocketChannel.class)
             .handler(new LoggingHandler(LogLevel.INFO))
-            .childHandler(new NettyMessageSyncServerInitializer());
+            .childHandler(new NettyMessageSyncServerInitializer(null));
   }
 
   @Override
