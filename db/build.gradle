@@ -2,4 +2,8 @@ apply plugin: 'java'
 
 dependencies {
     compile project(':api')
+    compile 'com.zaxxer:HikariCP:2.7.4'
+    compile 'log4j:log4j:1.2.17'
+
+    runtime 'com.h2database:h2:1.4.196'
 }

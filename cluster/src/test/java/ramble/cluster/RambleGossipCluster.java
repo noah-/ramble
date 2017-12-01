@@ -3,6 +3,7 @@ package ramble.cluster;
 import ramble.api.RambleMessage;
 import ramble.cluster.crypto.JavaKeyGenerator;
 import ramble.crypto.KeyServiceException;
+import ramble.db.persistent.PersistentDbStore;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
 import ramble.gossip.core.GossipServiceFactory;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +70,9 @@ class RambleGossipCluster {
   }
 
   public static void main(String args[]) throws InterruptedException, IOException, URISyntaxException,
-          NoSuchAlgorithmException, KeyServiceException {
+          NoSuchAlgorithmException, KeyServiceException, SQLException {
+
+    PersistentDbStore.runInitializeScripts();
 
     List<URI> nodes = new ArrayList<>();
     nodes.add(URI.create("udp://127.0.0.1:5000"));

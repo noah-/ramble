@@ -1,90 +1,82 @@
 package ramble.db.persistent;
 
-import java.sql.*;
-import java.nio.charset.StandardCharsets;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
+/**
+ * TODO need to figure out what the correct primary key is for the messages
+ */
 public class PersistentDbStore implements DbStore {
-    private static Connection connection = null;
 
-    @Override
-    public boolean exists(RambleMessage.SignedMessage message) {
-        if (connection == null)
-            return false;
+  private static final HikariConfig HIKARI_CONFIG = new HikariConfig();
+  private static final HikariDataSource HIKARI_DS;
 
-        String digest = message.getMessage().getMessageDigest().toString(StandardCharsets.UTF_8);
+  static {
+    HIKARI_CONFIG.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
+    HIKARI_CONFIG.addDataSourceProperty("URL", "jdbc:h2:~/rambleDB");
+    HIKARI_CONFIG.addDataSourceProperty("user", "sa");
+    HIKARI_CONFIG.addDataSourceProperty("password", "");
+    HIKARI_DS = new HikariDataSource(HIKARI_CONFIG);
+  }
 
-        try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * from messages WHERE digest = \'" + digest + "\'");
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+  public static void runInitializeScripts() throws SQLException {
+    try (Connection con = HIKARI_DS.getConnection(); Statement stmt = con.createStatement()) {
+      if (stmt.execute("RUNSCRIPT FROM 'classpath:h2-init.sql'")) {
+        stmt.getResultSet().close();
+      }
     }
+  }
 
-    @Override
-    public void store(RambleMessage.SignedMessage message) {
-        if (connection == null)
-            return;
+  @Override
+  public boolean exists(RambleMessage.SignedMessage message) {
+    String digest = message.getMessage().getMessageDigest().toString(StandardCharsets.UTF_8);
+    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE digest = ?)";
 
-        try {
-            Statement s = connection.createStatement();
-
-            String digest = message.getMessage().getMessageDigest().toString(StandardCharsets.UTF_8);
-            String key = message.getPublicKey().toStringUtf8();
-            long ts = message.getMessage().getTimestamp();
-            String msg = message.getMessage().getMessage();
-            String sql = "INSERT INTO messages VALUES (\'" + digest + "\' , \'" + key + "\' , " + ts + " , \'" + msg + "\' )";
-
-            s.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
+    try (Connection con = HIKARI_DS.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setString(1, digest);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next() && rs.getBoolean(1)) {
+          return true;
         }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
+    return false;
+  }
 
-    /*  TODO: Implement this */
-    @Override
-    public RambleMessage.SignedMessage get(String id) {
-        if (connection == null) {
-            throw new UnsupportedOperationException();
-        }
+  @Override
+  public void store(RambleMessage.SignedMessage message) {
+     String sql = "INSERT INTO messages(digest, publickey, timestamp, msg) VALUES (?, ?, ?, ?)";
+    long ts = message.getMessage().getTimestamp();
+    try (Connection con = HIKARI_DS.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
 
-        try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * from messages WHERE digest = \'" + id + "\'");
-            ResultSet rs = ps.executeQuery();
+      ps.setString(1, message.getMessage().getMessageDigest().toStringUtf8());
+      ps.setString(2, message.getPublicKey().toStringUtf8());
+      ps.setLong(3, ts);
+      ps.setString(4, message.getMessage().getMessage());
 
-            if (rs.next()) {
-                throw new UnsupportedOperationException();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        throw new UnsupportedOperationException();
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    public PersistentDbStore() {
-        if (connection != null) {
-            return;
-        }
-
-        try {
-            Class.forName("org.h2.Driver");
-            connection = DriverManager.getConnection("jdbc:h2:~rambleDB", "test", "test");
-            Statement s = connection.createStatement();
-            s.execute("create table if not exists messages (digest varchar(255), publickey varchar(255), timestamp int, msg varchar(255))");
-            s.execute("create table if not exists iplist (publickey varchar(255), ipaddress int, timestamp int, count int)");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+  // TODO: Implement this
+  @Override
+  public RambleMessage.SignedMessage get(String id) {
+    throw new UnsupportedOperationException();
+  }
 }

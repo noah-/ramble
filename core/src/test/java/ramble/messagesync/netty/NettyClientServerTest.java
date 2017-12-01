@@ -28,9 +28,9 @@ public class NettyClientServerTest {
 
     NettyMessageSyncClient nettyClient = new NettyMessageSyncClient("localhost", 5000);
     nettyClient.connect();
-    Set<RambleMessage.SignedMessage> messages = nettyClient.syncMessages();
-
-    messages.stream().map(msg -> msg.getMessage().getMessage()).forEach(System.out::println);
+//    Set<RambleMessage.SignedMessage> messages = nettyClient.syncMessages();
+//
+//    messages.stream().map(msg -> msg.getMessage().getMessage()).forEach(System.out::println);
 
     future.get();
   }
