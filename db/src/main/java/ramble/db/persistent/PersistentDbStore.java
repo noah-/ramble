@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.*;
 
 
 /**
@@ -58,7 +59,7 @@ public class PersistentDbStore implements DbStore {
 
   @Override
   public void store(RambleMessage.SignedMessage message) {
-     String sql = "INSERT INTO messages(digest, publickey, timestamp, msg) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO messages(digest, publickey, timestamp, msg) VALUES (?, ?, ?, ?)";
     long ts = message.getMessage().getTimestamp();
     try (Connection con = HIKARI_DS.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -74,9 +75,43 @@ public class PersistentDbStore implements DbStore {
     }
   }
 
-  // TODO: Implement this
+  // TODO: Convert database object to RambleMessage.SignedMessage, need to look at api.
   @Override
   public RambleMessage.SignedMessage get(String id) {
-    throw new UnsupportedOperationException();
+    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE digest = ?)";
+    try (Connection con = HIKARI_DS.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setString(1, id);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          // TODO: Convert database object to RambleMessage.SignedMessage, need to look at api.
+          return null;
+        }
+
+        return null;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
+
+  public HashSet<String> getRange(long start, long end) {
+    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE timestamp BETWEEN ? AND ?)";
+    try (Connection con = HIKARI_DS.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      HashSet<String> result = new HashSet<String>();
+      ps.setLong(1, start);
+      ps.setLong(2, end);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          result.add(rs.getString(1));
+        }
+
+        return result;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
 }
