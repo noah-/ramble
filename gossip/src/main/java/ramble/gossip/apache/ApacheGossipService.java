@@ -17,9 +17,7 @@ import ramble.crypto.URIUtils;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -28,8 +26,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 
@@ -40,13 +36,11 @@ public class ApacheGossipService implements GossipService {
 
   private final GossipManager gossipManager;
   private final URI gossipURI;
-  private final BlockingQueue<RambleMessage.Message> messageQueue;
   private final PublicKey publicKey;
   private final PrivateKey privateKey;
 
   @SuppressWarnings("unchecked")
-  public ApacheGossipService(URI uri, List<GossipPeer> peers, PublicKey publicKey, PrivateKey privateKey)
-          throws IOException, URISyntaxException, InterruptedException {
+  public ApacheGossipService(URI uri, List<GossipPeer> peers, PublicKey publicKey, PrivateKey privateKey) {
 
     List<Member> gossipMembers = peers.stream()
             .map(peer -> new RemoteMember(GOSSIP_CLUSTER_NAME, peer.getPeerURI(),
@@ -54,7 +48,6 @@ public class ApacheGossipService implements GossipService {
             .collect(Collectors.toList());
 
     this.gossipURI = uri;
-    this.messageQueue = new LinkedBlockingQueue<>();
     this.publicKey = publicKey;
     this.privateKey = privateKey;
 
@@ -62,6 +55,7 @@ public class ApacheGossipService implements GossipService {
     gossipSettings.setDistribution("exponential");
     gossipSettings.setProtocolManagerClass(RambleProtocolManager.class.getName());
     gossipSettings.setActiveGossipClass(RambleGossiper.class.getName());
+    gossipSettings.setGossipInterval(1000); // TODO: set for testing purposes
 
     this.gossipManager = GossipManagerBuilder.newBuilder()
             .cluster(GOSSIP_CLUSTER_NAME)
@@ -71,7 +65,7 @@ public class ApacheGossipService implements GossipService {
             .gossipSettings(gossipSettings)
             .listener(((member, gossipState) -> LOG.info("Member " + member + " reported status " + gossipState)))
             .messageHandler(MessageHandlerFactory.concurrentHandler(MessageHandlerFactory.defaultHandler(),
-                    new TypedMessageHandler(RambleBulkMessage.class, new RambleMessageHandler(this.messageQueue))))
+                    new TypedMessageHandler(RambleBulkMessage.class, new RambleMessageHandler(URIUtils.uriToId(uri)))))
             .build();
   }
 
@@ -120,13 +114,8 @@ public class ApacheGossipService implements GossipService {
   }
 
   @Override
-  public BlockingQueue<RambleMessage.Message> subscribe() {
-    return messageQueue;
-  }
-
-  @Override
-  public List<String> getConnectedPeers() {
-    return this.gossipManager.getLiveMembers().stream().map(LocalMember::toString).collect(Collectors.toList());
+  public List<URI> getConnectedPeers() {
+    return this.gossipManager.getLiveMembers().stream().map(LocalMember::getUri).collect(Collectors.toList());
   }
 
   @Override

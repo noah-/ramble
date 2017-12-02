@@ -2,6 +2,8 @@ package ramble.db.api;
 
 import ramble.api.RambleMessage;
 
+import java.util.Set;
+
 public interface DbStore {
 
   /**
@@ -12,4 +14,6 @@ public interface DbStore {
   void store(RambleMessage.SignedMessage message);
 
   RambleMessage.SignedMessage get(String id);
+
+  Set<RambleMessage.SignedMessage> getAllMessages();
 }

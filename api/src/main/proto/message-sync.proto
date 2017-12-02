@@ -8,8 +8,21 @@ option java_package = "ramble.api";
 option java_outer_classname = "MessageSyncProtocol";
 
 message Request {
+  oneof request_type {
+    GetAllMessages getAllMessages = 1;
+  }
 }
 
 message Response {
+  oneof response_type {
+    SendAllMessages sendAllMessage = 1;
+  }
+}
+
+message GetAllMessages {
+
+}
+
+message SendAllMessages {
   BulkSignedMessage messages = 1;
 }

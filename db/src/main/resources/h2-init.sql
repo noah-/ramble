@@ -3,11 +3,11 @@ DROP TABLE IF EXISTS iplist;
 
 CREATE TABLE messages
   (
-     id        IDENTITY PRIMARY KEY,
      digest    VARCHAR(255),
      publickey VARCHAR(255),
      timestamp BIGINT,
-     msg       VARCHAR(255)
+     msg       VARCHAR(255),
+     PRIMARY KEY(digest, publickey, timestamp)
   );
 
 CREATE TABLE iplist

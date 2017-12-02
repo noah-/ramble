@@ -4,28 +4,25 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
-
-import java.util.Set;
+import ramble.db.api.DbStore;
 
 public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<MessageSyncProtocol.Request> {
 
-  private final Set<RambleMessage.SignedMessage> messages;
+  private DbStore dbStore;
 
-  NettyMessageSyncServerHandler(Set<RambleMessage.SignedMessage> messages) {
-    this.messages = messages;
+  NettyMessageSyncServerHandler(DbStore dbStore) {
+    this.dbStore = dbStore;
   }
 
   @Override
-  protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Request msg)
-          throws Exception {
-
+  protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Request msg) {
     MessageSyncProtocol.Response.Builder responseBuilder = MessageSyncProtocol.Response.newBuilder();
 
     RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
-            .addAllSignedMessage(this.messages)
+            .addAllSignedMessage(dbStore.getAllMessages())
             .build();
 
-    responseBuilder.setMessages(bulkMessage);
+    responseBuilder.setSendAllMessage(MessageSyncProtocol.SendAllMessages.newBuilder().setMessages(bulkMessage));
     ctx.write(responseBuilder.build());
   }
 

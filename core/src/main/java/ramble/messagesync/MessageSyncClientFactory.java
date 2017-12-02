@@ -5,7 +5,7 @@ import ramble.messagesync.netty.NettyMessageSyncClient;
 
 public class MessageSyncClientFactory {
 
-  public MessageSyncClient getMessageSyncClient(String host, int port) {
+  public static MessageSyncClient getMessageSyncClient(String host, int port) {
     return new NettyMessageSyncClient(host, port);
   }
 }

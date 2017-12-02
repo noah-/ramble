@@ -1,8 +1,8 @@
 package ramble.cluster;
 
-import ramble.api.RambleMessage;
 import ramble.cluster.crypto.JavaKeyGenerator;
 import ramble.crypto.KeyServiceException;
+import ramble.crypto.URIUtils;
 import ramble.db.persistent.PersistentDbStore;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
@@ -72,8 +72,6 @@ class RambleGossipCluster {
   public static void main(String args[]) throws InterruptedException, IOException, URISyntaxException,
           NoSuchAlgorithmException, KeyServiceException, SQLException {
 
-    PersistentDbStore.runInitializeScripts();
-
     List<URI> nodes = new ArrayList<>();
     nodes.add(URI.create("udp://127.0.0.1:5000"));
     nodes.add(URI.create("udp://127.0.0.1:5001"));
@@ -81,20 +79,19 @@ class RambleGossipCluster {
     nodes.add(URI.create("udp://127.0.0.1:5003"));
     nodes.add(URI.create("udp://127.0.0.1:5004"));
 
+    nodes.forEach(uri -> {
+      try {
+        PersistentDbStore.getOrCreateStore(URIUtils.uriToId(uri)).runInitializeScripts();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
+
     List<URI> seeds = new ArrayList<>();
     seeds.add(URI.create("udp://127.0.0.1:5000"));
     seeds.add(URI.create("udp://127.0.0.1:5001"));
     seeds.add(URI.create("udp://127.0.0.1:5002"));
 
-    List<GossipService> clients = new RambleGossipCluster(nodes, seeds).run();
-
-    while (true) {
-      for (GossipService client : clients) {
-        RambleMessage.Message message;
-        while ((message = client.subscribe().take()) != null) {
-          System.out.println("Got message " + message.getMessage());
-        }
-      }
-    }
+    new RambleGossipCluster(nodes, seeds).run();
   }
 }

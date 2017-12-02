@@ -13,11 +13,9 @@ public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<M
   private Channel channel;
   private BlockingQueue<MessageSyncProtocol.Response> resps = new LinkedBlockingQueue<>();
 
-  MessageSyncProtocol.Response sendRequest() {
-    MessageSyncProtocol.Request req = MessageSyncProtocol.Request.newBuilder().build();
-
+  MessageSyncProtocol.Response sendRequest(MessageSyncProtocol.Request request) {
     // Send request
-    this.channel.writeAndFlush(req);
+    this.channel.writeAndFlush(request);
 
     // Now wait for response from server
     boolean interrupted = false;
@@ -44,8 +42,7 @@ public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<M
   }
 
   @Override
-  protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Response msg)
-          throws Exception {
+  protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Response msg) {
     this.resps.add(msg);
   }
 

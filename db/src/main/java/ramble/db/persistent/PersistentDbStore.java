@@ -1,17 +1,20 @@
 package ramble.db.persistent;
 
+import com.google.protobuf.ByteString;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -19,19 +22,25 @@ import java.util.*;
  */
 public class PersistentDbStore implements DbStore {
 
-  private static final HikariConfig HIKARI_CONFIG = new HikariConfig();
-  private static final HikariDataSource HIKARI_DS;
+  private static final Map<String, PersistentDbStore> CACHE = new HashMap<>();
 
-  static {
-    HIKARI_CONFIG.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
-    HIKARI_CONFIG.addDataSourceProperty("URL", "jdbc:h2:~/rambleDB");
-    HIKARI_CONFIG.addDataSourceProperty("user", "sa");
-    HIKARI_CONFIG.addDataSourceProperty("password", "");
-    HIKARI_DS = new HikariDataSource(HIKARI_CONFIG);
+  private final HikariDataSource hikariDataSource;
+
+  private PersistentDbStore(String id) {
+    HikariConfig hikariConfig = new HikariConfig();
+    hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
+    hikariConfig.addDataSourceProperty("URL", "jdbc:h2:" + getDbFromId(id));
+    hikariConfig.addDataSourceProperty("user", "sa");
+    hikariConfig.addDataSourceProperty("password", "");
+    this.hikariDataSource = new HikariDataSource(hikariConfig);
   }
 
-  public static void runInitializeScripts() throws SQLException {
-    try (Connection con = HIKARI_DS.getConnection(); Statement stmt = con.createStatement()) {
+  public static PersistentDbStore getOrCreateStore(String id) {
+    return CACHE.computeIfAbsent(id, PersistentDbStore::new);
+  }
+
+  public void runInitializeScripts() throws SQLException {
+    try (Connection con = hikariDataSource.getConnection(); Statement stmt = con.createStatement()) {
       if (stmt.execute("RUNSCRIPT FROM 'classpath:h2-init.sql'")) {
         stmt.getResultSet().close();
       }
@@ -40,12 +49,13 @@ public class PersistentDbStore implements DbStore {
 
   @Override
   public boolean exists(RambleMessage.SignedMessage message) {
-    String digest = message.getMessage().getMessageDigest().toString(StandardCharsets.UTF_8);
-    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE digest = ?)";
+    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE digest = ? AND publickey = ? AND timestamp = ?)";
 
-    try (Connection con = HIKARI_DS.getConnection();
+    try (Connection con = hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
-      ps.setString(1, digest);
+      ps.setString(1,  message.getMessage().getMessageDigest().toStringUtf8());
+      ps.setString(2, message.getPublicKey().toStringUtf8());
+      ps.setLong(3, message.getMessage().getTimestamp());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next() && rs.getBoolean(1)) {
           return true;
@@ -60,13 +70,12 @@ public class PersistentDbStore implements DbStore {
   @Override
   public void store(RambleMessage.SignedMessage message) {
     String sql = "INSERT INTO messages(digest, publickey, timestamp, msg) VALUES (?, ?, ?, ?)";
-    long ts = message.getMessage().getTimestamp();
-    try (Connection con = HIKARI_DS.getConnection();
+    try (Connection con = hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
 
       ps.setString(1, message.getMessage().getMessageDigest().toStringUtf8());
       ps.setString(2, message.getPublicKey().toStringUtf8());
-      ps.setLong(3, ts);
+      ps.setLong(3, message.getMessage().getTimestamp());
       ps.setString(4, message.getMessage().getMessage());
 
       ps.executeUpdate();
@@ -79,7 +88,7 @@ public class PersistentDbStore implements DbStore {
   @Override
   public RambleMessage.SignedMessage get(String id) {
     String sql = "SELECT EXISTS (SELECT * FROM messages WHERE digest = ?)";
-    try (Connection con = HIKARI_DS.getConnection();
+    try (Connection con = hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setString(1, id);
       try (ResultSet rs = ps.executeQuery()) {
@@ -97,7 +106,7 @@ public class PersistentDbStore implements DbStore {
 
   public HashSet<String> getRange(long start, long end) {
     String sql = "SELECT EXISTS (SELECT * FROM messages WHERE timestamp BETWEEN ? AND ?)";
-    try (Connection con = HIKARI_DS.getConnection();
+    try (Connection con = hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
       HashSet<String> result = new HashSet<String>();
       ps.setLong(1, start);
@@ -114,4 +123,34 @@ public class PersistentDbStore implements DbStore {
     }
   }
 
+  // TODO: make this more efficient
+  @Override
+  public Set<RambleMessage.SignedMessage> getAllMessages() {
+    Set<RambleMessage.SignedMessage> messages = new HashSet<>();
+
+    try (Connection con = hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement("SELECT digest, publickey, timestamp, msg FROM messages")) {
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          RambleMessage.Message message = RambleMessage.Message.newBuilder()
+                  .setMessageDigest(ByteString.copyFromUtf8(rs.getString(1)))
+                  .setTimestamp(rs.getLong(3))
+                  .setMessage(rs.getString(4))
+                  .build();
+
+          messages.add(RambleMessage.SignedMessage.newBuilder()
+                  .setMessage(message)
+                  .setPublicKey(ByteString.copyFromUtf8(rs.getString(2)))
+                  .build());
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return messages;
+  }
+
+  private String getDbFromId(String id) {
+    return "~/rambleDB/" + id;
+  }
 }

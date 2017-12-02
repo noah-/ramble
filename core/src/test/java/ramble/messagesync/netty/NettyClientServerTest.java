@@ -1,24 +1,35 @@
 package ramble.messagesync.netty;
 
 import ramble.api.RambleMessage;
+import ramble.db.DbStoreFactory;
+import ramble.db.persistent.PersistentDbStore;
+import ramble.messagesync.MessageSyncClientFactory;
+import ramble.messagesync.MessageSyncServerFactory;
+import ramble.messagesync.api.MessageSyncClient;
+import ramble.messagesync.api.MessageSyncServer;
 
-import java.util.HashSet;
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class NettyClientServerTest {
 
-  public static void main(String args[]) throws InterruptedException, ExecutionException {
+  public static void main(String args[]) throws InterruptedException, ExecutionException, SQLException {
 
-    Set<RambleMessage.SignedMessage> messages = new HashSet<>();
+    PersistentDbStore.getOrCreateStore("netty-test").runInitializeScripts();
 
-    RambleMessage.Message.newBuilder().setMessage("");
+    DbStoreFactory.getDbStore("netty-test").store(RambleMessage.SignedMessage.newBuilder().setMessage(
+            RambleMessage.Message.newBuilder().setMessage("hello")).build());
 
-//    RambleMessage.SignedMessage.newBuilder().setMessage(messageBuilder);
+    DbStoreFactory.getDbStore("netty-test").store(RambleMessage.SignedMessage.newBuilder().setMessage(
+            RambleMessage.Message.newBuilder().setMessage("world")).build());
+
+//    NettyMessageSyncServer nettyServer = new NettyMessageSyncServer(6000);
+    MessageSyncServer nettyServer = MessageSyncServerFactory.getMessageSyncServer(
+            DbStoreFactory.getDbStore("netty-test"), 6000);
 
     CompletableFuture future = CompletableFuture.runAsync(()-> {
-      NettyMessageSyncServer nettyServer = new NettyMessageSyncServer(5000, messages);
       try {
         nettyServer.start();
       } catch (InterruptedException e) {
@@ -26,12 +37,21 @@ public class NettyClientServerTest {
       }
     });
 
-    NettyMessageSyncClient nettyClient = new NettyMessageSyncClient("localhost", 5000);
-    nettyClient.connect();
-//    Set<RambleMessage.SignedMessage> messages = nettyClient.syncMessages();
-//
-//    messages.stream().map(msg -> msg.getMessage().getMessage()).forEach(System.out::println);
+    for (int i = 0; i < 10; i++) {
+      MessageSyncClient nettyClient = MessageSyncClientFactory.getMessageSyncClient("localhost", 6000);
+//      NettyMessageSyncClient nettyClient = new NettyMessageSyncClient("localhost", 6000);
+      nettyClient.connect();
+      Thread.sleep(1000);
+      Set<RambleMessage.SignedMessage> messages = nettyClient.syncMessages();
+      messages.forEach(System.out::println);
+      Set<RambleMessage.SignedMessage> messages2 = nettyClient.syncMessages();
+      messages2.forEach(System.out::println);
+      Thread.sleep(1000);
+//      nettyClient.shutdown();
+      Thread.sleep(1000);
+    }
 
+    nettyServer.stop();
     future.get();
   }
 }

@@ -5,7 +5,9 @@ import ramble.db.api.DbStore;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class InMemoryDbStore implements DbStore {
 
@@ -24,5 +26,10 @@ public class InMemoryDbStore implements DbStore {
   @Override
   public RambleMessage.SignedMessage get(String id) {
     return this.messages.get(id);
+  }
+
+  @Override
+  public Set<RambleMessage.SignedMessage> getAllMessages() {
+    return new HashSet<>(this.messages.values());
   }
 }

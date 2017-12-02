@@ -6,6 +6,7 @@ import org.apache.gossip.manager.GossipManager;
 import org.apache.gossip.manager.handlers.MessageHandler;
 import org.apache.gossip.model.Base;
 import org.apache.gossip.model.RambleBulkMessage;
+import org.apache.log4j.Logger;
 import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
@@ -15,16 +16,16 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.concurrent.BlockingQueue;
 
 
 public class RambleMessageHandler implements MessageHandler {
 
-  private final DbStore dbStore = DbStoreFactory.getDbStore();
-  private final BlockingQueue<RambleMessage.Message> messageQueue;
+  private static final Logger LOG = Logger.getLogger(ApacheGossipService.class);
 
-  public RambleMessageHandler(BlockingQueue<RambleMessage.Message> messageQueue) {
-    this.messageQueue = messageQueue;
+  private final DbStore dbStore;
+
+  RambleMessageHandler(String id) {
+    this.dbStore = DbStoreFactory.getDbStore(id);
   }
 
   @Override
@@ -43,11 +44,13 @@ public class RambleMessageHandler implements MessageHandler {
                 signedMessage.getSignature().toByteArray())) {
           gossipCore.addRambleMessage(signedMessage);
           if (!this.dbStore.exists(signedMessage)) {
+            LOG.info("Got new message from " + signedMessage.getMessage().getSourceId() + " - " +
+                    signedMessage.getMessage().getMessage());
+
             this.dbStore.store(signedMessage);
-            this.messageQueue.put(signedMessage.getMessage());
           }
         }
-      } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException | InterruptedException e) {
+      } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException e) {
         throw new RuntimeException(e);
       }
     }

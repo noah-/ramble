@@ -38,9 +38,13 @@ public class NettyMessageSyncClient implements MessageSyncClient {
 
   @Override
   public Set<RambleMessage.SignedMessage> syncMessages() {
+    System.out.println("Connecting to host " + this.host + " port " + this.port);
+    System.out.println("Is null: " + this.channel);
+
     NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
-    MessageSyncProtocol.Response resp = handle.sendRequest();
-    return new HashSet<>(resp.getMessages().getSignedMessageList());
+    MessageSyncProtocol.Response resp = handle.sendRequest(MessageSyncProtocol.Request.newBuilder().setGetAllMessages(
+            MessageSyncProtocol.GetAllMessages.newBuilder()).build());
+    return new HashSet<>(resp.getSendAllMessage().getMessages().getSignedMessageList());
   }
 
   @Override

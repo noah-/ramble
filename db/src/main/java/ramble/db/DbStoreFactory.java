@@ -5,7 +5,7 @@ import ramble.db.persistent.PersistentDbStore;
 
 public class DbStoreFactory {
 
-  public static DbStore getDbStore() {
-    return new PersistentDbStore();
+  public static DbStore getDbStore(String id) {
+    return PersistentDbStore.getOrCreateStore(id);
   }
 }

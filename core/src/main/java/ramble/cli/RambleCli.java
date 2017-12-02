@@ -28,6 +28,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 /**
@@ -88,9 +89,10 @@ public class RambleCli {
       gossipURI = URI.create("udp://127.0.0.1:50000");
     }
 
-    List<String> peers;
+    List<URI> peers;
     if (cmd.hasOption('p')) {
-      peers = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(cmd.getOptionValue('p'));
+      peers = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(cmd.getOptionValue('p')).stream().map(
+              URI::create).collect(Collectors.toList());
     } else {
       peers = new ArrayList<>();
     }
@@ -100,7 +102,7 @@ public class RambleCli {
     PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(cmd.getOptionValue("pu")));
 
     // Create the RAMBLE service
-    this.ramble = new RambleImpl(gossipURI, peers, publicKey, privateKey);
+    this.ramble = new RambleImpl(gossipURI, peers, publicKey, privateKey, 5050);
     this.dumpFile = new File(cmd.getOptionValue('f'));
   }
 
@@ -118,7 +120,7 @@ public class RambleCli {
     Thread dumpThread = new Thread() {
       @Override
       public void run() {
-        RambleMessage.Message message = null;
+        RambleMessage.SignedMessage message = null;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(dumpFile))) {
           Runtime.getRuntime().addShutdownHook(new Thread(){
@@ -131,14 +133,14 @@ public class RambleCli {
               }
             }
           });
-          try {
-            while ((message = ramble.listen().take()) != null) {
-              writer.write(message.getMessage());
-              writer.write('\n');
-            }
-          } catch (InterruptedException | IOException e) {
-            LOG.error("Unable to write message " + message + " to file " + dumpFile, e);
-          }
+//          try {
+//            while ((message = ramble.listen().take()) != null) {
+//              writer.write(message.getMessage().getMessage());
+//              writer.write('\n');
+//            }
+//          } catch (InterruptedException | IOException e) {
+//            LOG.error("Unable to write message " + message + " to file " + dumpFile, e);
+//          }
         } catch (IOException e) {
           LOG.error("Unable to open file " + dumpFile);
         }

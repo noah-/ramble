@@ -9,7 +9,7 @@ public class AntiEntropy {
     private static long _lastVerifiedTS;
     private long currentTS;
     private final long BLOCK_TIME_PERIOD = 300000; // 5 mins
-    private final PersistentDbStore dbStore = new PersistentDbStore();
+    private final PersistentDbStore dbStore = PersistentDbStore.getOrCreateStore("anti-entropy");
     private HashMap<Long,HashSet<String>> blockCache = new HashMap<>();
 
     public AntiEntropy(long ts) {

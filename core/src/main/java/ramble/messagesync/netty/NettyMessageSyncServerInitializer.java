@@ -8,20 +8,18 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import ramble.api.MessageSyncProtocol;
-import ramble.api.RambleMessage;
-
-import java.util.Set;
+import ramble.db.api.DbStore;
 
 public class NettyMessageSyncServerInitializer extends ChannelInitializer<SocketChannel> {
 
-  private final Set<RambleMessage.SignedMessage> messages;
+  private DbStore dbStore;
 
-  NettyMessageSyncServerInitializer(Set<RambleMessage.SignedMessage> messages) {
-    this.messages = messages;
+  NettyMessageSyncServerInitializer(DbStore dbStore) {
+    this.dbStore = dbStore;
   }
 
   @Override
-  protected void initChannel(SocketChannel ch) throws Exception {
+  protected void initChannel(SocketChannel ch) {
     ChannelPipeline p = ch.pipeline();
     p.addLast(new ProtobufVarint32FrameDecoder());
     p.addLast(new ProtobufDecoder(MessageSyncProtocol.Request.getDefaultInstance()));
@@ -29,6 +27,6 @@ public class NettyMessageSyncServerInitializer extends ChannelInitializer<Socket
     p.addLast(new ProtobufVarint32LengthFieldPrepender());
     p.addLast(new ProtobufEncoder());
 
-    p.addLast(new NettyMessageSyncServerHandler(messages));
+    p.addLast(new NettyMessageSyncServerHandler(dbStore));
   }
 }
