@@ -1,5 +1,6 @@
 package ramble.cluster;
 
+import org.apache.log4j.Logger;
 import ramble.cluster.crypto.JavaKeyGenerator;
 import ramble.crypto.KeyServiceException;
 import ramble.crypto.URIUtils;
@@ -23,6 +24,8 @@ class RambleGossipCluster {
 
   private final List<URI> nodes;
   private final List<URI> seeds;
+
+  private static final Logger LOG = Logger.getLogger(RambleGossipCluster.class);
 
   private RambleGossipCluster(List<URI> nodes, List<URI> seeds) {
     this.nodes = nodes;
@@ -48,10 +51,10 @@ class RambleGossipCluster {
     for (int i = 0; i < 10; i++) {
       Thread.sleep(10000);
 
-      clients.forEach(gossipService -> gossipService.gossip("Hello World"));
+//      clients.forEach(gossipService -> gossipService.gossip("Hello World"));
 
-      System.out.println("Live members: ");
-      clients.forEach(client -> System.out.println(Arrays.toString(client.getConnectedPeers().toArray())));
+      LOG.info("Live members: ");
+      clients.forEach(client -> LOG.info(Arrays.toString(client.getMembers().toArray())));
     }
     return clients;
   }
@@ -64,7 +67,7 @@ class RambleGossipCluster {
 
     List<GossipService> clients = new ArrayList<>();
     for (URI node : this.nodes) {
-      clients.add(GossipServiceFactory.buildGossipService(node, startupMembers, javaKeyGenerator.getPublicKey(), javaKeyGenerator.getPrivateKey()));
+      clients.add(GossipServiceFactory.buildGossipService(startupMembers, javaKeyGenerator.getPublicKey(), javaKeyGenerator.getPrivateKey(), node.getPort(),1000, null));
     }
     return clients;
   }

@@ -25,4 +25,6 @@ public interface Ramble {
    * Shutdown RAMBLE
    */
   void shutdown();
+
+  String getId();
 }

@@ -27,6 +27,6 @@ public class NettyMessageSyncServerInitializer extends ChannelInitializer<Socket
     p.addLast(new ProtobufVarint32LengthFieldPrepender());
     p.addLast(new ProtobufEncoder());
 
-    p.addLast(new NettyMessageSyncServerHandler(dbStore));
+    p.addLast(new NettyMessageSyncServerHandler(this.dbStore));
   }
 }

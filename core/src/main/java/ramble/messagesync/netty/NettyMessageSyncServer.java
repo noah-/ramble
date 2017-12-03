@@ -41,6 +41,7 @@ public class NettyMessageSyncServer implements MessageSyncServer {
   public void start() {
     LOG.info("Starting Message Sync Server on port " + this.port);
 
+    // TODO not sure if running this async is necessary / safe
     CompletableFuture.runAsync(() -> {
       try {
         bootStrap.bind(this.port).sync().channel().closeFuture().sync();

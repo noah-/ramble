@@ -6,7 +6,6 @@ import ramble.api.Ramble;
 import ramble.cluster.crypto.JavaKeyGenerator;
 import ramble.core.RambleImpl;
 import ramble.crypto.KeyServiceException;
-import ramble.crypto.URIUtils;
 import ramble.db.persistent.PersistentDbStore;
 
 import java.io.File;
@@ -52,6 +51,15 @@ class RambleCluster {
 //    }
 
     List<Ramble> clients = createCluster();
+
+    clients.forEach(client -> {
+      try {
+        PersistentDbStore.getOrCreateStore(client.getId()).runInitializeScripts();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
+
     clients.forEach(Ramble::start);
     for (int i = 0; i < 3; i++) {
       Thread.sleep(10000);
@@ -68,7 +76,7 @@ class RambleCluster {
 
     List<Ramble> clients = new ArrayList<>();
     for (URI node : this.nodes) {
-      clients.add(new RambleImpl(node, this.seeds, javaKeyGenerator.getPublicKey(), javaKeyGenerator.getPrivateKey(),
+      clients.add(new RambleImpl(this.seeds, javaKeyGenerator.getPublicKey(), javaKeyGenerator.getPrivateKey(), node.getPort(),
               node.getPort() + 1000));
     }
     return clients;
@@ -83,14 +91,6 @@ class RambleCluster {
     nodes.add(URI.create("udp://127.0.0.1:5002"));
     nodes.add(URI.create("udp://127.0.0.1:5003"));
     nodes.add(URI.create("udp://127.0.0.1:5004"));
-
-    nodes.forEach(uri -> {
-      try {
-        PersistentDbStore.getOrCreateStore(URIUtils.uriToId(uri)).runInitializeScripts();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    });
 
     List<URI> seeds = new ArrayList<>();
     seeds.add(URI.create("udp://127.0.0.1:5000"));

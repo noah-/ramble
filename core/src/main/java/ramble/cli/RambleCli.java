@@ -102,7 +102,8 @@ public class RambleCli {
     PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(cmd.getOptionValue("pu")));
 
     // Create the RAMBLE service
-    this.ramble = new RambleImpl(gossipURI, peers, publicKey, privateKey, 5050);
+    // TODO fix me - it should pass in a port, not a URI
+    this.ramble = new RambleImpl(peers, publicKey, privateKey, 5050, 6050);
     this.dumpFile = new File(cmd.getOptionValue('f'));
   }
 

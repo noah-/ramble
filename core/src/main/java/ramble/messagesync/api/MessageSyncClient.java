@@ -16,5 +16,5 @@ public interface MessageSyncClient {
    */
   Set<RambleMessage.SignedMessage> syncMessages();
 
-  void shutdown();
+  void disconnect();
 }

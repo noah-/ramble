@@ -5,6 +5,7 @@ import org.apache.gossip.Member;
 import org.apache.gossip.RemoteMember;
 import org.apache.gossip.manager.GossipManager;
 import org.apache.gossip.manager.GossipManagerBuilder;
+import org.apache.log4j.Logger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,21 +19,23 @@ import java.util.List;
  */
 public class ApacheGossipCluster {
 
+  private static final Logger LOG = Logger.getLogger(ApacheGossipCluster.class);
+
   private void run() throws InterruptedException, UnknownHostException, URISyntaxException {
     List<GossipManager> clients = createCluster();
     clients.forEach(GossipManager::init);
     for (int i = 0; i < 10; i++) {
       Thread.sleep(10000);
 
-      System.out.println("Live members: ");
-      clients.forEach(client -> System.out.println(client.getLiveMembers()));
+      LOG.info("Live members: ");
+      clients.forEach(client -> LOG.info(client.getLiveMembers()));
 
-      System.out.println("Dead members: ");
-      clients.forEach(client -> System.out.println(client.getDeadMembers()));
+      LOG.info("Dead members: ");
+      clients.forEach(client -> LOG.info(client.getDeadMembers()));
     }
   }
 
-  private List<GossipManager> createCluster() throws UnknownHostException, InterruptedException, URISyntaxException {
+  private List<GossipManager> createCluster() throws URISyntaxException {
     GossipSettings settings = new GossipSettings();
 
     int seedNodes = 3;

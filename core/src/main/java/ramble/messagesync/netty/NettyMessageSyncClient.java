@@ -5,6 +5,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.apache.log4j.Logger;
 import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
 import ramble.messagesync.api.MessageSyncClient;
@@ -13,6 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NettyMessageSyncClient implements MessageSyncClient {
+
+  private static final Logger LOG = Logger.getLogger(NettyMessageSyncClient.class);
 
   private final String host;
   private final int port;
@@ -38,8 +41,7 @@ public class NettyMessageSyncClient implements MessageSyncClient {
 
   @Override
   public Set<RambleMessage.SignedMessage> syncMessages() {
-    System.out.println("Connecting to host " + this.host + " port " + this.port);
-    System.out.println("Is null: " + this.channel);
+    LOG.info("Netty client connecting to host " + this.host + " port " + this.port);
 
     NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
     MessageSyncProtocol.Response resp = handle.sendRequest(MessageSyncProtocol.Request.newBuilder().setGetAllMessages(
@@ -48,7 +50,7 @@ public class NettyMessageSyncClient implements MessageSyncClient {
   }
 
   @Override
-  public void shutdown() {
+  public void disconnect() {
     this.channel.close();
     this.group.shutdownGracefully();
   }

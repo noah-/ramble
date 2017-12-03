@@ -1,30 +1,32 @@
 package ramble.core;
 
+import com.google.common.base.Joiner;
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.ServiceManager;
+import com.google.protobuf.ByteString;
 import org.apache.log4j.Logger;
 import ramble.api.Ramble;
 import ramble.api.RambleMessage;
-import ramble.crypto.URIUtils;
+import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
 import ramble.gossip.core.GossipServiceFactory;
-import ramble.messagesync.MessageSyncClientFactory;
-import ramble.messagesync.MessageSyncServerFactory;
-import ramble.messagesync.api.MessageSyncClient;
-import ramble.messagesync.api.MessageSyncServer;
+import ramble.messagesync.MessageSyncService;
 
-import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Arrays;
+import java.security.SignatureException;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -37,68 +39,86 @@ public class RambleImpl implements Ramble {
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
 
   private final GossipService gossipService;
-  private final MessageSyncServer messageSyncServer;
+  private final ServiceManager serviceManager;
+  private final PublicKey publicKey;
+  private final PrivateKey privateKey;
+  private final String id;
 
-  public RambleImpl(URI gossipURI, List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int messageSyncPort)
-          throws InterruptedException, IOException, URISyntaxException {
+  public RambleImpl(List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort, int messageSyncPort)
+          throws UnknownHostException {
 
+    Set<Service> services = new HashSet<>();
+
+    this.privateKey = privateKey;
+    this.publicKey = publicKey;
+    this.id = createId(gossipPort, messageSyncPort);
     this.gossipService = GossipServiceFactory.buildGossipService(
-            gossipURI,
             peers.stream().map(GossipPeer::new).collect(Collectors.toList()),
             publicKey,
-            privateKey);
+            privateKey,
+            gossipPort,
+            messageSyncPort,
+            this.id);
 
-    this.messageSyncServer = MessageSyncServerFactory.getMessageSyncServer(
-            DbStoreFactory.getDbStore(URIUtils.uriToId(gossipURI)), messageSyncPort);
+    MessageSyncService messageSyncService = new MessageSyncService(this.gossipService,
+            DbStoreFactory.getDbStore(this.id), messageSyncPort, this.id);
+    services.add(messageSyncService);
 
-    ScheduledFuture syncProtocolFuture = Executors.newScheduledThreadPool(1)
-            .scheduleAtFixedRate(this::runSyncProtocol, 5, 15, TimeUnit.SECONDS);
-
-    LOG.info("Running Gossip service on " + this.gossipService.getURI());
-  }
-
-  private void runSyncProtocol() {
-    try {
-      System.out.println("Running sync protocol");
-      List<URI> peers = this.gossipService.getConnectedPeers();
-      System.out.println("Connected peers: " + Arrays.toString(peers.toArray()));
-
-      if (peers.size() > 0) {
-        Random rand = new Random();
-        URI targetURI = peers.get(rand.nextInt(peers.size()));
-
-        // TODO fix so port # is correct
-        MessageSyncClient client = MessageSyncClientFactory.getMessageSyncClient(targetURI.getHost(),
-                targetURI.getPort() + 1000);
-        client.connect();
-
-        Set<RambleMessage.SignedMessage> messages = client.syncMessages();
-
-//        System.out.println("Got messages: " + Arrays.toString(messages.toArray()));
-      }
-    } catch (Throwable t) {
-      LOG.error("Sync protocol failed", t);
-    }
+    this.serviceManager = new ServiceManager(services);
   }
 
   @Override
   public void start() {
     this.gossipService.start();
-    try {
-      this.messageSyncServer.start();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    this.serviceManager.startAsync();
   }
 
   @Override
   public void post(String message) {
-    this.gossipService.gossip(message);
+    LOG.info("Sending message: " + message);
+
+    byte[] digest;
+    try {
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      md.update(message.getBytes(StandardCharsets.UTF_8));
+      digest = md.digest();
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+
+    RambleMessage.Message rambleMessage = RambleMessage.Message.newBuilder()
+            .setMessage(message)
+            .setTimestamp(System.currentTimeMillis())
+            .setSourceId(this.id)
+            .setMessageDigest(ByteString.copyFrom(digest))
+            .build();
+
+    RambleMessage.SignedMessage signedMessage;
+    try {
+      signedMessage = RambleMessage.SignedMessage.newBuilder()
+              .setMessage(rambleMessage)
+              .setSignature(ByteString.copyFrom(MessageSigner.sign(this.privateKey, rambleMessage.toByteArray())))
+              .setPublicKey(ByteString.copyFrom(this.publicKey.getEncoded()))
+              .build();
+    } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+
+    DbStoreFactory.getDbStore(this.id).store(signedMessage);
   }
 
   @Override
   public void shutdown() {
     this.gossipService.shutdown();
-    this.messageSyncServer.stop();
+    this.serviceManager.stopAsync();
+  }
+
+  private static String createId(int gossipPort, int messageSyncPort) throws UnknownHostException {
+    return Joiner.on("-").join(InetAddress.getLocalHost().getHostAddress(), gossipPort, messageSyncPort);
+  }
+
+  @Override
+  public String getId() {
+    return this.id;
   }
 }

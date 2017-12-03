@@ -1,5 +1,6 @@
 package ramble.messagesync.netty;
 
+import org.apache.log4j.Logger;
 import ramble.api.RambleMessage;
 import ramble.db.DbStoreFactory;
 import ramble.db.persistent.PersistentDbStore;
@@ -14,6 +15,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class NettyClientServerTest {
+
+  private static final Logger LOG = Logger.getLogger(NettyClientServerTest.class);
 
   public static void main(String args[]) throws InterruptedException, ExecutionException, SQLException {
 
@@ -43,9 +46,9 @@ public class NettyClientServerTest {
       nettyClient.connect();
       Thread.sleep(1000);
       Set<RambleMessage.SignedMessage> messages = nettyClient.syncMessages();
-      messages.forEach(System.out::println);
+      messages.forEach(LOG::info);
       Set<RambleMessage.SignedMessage> messages2 = nettyClient.syncMessages();
-      messages2.forEach(System.out::println);
+      messages2.forEach(LOG::info);
       Thread.sleep(1000);
 //      nettyClient.shutdown();
       Thread.sleep(1000);

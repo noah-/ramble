@@ -3,11 +3,13 @@ DROP TABLE IF EXISTS iplist;
 
 CREATE TABLE messages
   (
-     digest    VARCHAR(255),
-     publickey VARCHAR(255),
-     timestamp BIGINT,
-     msg       VARCHAR(255),
-     PRIMARY KEY(digest, publickey, timestamp)
+     sourceid      VARCHAR(255),
+     message       VARCHAR(255),
+     messagedigest BINARY(128),
+     timestamp     BIGINT,
+     publickey     BINARY(1024),
+     signature     BINARY(1024),
+     PRIMARY KEY(sourceid, messagedigest, timestamp)
   );
 
 CREATE TABLE iplist

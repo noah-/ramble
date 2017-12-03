@@ -49,13 +49,15 @@ public class PersistentDbStore implements DbStore {
 
   @Override
   public boolean exists(RambleMessage.SignedMessage message) {
-    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE digest = ? AND publickey = ? AND timestamp = ?)";
+    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE sourceid = ? AND messagedigest = ? AND timestamp = ?)";
 
     try (Connection con = hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
-      ps.setString(1,  message.getMessage().getMessageDigest().toStringUtf8());
-      ps.setString(2, message.getPublicKey().toStringUtf8());
+
+      ps.setString(1, message.getMessage().getSourceId());
+      ps.setBytes(2,  message.getMessage().getMessageDigest().toByteArray());
       ps.setLong(3, message.getMessage().getTimestamp());
+
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next() && rs.getBoolean(1)) {
           return true;
@@ -69,14 +71,18 @@ public class PersistentDbStore implements DbStore {
 
   @Override
   public void store(RambleMessage.SignedMessage message) {
-    String sql = "INSERT INTO messages(digest, publickey, timestamp, msg) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO messages(sourceid, message, messagedigest, timestamp, publickey, signature) " +
+            "VALUES (?, ?, ?, ?, ?, ?)";
+
     try (Connection con = hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
 
-      ps.setString(1, message.getMessage().getMessageDigest().toStringUtf8());
-      ps.setString(2, message.getPublicKey().toStringUtf8());
-      ps.setLong(3, message.getMessage().getTimestamp());
-      ps.setString(4, message.getMessage().getMessage());
+      ps.setString(1, message.getMessage().getSourceId());
+      ps.setString(2, message.getMessage().getMessage());
+      ps.setBytes(3, message.getMessage().getMessageDigest().toByteArray());
+      ps.setLong(4, message.getMessage().getTimestamp());
+      ps.setBytes(5, message.getPublicKey().toByteArray());
+      ps.setBytes(6, message.getSignature().toByteArray());
 
       ps.executeUpdate();
     } catch (SQLException e) {
@@ -84,6 +90,7 @@ public class PersistentDbStore implements DbStore {
     }
   }
 
+  // TODO fix me
   // TODO: Convert database object to RambleMessage.SignedMessage, need to look at api.
   @Override
   public RambleMessage.SignedMessage get(String id) {
@@ -104,6 +111,7 @@ public class PersistentDbStore implements DbStore {
     }
   }
 
+  // TODO fix me
   public HashSet<String> getRange(long start, long end) {
     String sql = "SELECT EXISTS (SELECT * FROM messages WHERE timestamp BETWEEN ? AND ?)";
     try (Connection con = hikariDataSource.getConnection();
@@ -126,21 +134,24 @@ public class PersistentDbStore implements DbStore {
   // TODO: make this more efficient
   @Override
   public Set<RambleMessage.SignedMessage> getAllMessages() {
+    String sql = "SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM messages";
     Set<RambleMessage.SignedMessage> messages = new HashSet<>();
 
     try (Connection con = hikariDataSource.getConnection();
-         PreparedStatement ps = con.prepareStatement("SELECT digest, publickey, timestamp, msg FROM messages")) {
+         PreparedStatement ps = con.prepareStatement(sql)) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           RambleMessage.Message message = RambleMessage.Message.newBuilder()
-                  .setMessageDigest(ByteString.copyFromUtf8(rs.getString(1)))
-                  .setTimestamp(rs.getLong(3))
-                  .setMessage(rs.getString(4))
+                  .setSourceId(rs.getString(1))
+                  .setMessage(rs.getString(2))
+                  .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
+                  .setTimestamp(rs.getLong(4))
                   .build();
 
           messages.add(RambleMessage.SignedMessage.newBuilder()
                   .setMessage(message)
-                  .setPublicKey(ByteString.copyFromUtf8(rs.getString(2)))
+                  .setPublicKey(ByteString.copyFrom(rs.getBytes(5)))
+                  .setSignature(ByteString.copyFrom(rs.getBytes(6)))
                   .build());
         }
       }

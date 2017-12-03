@@ -19,7 +19,7 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
     MessageSyncProtocol.Response.Builder responseBuilder = MessageSyncProtocol.Response.newBuilder();
 
     RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
-            .addAllSignedMessage(dbStore.getAllMessages())
+            .addAllSignedMessage(this.dbStore.getAllMessages())
             .build();
 
     responseBuilder.setSendAllMessage(MessageSyncProtocol.SendAllMessages.newBuilder().setMessages(bulkMessage));

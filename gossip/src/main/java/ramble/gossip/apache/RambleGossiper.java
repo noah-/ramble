@@ -9,7 +9,6 @@ import org.apache.gossip.model.RambleBulkMessage;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class RambleGossiper extends SimpleActiveGossiper {
@@ -27,9 +26,9 @@ public class RambleGossiper extends SimpleActiveGossiper {
   @Override
   public void init() {
     super.init();
-    this.rambleMessageExecutorService.scheduleAtFixedRate(
-            () -> sendRambleMessages(selectPartner(gossipManager.getLiveMembers())), 0,
-            gossipManager.getSettings().getGossipInterval(), TimeUnit.MILLISECONDS);
+//    this.rambleMessageExecutorService.scheduleAtFixedRate(
+//            () -> sendRambleMessages(selectPartner(gossipManager.getLiveMembers())), 0,
+//            gossipManager.getSettings().getGossipInterval(), TimeUnit.MILLISECONDS);
   }
 
   @Override
