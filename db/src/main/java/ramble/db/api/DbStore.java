@@ -4,16 +4,17 @@ import ramble.api.RambleMessage;
 
 import java.util.Set;
 
+
+/**
+ * Interface for storing {@link RambleMessage.SignedMessage}s in a datastore.
+ */
 public interface DbStore {
 
-  /**
-   * TODO need a bulk version of this query so that it can be converted into a more optimal SQL query
-   */
   boolean exists(RambleMessage.SignedMessage message);
 
   void store(RambleMessage.SignedMessage message);
 
-  RambleMessage.SignedMessage get(String id);
+  Set<RambleMessage.SignedMessage> getRange(long startTimestamp, long endTimestamp);
 
   Set<RambleMessage.SignedMessage> getAllMessages();
 }

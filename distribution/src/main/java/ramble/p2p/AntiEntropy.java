@@ -3,6 +3,7 @@ package ramble.p2p;
 import ramble.db.persistent.PersistentDbStore;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class AntiEntropy {
 
@@ -28,7 +29,9 @@ public class AntiEntropy {
         currentTS = current;
         while (current > _lastVerifiedTS) {
             long end = (current / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;
-            HashSet<String> a = dbStore.getRange(end - BLOCK_TIME_PERIOD, end);
+            HashSet<String> a = dbStore.getRange(end - BLOCK_TIME_PERIOD, end).stream().map(
+                    msg -> msg.getMessage().getMessage()).collect(
+                    Collectors.toCollection(HashSet::new));
             // TODO
             // serialize and send to other peer
             // wait to recieve set from other peer

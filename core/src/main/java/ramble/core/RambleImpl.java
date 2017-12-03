@@ -75,7 +75,7 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void post(String message) {
-    LOG.info("Sending message: " + message);
+    LOG.info("Posting message: " + message);
 
     byte[] digest;
     try {

@@ -1,8 +1,10 @@
 package ramble.db.persistent;
 
 import com.google.protobuf.ByteString;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
 
@@ -18,7 +20,9 @@ import java.util.Set;
 
 
 /**
- * TODO need to figure out what the correct primary key is for the messages
+ * Stores data in H2
+ *
+ * @see <a href="http://www.h2database.com/html/main.html">H2 Database</a>
  */
 public class PersistentDbStore implements DbStore {
 
@@ -40,7 +44,7 @@ public class PersistentDbStore implements DbStore {
   }
 
   public void runInitializeScripts() throws SQLException {
-    try (Connection con = hikariDataSource.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = this.hikariDataSource.getConnection(); Statement stmt = con.createStatement()) {
       if (stmt.execute("RUNSCRIPT FROM 'classpath:h2-init.sql'")) {
         stmt.getResultSet().close();
       }
@@ -51,7 +55,7 @@ public class PersistentDbStore implements DbStore {
   public boolean exists(RambleMessage.SignedMessage message) {
     String sql = "SELECT EXISTS (SELECT * FROM messages WHERE sourceid = ? AND messagedigest = ? AND timestamp = ?)";
 
-    try (Connection con = hikariDataSource.getConnection();
+    try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
 
       ps.setString(1, message.getMessage().getSourceId());
@@ -74,7 +78,7 @@ public class PersistentDbStore implements DbStore {
     String sql = "INSERT INTO messages(sourceid, message, messagedigest, timestamp, publickey, signature) " +
             "VALUES (?, ?, ?, ?, ?, ?)";
 
-    try (Connection con = hikariDataSource.getConnection();
+    try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
 
       ps.setString(1, message.getMessage().getSourceId());
@@ -90,54 +94,27 @@ public class PersistentDbStore implements DbStore {
     }
   }
 
-  // TODO fix me
-  // TODO: Convert database object to RambleMessage.SignedMessage, need to look at api.
   @Override
-  public RambleMessage.SignedMessage get(String id) {
-    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE digest = ?)";
-    try (Connection con = hikariDataSource.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql)) {
-      ps.setString(1, id);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          // TODO: Convert database object to RambleMessage.SignedMessage, need to look at api.
-          return null;
-        }
-
-        return null;
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+  public Set<RambleMessage.SignedMessage> getRange(long startTimestamp, long endTimestamp) {
+    return runSelectAllQuery("SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM " +
+            "messages WHERE timestamp BETWEEN ? AND ?)");
   }
 
-  // TODO fix me
-  public HashSet<String> getRange(long start, long end) {
-    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE timestamp BETWEEN ? AND ?)";
-    try (Connection con = hikariDataSource.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql)) {
-      HashSet<String> result = new HashSet<String>();
-      ps.setLong(1, start);
-      ps.setLong(2, end);
-      try (ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
-          result.add(rs.getString(1));
-        }
-
-        return result;
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  // TODO: make this more efficient
+  /**
+   * This implementation isn't particularly efficient since it runs a SQL query to get the contents of an entire table,
+   * a better way would be to use a SQL dump tool. For now this is probably sufficient since it shouldn't be called
+   * often.
+   */
   @Override
   public Set<RambleMessage.SignedMessage> getAllMessages() {
-    String sql = "SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM messages";
+    return runSelectAllQuery("SELECT sourceid, message, messagedigest, timestamp, publickey, signature " +
+            "FROM messages");
+  }
+
+  private Set<RambleMessage.SignedMessage> runSelectAllQuery(String sql) {
     Set<RambleMessage.SignedMessage> messages = new HashSet<>();
 
-    try (Connection con = hikariDataSource.getConnection();
+    try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
