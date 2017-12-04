@@ -9,6 +9,7 @@ import ramble.api.Ramble;
 import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
+import ramble.db.api.DbStore;
 import ramble.gossip.api.GossipPeer;
 import ramble.gossip.api.GossipService;
 import ramble.gossip.core.GossipServiceFactory;
@@ -43,6 +44,7 @@ public class RambleImpl implements Ramble {
   private final PublicKey publicKey;
   private final PrivateKey privateKey;
   private final String id;
+  private final DbStore dbStore;
 
   public RambleImpl(List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort, int messageSyncPort)
           throws UnknownHostException {
@@ -52,6 +54,7 @@ public class RambleImpl implements Ramble {
     this.privateKey = privateKey;
     this.publicKey = publicKey;
     this.id = createId(gossipPort, messageSyncPort);
+    this.dbStore = DbStoreFactory.getDbStore(this.id);
     this.gossipService = GossipServiceFactory.buildGossipService(
             peers.stream().map(GossipPeer::new).collect(Collectors.toList()),
             publicKey,
@@ -60,8 +63,12 @@ public class RambleImpl implements Ramble {
             messageSyncPort,
             this.id);
 
-    MessageSyncService messageSyncService = new MessageSyncService(this.gossipService,
-            DbStoreFactory.getDbStore(this.id), messageSyncPort, this.id);
+    MessageSyncService messageSyncService = new MessageSyncService(
+            this.gossipService,
+            this.dbStore,
+            messageSyncPort,
+            this.id);
+
     services.add(messageSyncService);
 
     this.serviceManager = new ServiceManager(services);
@@ -113,12 +120,23 @@ public class RambleImpl implements Ramble {
     this.serviceManager.stopAsync();
   }
 
-  private static String createId(int gossipPort, int messageSyncPort) throws UnknownHostException {
-    return Joiner.on("-").join(InetAddress.getLocalHost().getHostAddress(), gossipPort, messageSyncPort);
-  }
-
   @Override
   public String getId() {
     return this.id;
+  }
+
+  @Override
+  public Set<RambleMessage.Message> getAllMessages() {
+    return this.dbStore.getAllMessages()
+            .stream()
+            .map(RambleMessage.SignedMessage::getMessage)
+            .collect(Collectors.toCollection(HashSet::new));
+  }
+
+  private static String createId(int gossipPort, int messageSyncPort) throws UnknownHostException {
+    return Joiner.on("-").join(
+            InetAddress.getLocalHost().getHostAddress(),
+            gossipPort,
+            messageSyncPort);
   }
 }

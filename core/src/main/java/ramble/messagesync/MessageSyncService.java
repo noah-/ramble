@@ -85,7 +85,7 @@ public class MessageSyncService extends AbstractScheduledService implements Serv
 
   @Override
   protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(10000, 10000, TimeUnit.MILLISECONDS);
+    return Scheduler.newFixedRateSchedule(10000, 1000, TimeUnit.MILLISECONDS);
   }
 
   private GossipMember getTargetURI(List<GossipMember> peers) {

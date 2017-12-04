@@ -1,5 +1,7 @@
 package ramble.api;
 
+import java.util.Set;
+
 /**
  * Core interface for interacting with RAMBLE. Any application can start and interact with RAMBLE via this interface.
  */
@@ -27,4 +29,6 @@ public interface Ramble {
   void shutdown();
 
   String getId();
+
+  Set<RambleMessage.Message> getAllMessages();
 }
