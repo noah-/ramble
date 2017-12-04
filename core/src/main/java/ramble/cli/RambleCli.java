@@ -12,7 +12,6 @@ import ramble.api.Ramble;
 import ramble.api.RambleMessage;
 import ramble.core.RambleImpl;
 import ramble.crypto.KeyReader;
-import ramble.crypto.KeyServiceException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -46,7 +45,7 @@ public class RambleCli {
   private final File dumpFile;
 
   private RambleCli(String args[])
-          throws InterruptedException, IOException, URISyntaxException, ParseException, KeyServiceException, NoSuchAlgorithmException, InvalidKeySpecException {
+          throws IOException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
 
     // Parse the CLI options
     Options options = new Options();
@@ -160,7 +159,7 @@ public class RambleCli {
   }
 
   public static void main(String args[])
-          throws InterruptedException, IOException, URISyntaxException, ParseException, KeyServiceException, NoSuchAlgorithmException, InvalidKeySpecException {
+          throws InterruptedException, IOException, URISyntaxException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
     new RambleCli(args).run();
   }
 }
