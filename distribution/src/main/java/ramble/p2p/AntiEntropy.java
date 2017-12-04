@@ -1,6 +1,6 @@
 package ramble.p2p;
 
-import ramble.db.persistent.PersistentDbStore;
+import ramble.db.h2.H2DbStore;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -10,7 +10,7 @@ public class AntiEntropy {
     private static long _lastVerifiedTS;
     private long currentTS;
     private final long BLOCK_TIME_PERIOD = 300000; // 5 mins
-    private final PersistentDbStore dbStore = PersistentDbStore.getOrCreateStore("anti-entropy");
+    private final H2DbStore dbStore = H2DbStore.getOrCreateStore("anti-entropy");
     private HashMap<Long,HashSet<String>> blockCache = new HashMap<>();
 
     public AntiEntropy(long ts) {
