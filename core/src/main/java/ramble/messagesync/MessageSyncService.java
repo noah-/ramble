@@ -7,8 +7,8 @@ import ramble.api.RambleMessage;
 import ramble.core.RambleImpl;
 import ramble.crypto.MessageSigner;
 import ramble.db.api.DbStore;
-import ramble.gossip.api.GossipMember;
-import ramble.gossip.api.GossipService;
+import ramble.api.RambleMember;
+import ramble.api.MembershipService;
 import ramble.messagesync.api.MessageSyncClient;
 import ramble.messagesync.api.MessageSyncServer;
 
@@ -25,13 +25,13 @@ public class MessageSyncService extends AbstractScheduledService implements Serv
 
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
 
-  private final GossipService gossipService;
+  private final MembershipService gossipService;
   private final DbStore dbStore;
   private final MessageSyncServer messageSyncServer;
   private final String id;
   private final Random rand;
 
-  public MessageSyncService(GossipService gossipService, DbStore dbStore, int port, String id) {
+  public MessageSyncService(MembershipService gossipService, DbStore dbStore, int port, String id) {
     this.gossipService = gossipService;
     this.dbStore = dbStore;
     this.messageSyncServer = MessageSyncServerFactory.getMessageSyncServer(dbStore, port);
@@ -53,9 +53,9 @@ public class MessageSyncService extends AbstractScheduledService implements Serv
   protected void runOneIteration() throws InterruptedException {
     LOG.info("[id = " + this.id + "] Running message sync protocol");
 
-    List<GossipMember> peers = this.gossipService.getMembers();
+    List<RambleMember> peers = this.gossipService.getMembers();
     if (!peers.isEmpty()) {
-      GossipMember target = getTargetURI(peers);
+      RambleMember target = getTargetURI(peers);
 
       MessageSyncClient client = MessageSyncClientFactory.getMessageSyncClient(target.getUri().getHost(),
               target.getMessageSyncPort());
@@ -85,10 +85,10 @@ public class MessageSyncService extends AbstractScheduledService implements Serv
 
   @Override
   protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(10000, 1000, TimeUnit.MILLISECONDS);
+    return Scheduler.newFixedRateSchedule(1500, 1000, TimeUnit.MILLISECONDS);
   }
 
-  private GossipMember getTargetURI(List<GossipMember> peers) {
+  private RambleMember getTargetURI(List<RambleMember> peers) {
     return peers.get(this.rand.nextInt(peers.size()));
   }
 }

@@ -1,5 +1,6 @@
 package ramble.api;
 
+import java.net.URI;
 import java.util.Set;
 
 /**
@@ -31,4 +32,6 @@ public interface Ramble {
   String getId();
 
   Set<RambleMessage.Message> getAllMessages();
+
+  Set<URI> getMembers();
 }

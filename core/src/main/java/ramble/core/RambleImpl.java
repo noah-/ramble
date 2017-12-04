@@ -10,11 +10,12 @@ import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.db.api.DbStore;
+import ramble.api.RambleMember;
 import ramble.gossip.api.GossipPeer;
-import ramble.gossip.api.GossipService;
-import ramble.gossip.core.GossipServiceFactory;
+import ramble.api.MembershipService;
 import ramble.messagesync.MessageSyncService;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -32,14 +33,14 @@ import java.util.stream.Collectors;
 
 
 /**
- * Main implementation of {@link Ramble}. Currently just runs a {@link GossipService}. More RAMBLE-specific logic can
+ * Main implementation of {@link Ramble}. Currently just runs a {@link MembershipService}. More RAMBLE-specific logic can
  * be added here.
  */
 public class RambleImpl implements Ramble {
 
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
 
-  private final GossipService gossipService;
+  private final MembershipService membershipService;
   private final ServiceManager serviceManager;
   private final PublicKey publicKey;
   private final PrivateKey privateKey;
@@ -47,7 +48,7 @@ public class RambleImpl implements Ramble {
   private final DbStore dbStore;
 
   public RambleImpl(List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort, int messageSyncPort)
-          throws UnknownHostException {
+          throws IOException {
 
     Set<Service> services = new HashSet<>();
 
@@ -55,7 +56,7 @@ public class RambleImpl implements Ramble {
     this.publicKey = publicKey;
     this.id = createId(gossipPort, messageSyncPort);
     this.dbStore = DbStoreFactory.getDbStore(this.id);
-    this.gossipService = GossipServiceFactory.buildGossipService(
+    this.membershipService = MembershipServiceFactory.buildMembershipService(
             peers.stream().map(GossipPeer::new).collect(Collectors.toList()),
             publicKey,
             privateKey,
@@ -64,7 +65,7 @@ public class RambleImpl implements Ramble {
             this.id);
 
     MessageSyncService messageSyncService = new MessageSyncService(
-            this.gossipService,
+            this.membershipService,
             this.dbStore,
             messageSyncPort,
             this.id);
@@ -76,7 +77,7 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void start() {
-    this.gossipService.start();
+    this.membershipService.start();
     this.serviceManager.startAsync();
   }
 
@@ -116,7 +117,7 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void shutdown() {
-    this.gossipService.shutdown();
+    this.membershipService.shutdown();
     this.serviceManager.stopAsync();
   }
 
@@ -127,10 +128,20 @@ public class RambleImpl implements Ramble {
 
   @Override
   public Set<RambleMessage.Message> getAllMessages() {
-    return this.dbStore.getAllMessages()
+    return this.dbStore
+            .getAllMessages()
             .stream()
             .map(RambleMessage.SignedMessage::getMessage)
-            .collect(Collectors.toCollection(HashSet::new));
+            .collect(Collectors.toSet());
+  }
+
+  @Override
+  public Set<URI> getMembers() {
+    return this.membershipService
+            .getMembers()
+            .stream()
+            .map(RambleMember::getUri)
+            .collect(Collectors.toSet());
   }
 
   private static String createId(int gossipPort, int messageSyncPort) throws UnknownHostException {

@@ -3,6 +3,7 @@ package ramble.cluster;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import ramble.api.Ramble;
@@ -75,13 +76,18 @@ public class RambleCluster {
 
     // Start each instance
     clients.forEach(Ramble::start);
-    Thread.sleep(5000);
+
+    // Wait for them to discover each other
+    Thread.sleep(1000);
+
+    // Validate each member has seen all other members
+    clients.forEach(mem -> Assert.assertEquals(mem.getMembers().size(), 4));
 
     // Post messages every 5 seconds
     for (int i = 0; i < 3; i++) {
       clients.forEach(gossipService -> gossipService.post(getRandomLoremIpsum(loremIpsum)));
 
-      Thread.sleep(5000);
+      Thread.sleep(1000);
     }
 
     // Wait for everything to converge
@@ -91,11 +97,7 @@ public class RambleCluster {
     clients.forEach(Ramble::shutdown);
 
     // Make sure each instance has 15 messages in its db
-    clients.forEach(client -> {
-      if (client.getAllMessages().size() != 15) {
-        throw new RuntimeException();
-      }
-    });
+    clients.forEach(client -> Assert.assertEquals(client.getAllMessages().size(), 15));
   }
 
   private String getRandomLoremIpsum(List<String> loremIpsum) {

@@ -51,7 +51,9 @@ public class NettyMessageSyncClient implements MessageSyncClient {
 
   @Override
   public void disconnect() {
-    this.channel.close();
+    if (this.channel != null) {
+      this.channel.close();
+    }
     this.group.shutdownGracefully();
   }
 }
