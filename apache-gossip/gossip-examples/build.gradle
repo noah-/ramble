@@ -1,5 +1,0 @@
-dependencies {
-    compile project(':apache-gossip:gossip-base')
-    compile project(':apache-gossip:gossip-protocol-jackson')
-    compile project(':apache-gossip:gossip-transport-udp')
-}
