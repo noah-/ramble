@@ -1,4 +1,4 @@
-package ramble.gossip.apache;
+package ramble.membership;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.gossip.GossipSettings;
@@ -7,11 +7,8 @@ import org.apache.gossip.RemoteMember;
 import org.apache.gossip.manager.GossipManager;
 import org.apache.gossip.manager.GossipManagerBuilder;
 import org.apache.log4j.Logger;
-
-import ramble.crypto.URIUtils;
-import ramble.api.RambleMember;
-import ramble.gossip.api.GossipPeer;
 import ramble.api.MembershipService;
+import ramble.api.RambleMember;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,11 +38,11 @@ public class ApacheGossipMembershipService implements MembershipService {
   private final GossipManager gossipManager;
 
   @SuppressWarnings("unchecked")
-  public ApacheGossipMembershipService(List<GossipPeer> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort,
-                                       int messageSyncPort, String id) throws IOException {
+  public ApacheGossipMembershipService(List<URI> peers, PublicKey publicKey, PrivateKey privateKey,
+                                       int gossipPort, int messageSyncPort, String id) throws IOException {
 
     List<Member> gossipMembers = peers.stream()
-            .map(peer -> new RemoteMember(GOSSIP_CLUSTER_NAME, peer.getPeerURI(), URIUtils.uriToId(peer.getPeerURI())))
+            .map(uri -> new RemoteMember(GOSSIP_CLUSTER_NAME, uri, uriToGossipId(uri)))
             .collect(Collectors.toList());
 
     URI uri = URI.create("udp://127.0.0.1:" + gossipPort);

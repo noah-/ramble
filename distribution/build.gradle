@@ -1,9 +1,10 @@
 apply plugin: 'java'
 
 dependencies {
+    compile project(":api")
     compile project(":core")
     compile project(":crypto")
-    compile project(":gossip")
+    compile project(":db")
 }
 
 task buildDistributionTar(type: Tar, overwrite: true) {

@@ -4,8 +4,7 @@ def modules = ['apache-gossip',
                'core',
                'crypto',
                'db',
-               'distribution',
-               'gossip']
+               'distribution']
 
 modules.each { module ->
     include "${module}"

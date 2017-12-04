@@ -2,9 +2,14 @@ apply plugin: 'java'
 
 dependencies {
     compile project(":api")
-    compile project(":gossip")
+    compile project(':apache-gossip:gossip-base')
+    compile project(':apache-gossip:gossip-protocol-jackson')
+    compile project(':apache-gossip:gossip-transport-udp')
+    compile project(':crypto')
+    compile project(':db')
     compile 'commons-cli:commons-cli:1.2'
     compile 'io.netty:netty-all:4.1.17.Final'
+    compile 'com.google.guava:guava:23.0'
 }
 
 ext.classification="library"

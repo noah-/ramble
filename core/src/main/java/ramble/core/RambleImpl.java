@@ -5,14 +5,14 @@ import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import com.google.protobuf.ByteString;
 import org.apache.log4j.Logger;
+import ramble.api.MembershipService;
 import ramble.api.Ramble;
+import ramble.api.RambleMember;
 import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.db.api.DbStore;
-import ramble.api.RambleMember;
-import ramble.gossip.api.GossipPeer;
-import ramble.api.MembershipService;
+import ramble.membership.MembershipServiceFactory;
 import ramble.messagesync.MessageSyncService;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class RambleImpl implements Ramble {
     this.id = createId(gossipPort, messageSyncPort);
     this.dbStore = DbStoreFactory.getDbStore(this.id);
     this.membershipService = MembershipServiceFactory.buildMembershipService(
-            peers.stream().map(GossipPeer::new).collect(Collectors.toList()),
+            peers,
             publicKey,
             privateKey,
             gossipPort,

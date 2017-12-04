@@ -1,10 +1,9 @@
-package ramble.core;
+package ramble.membership;
 
-import ramble.gossip.apache.ApacheGossipMembershipService;
-import ramble.gossip.api.GossipPeer;
 import ramble.api.MembershipService;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 public class MembershipServiceFactory {
 
-  public static MembershipService buildMembershipService(List<GossipPeer> peers, PublicKey publicKey, PrivateKey privateKey,
+  public static MembershipService buildMembershipService(List<URI> peers, PublicKey publicKey, PrivateKey privateKey,
                                                          int gossipPort, int messageSyncPort, String id) throws IOException {
     return new ApacheGossipMembershipService(peers, publicKey, privateKey, gossipPort, messageSyncPort, id);
   }
