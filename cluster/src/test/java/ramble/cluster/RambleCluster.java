@@ -7,9 +7,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import ramble.api.Ramble;
-import ramble.cluster.crypto.JavaKeyGenerator;
+import ramble.crypto.JavaKeyGenerator;
 import ramble.core.RambleImpl;
-import ramble.db.persistent.PersistentDbStore;
+import ramble.db.h2.H2DbStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class RambleCluster {
     // Setup the db for each instance
     clients.forEach(client -> {
       try {
-        PersistentDbStore.getOrCreateStore(client.getId()).runInitializeScripts();
+        H2DbStore.getOrCreateStore(client.getId()).runInitializeScripts();
       } catch (SQLException e) {
         e.printStackTrace();
       }

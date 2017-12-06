@@ -1,6 +1,6 @@
 package ramble.p2p;
 
-import ramble.db.persistent.PersistentDbStore;
+import ramble.db.h2.H2DbStore;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicLong;
@@ -11,7 +11,7 @@ public class AntiEntropy implements Runnable {
     private static final long BLOCK_TIME_PERIOD = 300000; // 5 mins
     private static AtomicLong _lastVerifiedTS;
 
-    private final PersistentDbStore dbStore;
+    private final H2DbStore dbStore;
     private long currentTS;
     private HashMap<Long,HashSet<String>> blockCache = new HashMap<>();
     private MessageService ms;
@@ -22,7 +22,7 @@ public class AntiEntropy implements Runnable {
 
         this.ms = ms;
         currentTS = (nts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;;
-        dbStore = PersistentDbStore.getOrCreateStore(db);
+        dbStore = H2DbStore.getOrCreateStore(db);
     }
 
     public void computeComplement(HashSet<String> a, HashSet<String> b) {

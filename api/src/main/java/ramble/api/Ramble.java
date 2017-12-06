@@ -2,6 +2,7 @@ package ramble.api;
 
 import java.net.URI;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Core interface for interacting with RAMBLE. Any application can start and interact with RAMBLE via this interface.
@@ -23,6 +24,8 @@ public interface Ramble {
 //  void getLatestMessage();
 //
 //  void importKey(String key);
+
+  BlockingQueue<RambleMessage.Message> listen();
 
   /**
    * Shutdown RAMBLE

@@ -19,6 +19,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class MessageSyncService extends AbstractScheduledService implements Service {
@@ -30,13 +31,16 @@ public class MessageSyncService extends AbstractScheduledService implements Serv
   private final MessageSyncServer messageSyncServer;
   private final String id;
   private final Random rand;
+  private final BlockingQueue<RambleMessage.Message> messageQueue;
 
-  public MessageSyncService(MembershipService gossipService, DbStore dbStore, int port, String id) {
+  public MessageSyncService(MembershipService gossipService, DbStore dbStore, int port, String id,
+                            BlockingQueue<RambleMessage.Message> messageQueue) {
     this.gossipService = gossipService;
     this.dbStore = dbStore;
     this.messageSyncServer = MessageSyncServerFactory.getMessageSyncServer(dbStore, port);
     this.id = id;
     this.rand = new Random();
+    this.messageQueue = messageQueue;
   }
 
   @Override
@@ -72,6 +76,7 @@ public class MessageSyncService extends AbstractScheduledService implements Serv
               LOG.info("[id = " + this.id + "] Message-sync got new message from " +
                       signedMessage.getMessage().getSourceId() + " - " + signedMessage.getMessage().getMessage());
               this.dbStore.store(signedMessage);
+              this.messageQueue.put(signedMessage.getMessage());
             }
           }
         }

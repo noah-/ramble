@@ -3,7 +3,7 @@ package ramble.messagesync.netty;
 import org.apache.log4j.Logger;
 import ramble.api.RambleMessage;
 import ramble.db.DbStoreFactory;
-import ramble.db.persistent.PersistentDbStore;
+import ramble.db.h2.H2DbStore;
 import ramble.messagesync.MessageSyncClientFactory;
 import ramble.messagesync.MessageSyncServerFactory;
 import ramble.messagesync.api.MessageSyncClient;
@@ -20,7 +20,7 @@ public class NettyClientServerTest {
 
   public static void main(String args[]) throws InterruptedException, ExecutionException, SQLException {
 
-    PersistentDbStore.getOrCreateStore("netty-test").runInitializeScripts();
+    H2DbStore.getOrCreateStore("netty-test").runInitializeScripts();
 
     DbStoreFactory.getDbStore("netty-test").store(RambleMessage.SignedMessage.newBuilder().setMessage(
             RambleMessage.Message.newBuilder().setMessage("hello")).build());

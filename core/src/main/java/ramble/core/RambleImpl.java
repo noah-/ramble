@@ -1,10 +1,10 @@
 package ramble.core;
 
-import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import com.google.protobuf.ByteString;
 import org.apache.log4j.Logger;
+import ramble.api.IdGenerator;
 import ramble.api.MembershipService;
 import ramble.api.Ramble;
 import ramble.api.RambleMember;
@@ -16,9 +16,7 @@ import ramble.membership.MembershipServiceFactory;
 import ramble.messagesync.MessageSyncService;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -29,12 +27,14 @@ import java.security.SignatureException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
 
 
 /**
- * Main implementation of {@link Ramble}. Currently just runs a {@link MembershipService}. More RAMBLE-specific logic can
- * be added here.
+ * Main implementation of {@link Ramble}. Currently just runs a {@link MembershipService}. More RAMBLE-specific logic
+ * can be added here.
  */
 public class RambleImpl implements Ramble {
 
@@ -46,6 +46,7 @@ public class RambleImpl implements Ramble {
   private final PrivateKey privateKey;
   private final String id;
   private final DbStore dbStore;
+  private final BlockingQueue<RambleMessage.Message> messageQueue;
 
   public RambleImpl(List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort, int messageSyncPort)
           throws IOException {
@@ -54,7 +55,7 @@ public class RambleImpl implements Ramble {
 
     this.privateKey = privateKey;
     this.publicKey = publicKey;
-    this.id = createId(gossipPort, messageSyncPort);
+    this.id = IdGenerator.createId(gossipPort, messageSyncPort);
     this.dbStore = DbStoreFactory.getDbStore(this.id);
     this.membershipService = MembershipServiceFactory.buildMembershipService(
             peers,
@@ -63,12 +64,14 @@ public class RambleImpl implements Ramble {
             gossipPort,
             messageSyncPort,
             this.id);
+    this.messageQueue = new ArrayBlockingQueue<>(1024);
 
     MessageSyncService messageSyncService = new MessageSyncService(
             this.membershipService,
             this.dbStore,
             messageSyncPort,
-            this.id);
+            this.id,
+            this.messageQueue);
 
     services.add(messageSyncService);
 
@@ -113,6 +116,17 @@ public class RambleImpl implements Ramble {
     }
 
     DbStoreFactory.getDbStore(this.id).store(signedMessage);
+
+    try {
+      this.messageQueue.put(signedMessage.getMessage());
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public BlockingQueue<RambleMessage.Message> listen() {
+    return this.messageQueue;
   }
 
   @Override
@@ -142,12 +156,5 @@ public class RambleImpl implements Ramble {
             .stream()
             .map(RambleMember::getUri)
             .collect(Collectors.toSet());
-  }
-
-  private static String createId(int gossipPort, int messageSyncPort) throws UnknownHostException {
-    return Joiner.on("-").join(
-            InetAddress.getLocalHost().getHostAddress(),
-            gossipPort,
-            messageSyncPort);
   }
 }

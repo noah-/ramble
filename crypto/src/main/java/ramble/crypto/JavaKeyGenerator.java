@@ -1,4 +1,4 @@
-package ramble.cluster.crypto;
+package ramble.crypto;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -7,6 +7,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 
+/**
+ * Utility class for generating Java key-pairs
+ */
 public class JavaKeyGenerator {
 
   private final KeyPairGenerator keyGen;

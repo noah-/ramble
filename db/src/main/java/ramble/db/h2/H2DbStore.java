@@ -1,4 +1,4 @@
-package ramble.db.persistent;
+package ramble.db.h2;
 
 import com.google.protobuf.ByteString;
 
@@ -24,13 +24,13 @@ import java.util.Set;
  *
  * @see <a href="http://www.h2database.com/html/main.html">H2 Database</a>
  */
-public class PersistentDbStore implements DbStore {
+public class H2DbStore implements DbStore {
 
-  private static final Map<String, PersistentDbStore> CACHE = new HashMap<>();
+  private static final Map<String, H2DbStore> CACHE = new HashMap<>();
 
   private final HikariDataSource hikariDataSource;
 
-  private PersistentDbStore(String id) {
+  private H2DbStore(String id) {
     HikariConfig hikariConfig = new HikariConfig();
     hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
     hikariConfig.addDataSourceProperty("URL", "jdbc:h2:" + getDbFromId(id));
@@ -39,8 +39,8 @@ public class PersistentDbStore implements DbStore {
     this.hikariDataSource = new HikariDataSource(hikariConfig);
   }
 
-  public static PersistentDbStore getOrCreateStore(String id) {
-    return CACHE.computeIfAbsent(id, PersistentDbStore::new);
+  public static H2DbStore getOrCreateStore(String id) {
+    return CACHE.computeIfAbsent(id, H2DbStore::new);
   }
 
   public void runInitializeScripts() throws SQLException {

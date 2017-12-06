@@ -2,7 +2,7 @@ package ramble.local.antientropy;
 
 import ramble.api.RambleMessage;
 import ramble.db.DbStoreFactory;
-import ramble.db.persistent.PersistentDbStore;
+import ramble.db.h2.H2DbStore;
 import ramble.p2p.AntiEntropy;
 import ramble.p2p.MessageService;
 
@@ -12,8 +12,8 @@ import java.util.concurrent.ExecutionException;
 public class AntiEntropyTest {
     public static void main(String args[]) throws InterruptedException, ExecutionException, SQLException {
 
-        PersistentDbStore.getOrCreateStore("ae-test0").runInitializeScripts();
-        PersistentDbStore.getOrCreateStore("ae-test1").runInitializeScripts();
+        H2DbStore.getOrCreateStore("ae-test0").runInitializeScripts();
+        H2DbStore.getOrCreateStore("ae-test1").runInitializeScripts();
 
         DbStoreFactory.getDbStore("ae-test0").store(RambleMessage.SignedMessage.newBuilder().setMessage(
                 RambleMessage.Message.newBuilder().setMessage("hello")).build());
