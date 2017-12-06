@@ -3,18 +3,26 @@ package ramble.p2p;
 import ramble.db.persistent.PersistentDbStore;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class AntiEntropy {
+public class AntiEntropy implements Runnable {
 
-    private static long _lastVerifiedTS;
+    private static final long BLOCK_TIME_PERIOD = 300000; // 5 mins
+    private static AtomicLong _lastVerifiedTS;
+
+    private final PersistentDbStore dbStore;
     private long currentTS;
-    private final long BLOCK_TIME_PERIOD = 300000; // 5 mins
-    private final PersistentDbStore dbStore = PersistentDbStore.getOrCreateStore("anti-entropy");
     private HashMap<Long,HashSet<String>> blockCache = new HashMap<>();
+    private MessageService ms;
 
-    public AntiEntropy(long ts) {
-        _lastVerifiedTS = ts;
+    public AntiEntropy(MessageService ms, String db, long ts, long nts) {
+        if (_lastVerifiedTS.get() < ts)
+            _lastVerifiedTS.set(ts);
+
+        this.ms = ms;
+        currentTS = (nts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;;
+        dbStore = PersistentDbStore.getOrCreateStore(db);
     }
 
     public void computeComplement(HashSet<String> a, HashSet<String> b) {
@@ -25,36 +33,49 @@ public class AntiEntropy {
         }
     }
 
-    public void runAntiEntropy(long current) {
-        currentTS = current;
-        while (current > _lastVerifiedTS) {
-            long end = (current / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;
-            HashSet<String> a = dbStore.getRange(end - BLOCK_TIME_PERIOD, end).stream().map(
-                    msg -> msg.getMessage().getMessage()).collect(
-                    Collectors.toCollection(HashSet::new));
-            // TODO
-            // serialize and send to other peer
-            // wait to recieve set from other peer
-            HashSet<String> b = new HashSet<String>(); // placeholder for receive set
+    public HashSet<String> getDigestBlock(long ts) {
+        return dbStore.getRange(ts - BLOCK_TIME_PERIOD, ts).stream().map(
+                msg -> msg.getMessage().getMessage()).collect(
+                Collectors.toCollection(HashSet::new));
+    }
+
+    public void run() {
+        long current = currentTS;
+
+        while (current > _lastVerifiedTS.get()) {
+            HashSet<String> a = getDigestBlock(current);
+            ms.sendBlock(a);
+            HashSet<String> b = null;
+            try {
+                b = ms.getBlock();
+            } catch (InterruptedException e)
+            {}
+
             computeComplement(a, b);
 
-            if (blockCache.containsKey(end)) {
-                blockCache.get(end).addAll(b);
+            if (blockCache.containsKey(current)) {
+                blockCache.get(current).addAll(b);
             } else {
-                blockCache.put(end, b);
+                blockCache.put(current, b);
             }
+
+            current -= BLOCK_TIME_PERIOD;
         }
     }
 
     public void flushCache(){
+        System.out.println("Verified TS Before: " + _lastVerifiedTS.get());
+
         for (long k : blockCache.keySet()) {
             HashSet<String> hs = blockCache.get(k);
             // TODO
             // request messages with the following digests in hs
             // save them to database
+            System.out.println(hs.toArray().toString());
         }
 
-        _lastVerifiedTS = currentTS;
+        _lastVerifiedTS.set(currentTS);
+        System.out.println("Verified TS After: " + _lastVerifiedTS.get());
         blockCache.clear();
     }
 
