@@ -13,12 +13,17 @@ RUN apt-get -y install openjdk-8-jdk
 # Build ramble.
 RUN ./gradlew clean build
 RUN tar -xvf ramble-distribution*.gz
+RUN apt-get -y install inotify-tools
+RUN apt-get -y install iproute2
+RUN apt-get -y install iputils-ping
+RUN apt-get -y install net-tools
+
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
 # Define environment variable
-ENV NAME World
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 # Run app.py when the container launches
 # TODO(JK), add a wrapper for the cli.
