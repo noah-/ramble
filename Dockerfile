@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/openjdk/
-FROM  openjdk:alpine
+FROM ubuntu
 
 # Copy file to ramble dir.
 COPY . /usr/src/ramble
@@ -8,8 +8,8 @@ COPY . /usr/src/ramble
 WORKDIR /usr/src/ramble
 
 # Install bash.
-RUN apk update
-RUN apk add bash bash-doc bash-completion
+RUN apt-get update
+RUN apt-get -y install openjdk-8-jdk
 # Build ramble.
 RUN ./gradlew clean build
 RUN tar -xvf ramble-distribution*.gz
