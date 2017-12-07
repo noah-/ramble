@@ -1,6 +1,7 @@
 package ramble.membership;
 
 import ramble.api.MembershipService;
+import ramble.membership.gossip.ApacheGossipMembershipService;
 
 import java.io.IOException;
 import java.net.URI;
