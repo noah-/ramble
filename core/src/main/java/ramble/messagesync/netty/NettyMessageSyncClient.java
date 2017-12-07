@@ -1,5 +1,6 @@
 package ramble.messagesync.netty;
 
+import com.google.protobuf.ByteString;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -12,6 +13,7 @@ import ramble.messagesync.api.MessageSyncClient;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class NettyMessageSyncClient implements MessageSyncClient {
 
@@ -36,17 +38,36 @@ public class NettyMessageSyncClient implements MessageSyncClient {
             .channel(NioSocketChannel.class)
             .handler(new NettyMessageSyncClientInitializer());
 
+    LOG.info("Netty client connecting to host " + this.host + " port " + this.port);
     this.channel = bootstrap.connect(this.host, this.port).sync().channel();
   }
 
   @Override
   public Set<RambleMessage.SignedMessage> syncMessages() {
-    LOG.info("Netty client connecting to host " + this.host + " port " + this.port);
-
     NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
     MessageSyncProtocol.Response resp = handle.sendRequest(MessageSyncProtocol.Request.newBuilder().setGetAllMessages(
             MessageSyncProtocol.GetAllMessages.newBuilder()).build());
-    return new HashSet<>(resp.getSendAllMessage().getMessages().getSignedMessageList());
+    return new HashSet<>(resp.getSendMessage().getMessages().getSignedMessageList());
+  }
+
+  /**
+   * Get a {@link Set} of {@link RambleMessage.SignedMessage}s from the remote server that matches the specified
+   * {@link Set} of message digests.
+   */
+  Set<RambleMessage.SignedMessage> getMessages(Set<byte[]> messageDigests) {
+    NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
+
+    Set<ByteString> messageByteStrings = messageDigests.stream().map(ByteString::copyFrom).collect(Collectors.toSet());
+
+    MessageSyncProtocol.GetMessages getMessagesRequest = MessageSyncProtocol.GetMessages.newBuilder()
+            .addAllMessageDigest(messageByteStrings)
+            .build();
+
+    MessageSyncProtocol.Request request = MessageSyncProtocol.Request.newBuilder()
+            .setGetMessages(getMessagesRequest)
+            .build();
+
+    return new HashSet<>(handle.sendRequest(request).getSendMessage().getMessages().getSignedMessageList());
   }
 
   @Override
