@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class AntiEntropy implements Runnable {
+public class AntiEntropy {
 
     private static final long BLOCK_TIME_PERIOD = 300000; // 5 mins
-    private static AtomicLong _lastVerifiedTS;
+    private static AtomicLong _lastVerifiedTS = new AtomicLong(0);
 
     private final H2DbStore dbStore;
     private long currentTS;
@@ -44,6 +44,14 @@ public class AntiEntropy implements Runnable {
 
         while (current > _lastVerifiedTS.get()) {
             HashSet<String> a = getDigestBlock(current);
+
+            HashSet<String> copy = new HashSet<String>();
+            for (String s : a) {
+                copy.add(s);
+                System.out.println(s);
+            }
+            a = copy;
+
             ms.sendBlock(a);
             HashSet<String> b = null;
             try {
@@ -71,7 +79,8 @@ public class AntiEntropy implements Runnable {
             // TODO
             // request messages with the following digests in hs
             // save them to database
-            System.out.println(hs.toArray().toString());
+            for (String s : hs)
+                System.out.println(s);
         }
 
         _lastVerifiedTS.set(currentTS);

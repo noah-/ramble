@@ -75,8 +75,7 @@ public class H2DbStore implements DbStore {
 
   @Override
   public void store(RambleMessage.SignedMessage message) {
-    String sql = "INSERT INTO messages(sourceid, message, messagedigest, timestamp, publickey, signature) " +
-            "VALUES (?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO messages(sourceid, message, messagedigest, timestamp, publickey, signature) VALUES (?, ?, ?, ?, ?, ?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -97,7 +96,7 @@ public class H2DbStore implements DbStore {
   @Override
   public Set<RambleMessage.SignedMessage> getRange(long startTimestamp, long endTimestamp) {
     return runSelectAllQuery("SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM " +
-            "messages WHERE timestamp BETWEEN ? AND ?)");
+            "messages WHERE timestamp BETWEEN " + startTimestamp + " AND " +  endTimestamp);
   }
 
   /**
