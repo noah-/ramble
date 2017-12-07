@@ -6,21 +6,28 @@ public class MessageService {
     public static HashSet<String> hs0 = null;
     public static HashSet<String> hs1 = null;
 
-    int id;
+    private int id;
 
     public MessageService(int id) {
         this.id = id;
     }
 
     public void sendBlock(HashSet<String> hs) {
+        HashSet<String> copy = new HashSet<String>();
+
+        for (String s : hs) {
+            copy.add(s);
+        }
+
         if (id == 0)
-            hs0 = hs;
+            hs0 = copy;
         else
-            hs1 = hs;
+            hs1 = copy;
     }
 
     public HashSet<String> getBlock() throws InterruptedException{
         HashSet<String> hs;
+        HashSet<String> copy = new HashSet<String>();
 
         if (id == 0)
             hs = hs1;
@@ -31,6 +38,10 @@ public class MessageService {
             Thread.sleep(10);
         }
 
-        return hs;
+        for (String s : hs) {
+            copy.add(s);
+        }
+
+        return copy;
     }
 }
