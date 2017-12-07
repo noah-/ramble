@@ -1,13 +1,19 @@
 package ramble.messagesync.netty;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.log4j.Logger;
 import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
+import ramble.crypto.MessageSigner;
 import ramble.db.api.DbStore;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,10 +36,25 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
       case GETMESSAGES:
         ctx.write(handleGetMessagesRequest(msg.getGetMessages()));
         break;
+      case SENDMESSAGES:
+        ctx.write(handleSendMessagesRequest(msg.getSendMessages()));
+        break;
       case REQUESTTYPE_NOT_SET:
         LOG.error("Got a message with an invalid request type, dropping message");
         break;
     }
+  }
+
+  private Empty handleSendMessagesRequest(MessageSyncProtocol.SendMessages sendMessages) {
+    try {
+      // Verify messages have valid signatures and store them in the DB
+      if (MessageSigner.verify(sendMessages.getMessages().getSignedMessageList())) {
+        this.dbStore.store(sendMessages.getMessages());
+      }
+    } catch (InvalidKeySpecException | NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+      LOG.error("Error while verifying signatures for messages:\n" + sendMessages.getMessages(), e);
+    }
+    return Empty.getDefaultInstance();
   }
 
   private MessageSyncProtocol.Response handleGetMessagesRequest(MessageSyncProtocol.GetMessages getMessagesRequest) {

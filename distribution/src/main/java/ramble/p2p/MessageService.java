@@ -12,14 +12,14 @@ public class MessageService {
         this.id = id;
     }
 
-    public void sendBlock(HashSet<String> hs) {
+    public void sendBlock(HashSet<String> hs) { // integrate this directly with netty
         if (id == 0)
             hs0 = hs;
         else
             hs1 = hs;
     }
 
-    public HashSet<String> getBlock() throws InterruptedException{
+    public HashSet<String> getBlock() throws InterruptedException{ // same here - any paraeter for connection peer uri
         HashSet<String> hs;
 
         if (id == 0)

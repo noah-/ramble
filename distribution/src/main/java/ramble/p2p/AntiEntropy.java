@@ -70,7 +70,7 @@ public class AntiEntropy {
         }
     }
 
-    public void flushCache(){
+    public void flushCache(){ // blocking queue
         for (long k : blockCache.keySet()) {
             HashSet<String> hs = blockCache.get(k);
             // TODO

@@ -70,6 +70,24 @@ public class NettyMessageSyncClient implements MessageSyncClient {
     return new HashSet<>(handle.sendRequest(request).getSendMessage().getMessages().getSignedMessageList());
   }
 
+  void sendMessage(Set<RambleMessage.SignedMessage> message) {
+    NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
+
+    RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
+            .addAllSignedMessage(message)
+            .build();
+
+    MessageSyncProtocol.SendMessages sendMessagesRequest = MessageSyncProtocol.SendMessages.newBuilder()
+            .setMessages(bulkMessage)
+            .build();
+
+    MessageSyncProtocol.Request request = MessageSyncProtocol.Request.newBuilder()
+            .setSendMessages(sendMessagesRequest)
+            .build();
+
+    handle.sendRequest(request);
+  }
+
   @Override
   public void disconnect() {
     if (this.channel != null) {

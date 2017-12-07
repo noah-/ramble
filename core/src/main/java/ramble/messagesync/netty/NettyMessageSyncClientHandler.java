@@ -13,6 +13,7 @@ public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<M
   private Channel channel;
   private BlockingQueue<MessageSyncProtocol.Response> resps = new LinkedBlockingQueue<>();
 
+  // Need to re-write this method and re-implement channelRead0
   MessageSyncProtocol.Response sendRequest(MessageSyncProtocol.Request request) {
     // Send request
     this.channel.writeAndFlush(request);
@@ -22,7 +23,7 @@ public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<M
     MessageSyncProtocol.Response resp;
     while (true) {
       try {
-        resp = this.resps.take();
+        resp = this.resps.take(); // need an ACK
         break;
       } catch (InterruptedException ignore) {
         interrupted = true;
