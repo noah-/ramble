@@ -3,6 +3,7 @@ package ramble.p2p;
 import ramble.db.h2.H2DbStore;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -26,9 +27,11 @@ public class AntiEntropy {
     }
 
     public void computeComplement(HashSet<String> a, HashSet<String> b) {
-        for (String s : b) {
-            if (a.remove(s)) {
-                b.remove(s);
+        Iterator<String> iterator = b.iterator();
+        while (iterator.hasNext()) {
+            String e = iterator.next();
+            if (a.remove(e)) {
+                iterator.remove();
             }
         }
     }

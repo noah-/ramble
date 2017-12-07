@@ -13,21 +13,14 @@ public class MessageService {
     }
 
     public void sendBlock(HashSet<String> hs) {
-        HashSet<String> copy = new HashSet<String>();
-
-        for (String s : hs) {
-            copy.add(s);
-        }
-
         if (id == 0)
-            hs0 = copy;
+            hs0 = hs;
         else
-            hs1 = copy;
+            hs1 = hs;
     }
 
     public HashSet<String> getBlock() throws InterruptedException{
         HashSet<String> hs;
-        HashSet<String> copy = new HashSet<String>();
 
         if (id == 0)
             hs = hs1;
@@ -36,12 +29,12 @@ public class MessageService {
 
         while (hs == null) {
             Thread.sleep(10);
+            if (id == 0)
+                hs = hs1;
+            else
+                hs = hs0;
         }
 
-        for (String s : hs) {
-            copy.add(s);
-        }
-
-        return copy;
+        return hs;
     }
 }
