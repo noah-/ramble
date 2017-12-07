@@ -111,29 +111,49 @@ public class H2DbStore implements DbStore {
             "FROM messages");
   }
 
-  private Set<RambleMessage.SignedMessage> runSelectAllQuery(String sql) {
-    Set<RambleMessage.SignedMessage> messages = new HashSet<>();
+  @Override
+  public Set<RambleMessage.SignedMessage> getMessages(Set<byte[]> messageDigest) {
+    String sql = "SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM messages WHERE " +
+            "messagedigest IN (?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setObject(1, messageDigest.toArray());
       try (ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
-          RambleMessage.Message message = RambleMessage.Message.newBuilder()
-                  .setSourceId(rs.getString(1))
-                  .setMessage(rs.getString(2))
-                  .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
-                  .setTimestamp(rs.getLong(4))
-                  .build();
-
-          messages.add(RambleMessage.SignedMessage.newBuilder()
-                  .setMessage(message)
-                  .setPublicKey(ByteString.copyFrom(rs.getBytes(5)))
-                  .setSignature(ByteString.copyFrom(rs.getBytes(6)))
-                  .build());
-        }
+        return resultSetToSignedMessages(rs);
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  private Set<RambleMessage.SignedMessage> runSelectAllQuery(String sql) {
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      try (ResultSet rs = ps.executeQuery()) {
+        return resultSetToSignedMessages(rs);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private Set<RambleMessage.SignedMessage> resultSetToSignedMessages(ResultSet rs) throws SQLException {
+    Set<RambleMessage.SignedMessage> messages = new HashSet<>();
+
+    while (rs.next()) {
+      RambleMessage.Message message = RambleMessage.Message.newBuilder()
+              .setSourceId(rs.getString(1))
+              .setMessage(rs.getString(2))
+              .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
+              .setTimestamp(rs.getLong(4))
+              .build();
+
+      messages.add(RambleMessage.SignedMessage.newBuilder()
+              .setMessage(message)
+              .setPublicKey(ByteString.copyFrom(rs.getBytes(5)))
+              .setSignature(ByteString.copyFrom(rs.getBytes(6)))
+              .build());
     }
     return messages;
   }

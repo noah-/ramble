@@ -2,17 +2,16 @@ package ramble.cluster;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import ramble.api.Ramble;
-import ramble.crypto.JavaKeyGenerator;
 import ramble.core.RambleImpl;
+import ramble.crypto.JavaKeyGenerator;
 import ramble.db.h2.H2DbStore;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
@@ -33,19 +32,21 @@ public class RambleCluster {
   @Test
   public void rambleClusterTest() throws InterruptedException, IOException, NoSuchAlgorithmException {
 
+    String addr = InetAddress.getLocalHost().getHostAddress();
+
     // Creates all nodes
     List<URI> nodes = new ArrayList<>();
-    nodes.add(URI.create("udp://127.0.0.1:5000"));
-    nodes.add(URI.create("udp://127.0.0.1:5001"));
-    nodes.add(URI.create("udp://127.0.0.1:5002"));
-    nodes.add(URI.create("udp://127.0.0.1:5003"));
-    nodes.add(URI.create("udp://127.0.0.1:5004"));
+    nodes.add(URI.create("udp://" + addr + ":5000"));
+    nodes.add(URI.create("udp://" + addr + ":5001"));
+    nodes.add(URI.create("udp://" + addr + ":5002"));
+    nodes.add(URI.create("udp://" + addr + ":5003"));
+    nodes.add(URI.create("udp://" + addr + ":5004"));
 
     // Create initial seeds
     List<URI> seeds = new ArrayList<>();
-    seeds.add(URI.create("udp://127.0.0.1:5000"));
-    seeds.add(URI.create("udp://127.0.0.1:5001"));
-    seeds.add(URI.create("udp://127.0.0.1:5002"));
+    seeds.add(URI.create("udp://" + addr + ":5000"));
+    seeds.add(URI.create("udp://" + addr + ":5001"));
+    seeds.add(URI.create("udp://" + addr + ":5002"));
 
     // Randomly select text from lorem-ipsum file
     List<String> loremIpsum = new ArrayList<>();
