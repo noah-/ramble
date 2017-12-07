@@ -10,12 +10,13 @@ option java_outer_classname = "MessageSyncProtocol";
 message Request {
   oneof request_type {
     GetAllMessages getAllMessages = 1;
+    GetMessages getMessages = 2;
   }
 }
 
 message Response {
   oneof response_type {
-    SendAllMessages sendAllMessage = 1;
+    SendMessages sendMessage = 1;
   }
 }
 
@@ -23,6 +24,10 @@ message GetAllMessages {
 
 }
 
-message SendAllMessages {
+message GetMessages {
+  repeated bytes messageDigest = 1;
+}
+
+message SendMessages {
   BulkSignedMessage messages = 1;
 }

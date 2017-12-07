@@ -1,12 +1,19 @@
 package ramble.messagesync.netty;
 
+import com.google.protobuf.ByteString;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.apache.log4j.Logger;
 import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<MessageSyncProtocol.Request> {
+
+  private static final Logger LOG = Logger.getLogger(NettyMessageSyncServerHandler.class);
 
   private DbStore dbStore;
 
@@ -16,14 +23,44 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Request msg) {
+    switch(msg.getRequestTypeCase()) {
+      case GETALLMESSAGES:
+        ctx.write(handleGetAllMessagesRequest());
+        break;
+      case GETMESSAGES:
+        ctx.write(handleGetMessagesRequest(msg.getGetMessages()));
+        break;
+      case REQUESTTYPE_NOT_SET:
+        LOG.error("Got a message with an invalid request type, dropping message");
+        break;
+    }
+  }
+
+  private MessageSyncProtocol.Response handleGetMessagesRequest(MessageSyncProtocol.GetMessages getMessagesRequest) {
+    MessageSyncProtocol.Response.Builder responseBuilder = MessageSyncProtocol.Response.newBuilder();
+
+    Set<RambleMessage.SignedMessage> messages = this.dbStore.getMessages(getMessagesRequest.getMessageDigestList()
+            .stream()
+            .map(ByteString::toByteArray)
+            .collect(Collectors.toSet()));
+
+    RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
+            .addAllSignedMessage(messages)
+            .build();
+
+    return responseBuilder.setSendMessage(
+            MessageSyncProtocol.SendMessages.newBuilder().setMessages(bulkMessage)).build();
+  }
+
+  private MessageSyncProtocol.Response handleGetAllMessagesRequest() {
     MessageSyncProtocol.Response.Builder responseBuilder = MessageSyncProtocol.Response.newBuilder();
 
     RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
             .addAllSignedMessage(this.dbStore.getAllMessages())
             .build();
 
-    responseBuilder.setSendAllMessage(MessageSyncProtocol.SendAllMessages.newBuilder().setMessages(bulkMessage));
-    ctx.write(responseBuilder.build());
+    return responseBuilder.setSendMessage(
+            MessageSyncProtocol.SendMessages.newBuilder().setMessages(bulkMessage)).build();
   }
 
   @Override

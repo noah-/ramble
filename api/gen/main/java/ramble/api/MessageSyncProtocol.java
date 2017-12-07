@@ -31,6 +31,19 @@ public final class MessageSyncProtocol {
      */
     ramble.api.MessageSyncProtocol.GetAllMessagesOrBuilder getGetAllMessagesOrBuilder();
 
+    /**
+     * <code>.ramble.api.GetMessages getMessages = 2;</code>
+     */
+    boolean hasGetMessages();
+    /**
+     * <code>.ramble.api.GetMessages getMessages = 2;</code>
+     */
+    ramble.api.MessageSyncProtocol.GetMessages getGetMessages();
+    /**
+     * <code>.ramble.api.GetMessages getMessages = 2;</code>
+     */
+    ramble.api.MessageSyncProtocol.GetMessagesOrBuilder getGetMessagesOrBuilder();
+
     public ramble.api.MessageSyncProtocol.Request.RequestTypeCase getRequestTypeCase();
   }
   /**
@@ -90,6 +103,20 @@ public final class MessageSyncProtocol {
               requestTypeCase_ = 1;
               break;
             }
+            case 18: {
+              ramble.api.MessageSyncProtocol.GetMessages.Builder subBuilder = null;
+              if (requestTypeCase_ == 2) {
+                subBuilder = ((ramble.api.MessageSyncProtocol.GetMessages) requestType_).toBuilder();
+              }
+              requestType_ =
+                  input.readMessage(ramble.api.MessageSyncProtocol.GetMessages.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ramble.api.MessageSyncProtocol.GetMessages) requestType_);
+                requestType_ = subBuilder.buildPartial();
+              }
+              requestTypeCase_ = 2;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -119,6 +146,7 @@ public final class MessageSyncProtocol {
     public enum RequestTypeCase
         implements com.google.protobuf.Internal.EnumLite {
       GETALLMESSAGES(1),
+      GETMESSAGES(2),
       REQUESTTYPE_NOT_SET(0);
       private final int value;
       private RequestTypeCase(int value) {
@@ -135,6 +163,7 @@ public final class MessageSyncProtocol {
       public static RequestTypeCase forNumber(int value) {
         switch (value) {
           case 1: return GETALLMESSAGES;
+          case 2: return GETMESSAGES;
           case 0: return REQUESTTYPE_NOT_SET;
           default: return null;
         }
@@ -176,6 +205,32 @@ public final class MessageSyncProtocol {
       return ramble.api.MessageSyncProtocol.GetAllMessages.getDefaultInstance();
     }
 
+    public static final int GETMESSAGES_FIELD_NUMBER = 2;
+    /**
+     * <code>.ramble.api.GetMessages getMessages = 2;</code>
+     */
+    public boolean hasGetMessages() {
+      return requestTypeCase_ == 2;
+    }
+    /**
+     * <code>.ramble.api.GetMessages getMessages = 2;</code>
+     */
+    public ramble.api.MessageSyncProtocol.GetMessages getGetMessages() {
+      if (requestTypeCase_ == 2) {
+         return (ramble.api.MessageSyncProtocol.GetMessages) requestType_;
+      }
+      return ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance();
+    }
+    /**
+     * <code>.ramble.api.GetMessages getMessages = 2;</code>
+     */
+    public ramble.api.MessageSyncProtocol.GetMessagesOrBuilder getGetMessagesOrBuilder() {
+      if (requestTypeCase_ == 2) {
+         return (ramble.api.MessageSyncProtocol.GetMessages) requestType_;
+      }
+      return ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -191,6 +246,9 @@ public final class MessageSyncProtocol {
       if (requestTypeCase_ == 1) {
         output.writeMessage(1, (ramble.api.MessageSyncProtocol.GetAllMessages) requestType_);
       }
+      if (requestTypeCase_ == 2) {
+        output.writeMessage(2, (ramble.api.MessageSyncProtocol.GetMessages) requestType_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -202,6 +260,10 @@ public final class MessageSyncProtocol {
       if (requestTypeCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, (ramble.api.MessageSyncProtocol.GetAllMessages) requestType_);
+      }
+      if (requestTypeCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, (ramble.api.MessageSyncProtocol.GetMessages) requestType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -227,6 +289,10 @@ public final class MessageSyncProtocol {
           result = result && getGetAllMessages()
               .equals(other.getGetAllMessages());
           break;
+        case 2:
+          result = result && getGetMessages()
+              .equals(other.getGetMessages());
+          break;
         case 0:
         default:
       }
@@ -245,6 +311,10 @@ public final class MessageSyncProtocol {
         case 1:
           hash = (37 * hash) + GETALLMESSAGES_FIELD_NUMBER;
           hash = (53 * hash) + getGetAllMessages().hashCode();
+          break;
+        case 2:
+          hash = (37 * hash) + GETMESSAGES_FIELD_NUMBER;
+          hash = (53 * hash) + getGetMessages().hashCode();
           break;
         case 0:
         default:
@@ -409,6 +479,13 @@ public final class MessageSyncProtocol {
             result.requestType_ = getAllMessagesBuilder_.build();
           }
         }
+        if (requestTypeCase_ == 2) {
+          if (getMessagesBuilder_ == null) {
+            result.requestType_ = requestType_;
+          } else {
+            result.requestType_ = getMessagesBuilder_.build();
+          }
+        }
         result.requestTypeCase_ = requestTypeCase_;
         onBuilt();
         return result;
@@ -454,6 +531,10 @@ public final class MessageSyncProtocol {
         switch (other.getRequestTypeCase()) {
           case GETALLMESSAGES: {
             mergeGetAllMessages(other.getGetAllMessages());
+            break;
+          }
+          case GETMESSAGES: {
+            mergeGetMessages(other.getGetMessages());
             break;
           }
           case REQUESTTYPE_NOT_SET: {
@@ -637,6 +718,142 @@ public final class MessageSyncProtocol {
         onChanged();;
         return getAllMessagesBuilder_;
       }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ramble.api.MessageSyncProtocol.GetMessages, ramble.api.MessageSyncProtocol.GetMessages.Builder, ramble.api.MessageSyncProtocol.GetMessagesOrBuilder> getMessagesBuilder_;
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public boolean hasGetMessages() {
+        return requestTypeCase_ == 2;
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public ramble.api.MessageSyncProtocol.GetMessages getGetMessages() {
+        if (getMessagesBuilder_ == null) {
+          if (requestTypeCase_ == 2) {
+            return (ramble.api.MessageSyncProtocol.GetMessages) requestType_;
+          }
+          return ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance();
+        } else {
+          if (requestTypeCase_ == 2) {
+            return getMessagesBuilder_.getMessage();
+          }
+          return ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public Builder setGetMessages(ramble.api.MessageSyncProtocol.GetMessages value) {
+        if (getMessagesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          requestType_ = value;
+          onChanged();
+        } else {
+          getMessagesBuilder_.setMessage(value);
+        }
+        requestTypeCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public Builder setGetMessages(
+          ramble.api.MessageSyncProtocol.GetMessages.Builder builderForValue) {
+        if (getMessagesBuilder_ == null) {
+          requestType_ = builderForValue.build();
+          onChanged();
+        } else {
+          getMessagesBuilder_.setMessage(builderForValue.build());
+        }
+        requestTypeCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public Builder mergeGetMessages(ramble.api.MessageSyncProtocol.GetMessages value) {
+        if (getMessagesBuilder_ == null) {
+          if (requestTypeCase_ == 2 &&
+              requestType_ != ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance()) {
+            requestType_ = ramble.api.MessageSyncProtocol.GetMessages.newBuilder((ramble.api.MessageSyncProtocol.GetMessages) requestType_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            requestType_ = value;
+          }
+          onChanged();
+        } else {
+          if (requestTypeCase_ == 2) {
+            getMessagesBuilder_.mergeFrom(value);
+          }
+          getMessagesBuilder_.setMessage(value);
+        }
+        requestTypeCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public Builder clearGetMessages() {
+        if (getMessagesBuilder_ == null) {
+          if (requestTypeCase_ == 2) {
+            requestTypeCase_ = 0;
+            requestType_ = null;
+            onChanged();
+          }
+        } else {
+          if (requestTypeCase_ == 2) {
+            requestTypeCase_ = 0;
+            requestType_ = null;
+          }
+          getMessagesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public ramble.api.MessageSyncProtocol.GetMessages.Builder getGetMessagesBuilder() {
+        return getGetMessagesFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      public ramble.api.MessageSyncProtocol.GetMessagesOrBuilder getGetMessagesOrBuilder() {
+        if ((requestTypeCase_ == 2) && (getMessagesBuilder_ != null)) {
+          return getMessagesBuilder_.getMessageOrBuilder();
+        } else {
+          if (requestTypeCase_ == 2) {
+            return (ramble.api.MessageSyncProtocol.GetMessages) requestType_;
+          }
+          return ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.ramble.api.GetMessages getMessages = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ramble.api.MessageSyncProtocol.GetMessages, ramble.api.MessageSyncProtocol.GetMessages.Builder, ramble.api.MessageSyncProtocol.GetMessagesOrBuilder> 
+          getGetMessagesFieldBuilder() {
+        if (getMessagesBuilder_ == null) {
+          if (!(requestTypeCase_ == 2)) {
+            requestType_ = ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance();
+          }
+          getMessagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              ramble.api.MessageSyncProtocol.GetMessages, ramble.api.MessageSyncProtocol.GetMessages.Builder, ramble.api.MessageSyncProtocol.GetMessagesOrBuilder>(
+                  (ramble.api.MessageSyncProtocol.GetMessages) requestType_,
+                  getParentForChildren(),
+                  isClean());
+          requestType_ = null;
+        }
+        requestTypeCase_ = 2;
+        onChanged();;
+        return getMessagesBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
@@ -691,17 +908,17 @@ public final class MessageSyncProtocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+     * <code>.ramble.api.SendMessages sendMessage = 1;</code>
      */
-    boolean hasSendAllMessage();
+    boolean hasSendMessage();
     /**
-     * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+     * <code>.ramble.api.SendMessages sendMessage = 1;</code>
      */
-    ramble.api.MessageSyncProtocol.SendAllMessages getSendAllMessage();
+    ramble.api.MessageSyncProtocol.SendMessages getSendMessage();
     /**
-     * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+     * <code>.ramble.api.SendMessages sendMessage = 1;</code>
      */
-    ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder getSendAllMessageOrBuilder();
+    ramble.api.MessageSyncProtocol.SendMessagesOrBuilder getSendMessageOrBuilder();
 
     public ramble.api.MessageSyncProtocol.Response.ResponseTypeCase getResponseTypeCase();
   }
@@ -749,14 +966,14 @@ public final class MessageSyncProtocol {
               break;
             }
             case 10: {
-              ramble.api.MessageSyncProtocol.SendAllMessages.Builder subBuilder = null;
+              ramble.api.MessageSyncProtocol.SendMessages.Builder subBuilder = null;
               if (responseTypeCase_ == 1) {
-                subBuilder = ((ramble.api.MessageSyncProtocol.SendAllMessages) responseType_).toBuilder();
+                subBuilder = ((ramble.api.MessageSyncProtocol.SendMessages) responseType_).toBuilder();
               }
               responseType_ =
-                  input.readMessage(ramble.api.MessageSyncProtocol.SendAllMessages.parser(), extensionRegistry);
+                  input.readMessage(ramble.api.MessageSyncProtocol.SendMessages.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((ramble.api.MessageSyncProtocol.SendAllMessages) responseType_);
+                subBuilder.mergeFrom((ramble.api.MessageSyncProtocol.SendMessages) responseType_);
                 responseType_ = subBuilder.buildPartial();
               }
               responseTypeCase_ = 1;
@@ -790,7 +1007,7 @@ public final class MessageSyncProtocol {
     private java.lang.Object responseType_;
     public enum ResponseTypeCase
         implements com.google.protobuf.Internal.EnumLite {
-      SENDALLMESSAGE(1),
+      SENDMESSAGE(1),
       RESPONSETYPE_NOT_SET(0);
       private final int value;
       private ResponseTypeCase(int value) {
@@ -806,7 +1023,7 @@ public final class MessageSyncProtocol {
 
       public static ResponseTypeCase forNumber(int value) {
         switch (value) {
-          case 1: return SENDALLMESSAGE;
+          case 1: return SENDMESSAGE;
           case 0: return RESPONSETYPE_NOT_SET;
           default: return null;
         }
@@ -822,30 +1039,30 @@ public final class MessageSyncProtocol {
           responseTypeCase_);
     }
 
-    public static final int SENDALLMESSAGE_FIELD_NUMBER = 1;
+    public static final int SENDMESSAGE_FIELD_NUMBER = 1;
     /**
-     * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+     * <code>.ramble.api.SendMessages sendMessage = 1;</code>
      */
-    public boolean hasSendAllMessage() {
+    public boolean hasSendMessage() {
       return responseTypeCase_ == 1;
     }
     /**
-     * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+     * <code>.ramble.api.SendMessages sendMessage = 1;</code>
      */
-    public ramble.api.MessageSyncProtocol.SendAllMessages getSendAllMessage() {
+    public ramble.api.MessageSyncProtocol.SendMessages getSendMessage() {
       if (responseTypeCase_ == 1) {
-         return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+         return (ramble.api.MessageSyncProtocol.SendMessages) responseType_;
       }
-      return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+      return ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance();
     }
     /**
-     * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+     * <code>.ramble.api.SendMessages sendMessage = 1;</code>
      */
-    public ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder getSendAllMessageOrBuilder() {
+    public ramble.api.MessageSyncProtocol.SendMessagesOrBuilder getSendMessageOrBuilder() {
       if (responseTypeCase_ == 1) {
-         return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+         return (ramble.api.MessageSyncProtocol.SendMessages) responseType_;
       }
-      return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+      return ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -861,7 +1078,7 @@ public final class MessageSyncProtocol {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (responseTypeCase_ == 1) {
-        output.writeMessage(1, (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_);
+        output.writeMessage(1, (ramble.api.MessageSyncProtocol.SendMessages) responseType_);
       }
       unknownFields.writeTo(output);
     }
@@ -873,7 +1090,7 @@ public final class MessageSyncProtocol {
       size = 0;
       if (responseTypeCase_ == 1) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_);
+          .computeMessageSize(1, (ramble.api.MessageSyncProtocol.SendMessages) responseType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -896,8 +1113,8 @@ public final class MessageSyncProtocol {
       if (!result) return false;
       switch (responseTypeCase_) {
         case 1:
-          result = result && getSendAllMessage()
-              .equals(other.getSendAllMessage());
+          result = result && getSendMessage()
+              .equals(other.getSendMessage());
           break;
         case 0:
         default:
@@ -915,8 +1132,8 @@ public final class MessageSyncProtocol {
       hash = (19 * hash) + getDescriptor().hashCode();
       switch (responseTypeCase_) {
         case 1:
-          hash = (37 * hash) + SENDALLMESSAGE_FIELD_NUMBER;
-          hash = (53 * hash) + getSendAllMessage().hashCode();
+          hash = (37 * hash) + SENDMESSAGE_FIELD_NUMBER;
+          hash = (53 * hash) + getSendMessage().hashCode();
           break;
         case 0:
         default:
@@ -1075,10 +1292,10 @@ public final class MessageSyncProtocol {
       public ramble.api.MessageSyncProtocol.Response buildPartial() {
         ramble.api.MessageSyncProtocol.Response result = new ramble.api.MessageSyncProtocol.Response(this);
         if (responseTypeCase_ == 1) {
-          if (sendAllMessageBuilder_ == null) {
+          if (sendMessageBuilder_ == null) {
             result.responseType_ = responseType_;
           } else {
-            result.responseType_ = sendAllMessageBuilder_.build();
+            result.responseType_ = sendMessageBuilder_.build();
           }
         }
         result.responseTypeCase_ = responseTypeCase_;
@@ -1124,8 +1341,8 @@ public final class MessageSyncProtocol {
       public Builder mergeFrom(ramble.api.MessageSyncProtocol.Response other) {
         if (other == ramble.api.MessageSyncProtocol.Response.getDefaultInstance()) return this;
         switch (other.getResponseTypeCase()) {
-          case SENDALLMESSAGE: {
-            mergeSendAllMessage(other.getSendAllMessage());
+          case SENDMESSAGE: {
+            mergeSendMessage(other.getSendMessage());
             break;
           }
           case RESPONSETYPE_NOT_SET: {
@@ -1175,67 +1392,67 @@ public final class MessageSyncProtocol {
 
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          ramble.api.MessageSyncProtocol.SendAllMessages, ramble.api.MessageSyncProtocol.SendAllMessages.Builder, ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder> sendAllMessageBuilder_;
+          ramble.api.MessageSyncProtocol.SendMessages, ramble.api.MessageSyncProtocol.SendMessages.Builder, ramble.api.MessageSyncProtocol.SendMessagesOrBuilder> sendMessageBuilder_;
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public boolean hasSendAllMessage() {
+      public boolean hasSendMessage() {
         return responseTypeCase_ == 1;
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public ramble.api.MessageSyncProtocol.SendAllMessages getSendAllMessage() {
-        if (sendAllMessageBuilder_ == null) {
+      public ramble.api.MessageSyncProtocol.SendMessages getSendMessage() {
+        if (sendMessageBuilder_ == null) {
           if (responseTypeCase_ == 1) {
-            return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+            return (ramble.api.MessageSyncProtocol.SendMessages) responseType_;
           }
-          return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+          return ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance();
         } else {
           if (responseTypeCase_ == 1) {
-            return sendAllMessageBuilder_.getMessage();
+            return sendMessageBuilder_.getMessage();
           }
-          return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+          return ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance();
         }
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public Builder setSendAllMessage(ramble.api.MessageSyncProtocol.SendAllMessages value) {
-        if (sendAllMessageBuilder_ == null) {
+      public Builder setSendMessage(ramble.api.MessageSyncProtocol.SendMessages value) {
+        if (sendMessageBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           responseType_ = value;
           onChanged();
         } else {
-          sendAllMessageBuilder_.setMessage(value);
+          sendMessageBuilder_.setMessage(value);
         }
         responseTypeCase_ = 1;
         return this;
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public Builder setSendAllMessage(
-          ramble.api.MessageSyncProtocol.SendAllMessages.Builder builderForValue) {
-        if (sendAllMessageBuilder_ == null) {
+      public Builder setSendMessage(
+          ramble.api.MessageSyncProtocol.SendMessages.Builder builderForValue) {
+        if (sendMessageBuilder_ == null) {
           responseType_ = builderForValue.build();
           onChanged();
         } else {
-          sendAllMessageBuilder_.setMessage(builderForValue.build());
+          sendMessageBuilder_.setMessage(builderForValue.build());
         }
         responseTypeCase_ = 1;
         return this;
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public Builder mergeSendAllMessage(ramble.api.MessageSyncProtocol.SendAllMessages value) {
-        if (sendAllMessageBuilder_ == null) {
+      public Builder mergeSendMessage(ramble.api.MessageSyncProtocol.SendMessages value) {
+        if (sendMessageBuilder_ == null) {
           if (responseTypeCase_ == 1 &&
-              responseType_ != ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance()) {
-            responseType_ = ramble.api.MessageSyncProtocol.SendAllMessages.newBuilder((ramble.api.MessageSyncProtocol.SendAllMessages) responseType_)
+              responseType_ != ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance()) {
+            responseType_ = ramble.api.MessageSyncProtocol.SendMessages.newBuilder((ramble.api.MessageSyncProtocol.SendMessages) responseType_)
                 .mergeFrom(value).buildPartial();
           } else {
             responseType_ = value;
@@ -1243,18 +1460,18 @@ public final class MessageSyncProtocol {
           onChanged();
         } else {
           if (responseTypeCase_ == 1) {
-            sendAllMessageBuilder_.mergeFrom(value);
+            sendMessageBuilder_.mergeFrom(value);
           }
-          sendAllMessageBuilder_.setMessage(value);
+          sendMessageBuilder_.setMessage(value);
         }
         responseTypeCase_ = 1;
         return this;
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public Builder clearSendAllMessage() {
-        if (sendAllMessageBuilder_ == null) {
+      public Builder clearSendMessage() {
+        if (sendMessageBuilder_ == null) {
           if (responseTypeCase_ == 1) {
             responseTypeCase_ = 0;
             responseType_ = null;
@@ -1265,49 +1482,49 @@ public final class MessageSyncProtocol {
             responseTypeCase_ = 0;
             responseType_ = null;
           }
-          sendAllMessageBuilder_.clear();
+          sendMessageBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public ramble.api.MessageSyncProtocol.SendAllMessages.Builder getSendAllMessageBuilder() {
-        return getSendAllMessageFieldBuilder().getBuilder();
+      public ramble.api.MessageSyncProtocol.SendMessages.Builder getSendMessageBuilder() {
+        return getSendMessageFieldBuilder().getBuilder();
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
-      public ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder getSendAllMessageOrBuilder() {
-        if ((responseTypeCase_ == 1) && (sendAllMessageBuilder_ != null)) {
-          return sendAllMessageBuilder_.getMessageOrBuilder();
+      public ramble.api.MessageSyncProtocol.SendMessagesOrBuilder getSendMessageOrBuilder() {
+        if ((responseTypeCase_ == 1) && (sendMessageBuilder_ != null)) {
+          return sendMessageBuilder_.getMessageOrBuilder();
         } else {
           if (responseTypeCase_ == 1) {
-            return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+            return (ramble.api.MessageSyncProtocol.SendMessages) responseType_;
           }
-          return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+          return ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance();
         }
       }
       /**
-       * <code>.ramble.api.SendAllMessages sendAllMessage = 1;</code>
+       * <code>.ramble.api.SendMessages sendMessage = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          ramble.api.MessageSyncProtocol.SendAllMessages, ramble.api.MessageSyncProtocol.SendAllMessages.Builder, ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder> 
-          getSendAllMessageFieldBuilder() {
-        if (sendAllMessageBuilder_ == null) {
+          ramble.api.MessageSyncProtocol.SendMessages, ramble.api.MessageSyncProtocol.SendMessages.Builder, ramble.api.MessageSyncProtocol.SendMessagesOrBuilder> 
+          getSendMessageFieldBuilder() {
+        if (sendMessageBuilder_ == null) {
           if (!(responseTypeCase_ == 1)) {
-            responseType_ = ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+            responseType_ = ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance();
           }
-          sendAllMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              ramble.api.MessageSyncProtocol.SendAllMessages, ramble.api.MessageSyncProtocol.SendAllMessages.Builder, ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder>(
-                  (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_,
+          sendMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              ramble.api.MessageSyncProtocol.SendMessages, ramble.api.MessageSyncProtocol.SendMessages.Builder, ramble.api.MessageSyncProtocol.SendMessagesOrBuilder>(
+                  (ramble.api.MessageSyncProtocol.SendMessages) responseType_,
                   getParentForChildren(),
                   isClean());
           responseType_ = null;
         }
         responseTypeCase_ = 1;
         onChanged();;
-        return sendAllMessageBuilder_;
+        return sendMessageBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1742,8 +1959,549 @@ public final class MessageSyncProtocol {
 
   }
 
-  public interface SendAllMessagesOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:ramble.api.SendAllMessages)
+  public interface GetMessagesOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ramble.api.GetMessages)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated bytes messageDigest = 1;</code>
+     */
+    java.util.List<com.google.protobuf.ByteString> getMessageDigestList();
+    /**
+     * <code>repeated bytes messageDigest = 1;</code>
+     */
+    int getMessageDigestCount();
+    /**
+     * <code>repeated bytes messageDigest = 1;</code>
+     */
+    com.google.protobuf.ByteString getMessageDigest(int index);
+  }
+  /**
+   * Protobuf type {@code ramble.api.GetMessages}
+   */
+  public  static final class GetMessages extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:ramble.api.GetMessages)
+      GetMessagesOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use GetMessages.newBuilder() to construct.
+    private GetMessages(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private GetMessages() {
+      messageDigest_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GetMessages(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                messageDigest_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              messageDigest_.add(input.readBytes());
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          messageDigest_ = java.util.Collections.unmodifiableList(messageDigest_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ramble.api.MessageSyncProtocol.internal_static_ramble_api_GetMessages_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ramble.api.MessageSyncProtocol.internal_static_ramble_api_GetMessages_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ramble.api.MessageSyncProtocol.GetMessages.class, ramble.api.MessageSyncProtocol.GetMessages.Builder.class);
+    }
+
+    public static final int MESSAGEDIGEST_FIELD_NUMBER = 1;
+    private java.util.List<com.google.protobuf.ByteString> messageDigest_;
+    /**
+     * <code>repeated bytes messageDigest = 1;</code>
+     */
+    public java.util.List<com.google.protobuf.ByteString>
+        getMessageDigestList() {
+      return messageDigest_;
+    }
+    /**
+     * <code>repeated bytes messageDigest = 1;</code>
+     */
+    public int getMessageDigestCount() {
+      return messageDigest_.size();
+    }
+    /**
+     * <code>repeated bytes messageDigest = 1;</code>
+     */
+    public com.google.protobuf.ByteString getMessageDigest(int index) {
+      return messageDigest_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < messageDigest_.size(); i++) {
+        output.writeBytes(1, messageDigest_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < messageDigest_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(messageDigest_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getMessageDigestList().size();
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ramble.api.MessageSyncProtocol.GetMessages)) {
+        return super.equals(obj);
+      }
+      ramble.api.MessageSyncProtocol.GetMessages other = (ramble.api.MessageSyncProtocol.GetMessages) obj;
+
+      boolean result = true;
+      result = result && getMessageDigestList()
+          .equals(other.getMessageDigestList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getMessageDigestCount() > 0) {
+        hash = (37 * hash) + MESSAGEDIGEST_FIELD_NUMBER;
+        hash = (53 * hash) + getMessageDigestList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ramble.api.MessageSyncProtocol.GetMessages parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ramble.api.MessageSyncProtocol.GetMessages prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ramble.api.GetMessages}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:ramble.api.GetMessages)
+        ramble.api.MessageSyncProtocol.GetMessagesOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_GetMessages_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_GetMessages_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ramble.api.MessageSyncProtocol.GetMessages.class, ramble.api.MessageSyncProtocol.GetMessages.Builder.class);
+      }
+
+      // Construct using ramble.api.MessageSyncProtocol.GetMessages.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        messageDigest_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_GetMessages_descriptor;
+      }
+
+      public ramble.api.MessageSyncProtocol.GetMessages getDefaultInstanceForType() {
+        return ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance();
+      }
+
+      public ramble.api.MessageSyncProtocol.GetMessages build() {
+        ramble.api.MessageSyncProtocol.GetMessages result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public ramble.api.MessageSyncProtocol.GetMessages buildPartial() {
+        ramble.api.MessageSyncProtocol.GetMessages result = new ramble.api.MessageSyncProtocol.GetMessages(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          messageDigest_ = java.util.Collections.unmodifiableList(messageDigest_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.messageDigest_ = messageDigest_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ramble.api.MessageSyncProtocol.GetMessages) {
+          return mergeFrom((ramble.api.MessageSyncProtocol.GetMessages)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ramble.api.MessageSyncProtocol.GetMessages other) {
+        if (other == ramble.api.MessageSyncProtocol.GetMessages.getDefaultInstance()) return this;
+        if (!other.messageDigest_.isEmpty()) {
+          if (messageDigest_.isEmpty()) {
+            messageDigest_ = other.messageDigest_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureMessageDigestIsMutable();
+            messageDigest_.addAll(other.messageDigest_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ramble.api.MessageSyncProtocol.GetMessages parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ramble.api.MessageSyncProtocol.GetMessages) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.google.protobuf.ByteString> messageDigest_ = java.util.Collections.emptyList();
+      private void ensureMessageDigestIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          messageDigest_ = new java.util.ArrayList<com.google.protobuf.ByteString>(messageDigest_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated bytes messageDigest = 1;</code>
+       */
+      public java.util.List<com.google.protobuf.ByteString>
+          getMessageDigestList() {
+        return java.util.Collections.unmodifiableList(messageDigest_);
+      }
+      /**
+       * <code>repeated bytes messageDigest = 1;</code>
+       */
+      public int getMessageDigestCount() {
+        return messageDigest_.size();
+      }
+      /**
+       * <code>repeated bytes messageDigest = 1;</code>
+       */
+      public com.google.protobuf.ByteString getMessageDigest(int index) {
+        return messageDigest_.get(index);
+      }
+      /**
+       * <code>repeated bytes messageDigest = 1;</code>
+       */
+      public Builder setMessageDigest(
+          int index, com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMessageDigestIsMutable();
+        messageDigest_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated bytes messageDigest = 1;</code>
+       */
+      public Builder addMessageDigest(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureMessageDigestIsMutable();
+        messageDigest_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated bytes messageDigest = 1;</code>
+       */
+      public Builder addAllMessageDigest(
+          java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+        ensureMessageDigestIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, messageDigest_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated bytes messageDigest = 1;</code>
+       */
+      public Builder clearMessageDigest() {
+        messageDigest_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:ramble.api.GetMessages)
+    }
+
+    // @@protoc_insertion_point(class_scope:ramble.api.GetMessages)
+    private static final ramble.api.MessageSyncProtocol.GetMessages DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ramble.api.MessageSyncProtocol.GetMessages();
+    }
+
+    public static ramble.api.MessageSyncProtocol.GetMessages getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<GetMessages>
+        PARSER = new com.google.protobuf.AbstractParser<GetMessages>() {
+      public GetMessages parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GetMessages(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<GetMessages> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GetMessages> getParserForType() {
+      return PARSER;
+    }
+
+    public ramble.api.MessageSyncProtocol.GetMessages getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface SendMessagesOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:ramble.api.SendMessages)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -1760,18 +2518,18 @@ public final class MessageSyncProtocol {
     ramble.api.RambleMessage.BulkSignedMessageOrBuilder getMessagesOrBuilder();
   }
   /**
-   * Protobuf type {@code ramble.api.SendAllMessages}
+   * Protobuf type {@code ramble.api.SendMessages}
    */
-  public  static final class SendAllMessages extends
+  public  static final class SendMessages extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:ramble.api.SendAllMessages)
-      SendAllMessagesOrBuilder {
+      // @@protoc_insertion_point(message_implements:ramble.api.SendMessages)
+      SendMessagesOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use SendAllMessages.newBuilder() to construct.
-    private SendAllMessages(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use SendMessages.newBuilder() to construct.
+    private SendMessages(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private SendAllMessages() {
+    private SendMessages() {
     }
 
     @java.lang.Override
@@ -1779,7 +2537,7 @@ public final class MessageSyncProtocol {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private SendAllMessages(
+    private SendMessages(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1829,14 +2587,14 @@ public final class MessageSyncProtocol {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendAllMessages_descriptor;
+      return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendMessages_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendAllMessages_fieldAccessorTable
+      return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendMessages_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ramble.api.MessageSyncProtocol.SendAllMessages.class, ramble.api.MessageSyncProtocol.SendAllMessages.Builder.class);
+              ramble.api.MessageSyncProtocol.SendMessages.class, ramble.api.MessageSyncProtocol.SendMessages.Builder.class);
     }
 
     public static final int MESSAGES_FIELD_NUMBER = 1;
@@ -1897,10 +2655,10 @@ public final class MessageSyncProtocol {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof ramble.api.MessageSyncProtocol.SendAllMessages)) {
+      if (!(obj instanceof ramble.api.MessageSyncProtocol.SendMessages)) {
         return super.equals(obj);
       }
-      ramble.api.MessageSyncProtocol.SendAllMessages other = (ramble.api.MessageSyncProtocol.SendAllMessages) obj;
+      ramble.api.MessageSyncProtocol.SendMessages other = (ramble.api.MessageSyncProtocol.SendMessages) obj;
 
       boolean result = true;
       result = result && (hasMessages() == other.hasMessages());
@@ -1928,69 +2686,69 @@ public final class MessageSyncProtocol {
       return hash;
     }
 
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(byte[] data)
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(java.io.InputStream input)
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseDelimitedFrom(java.io.InputStream input)
+    public static ramble.api.MessageSyncProtocol.SendMessages parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseDelimitedFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static ramble.api.MessageSyncProtocol.SendAllMessages parseFrom(
+    public static ramble.api.MessageSyncProtocol.SendMessages parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2002,7 +2760,7 @@ public final class MessageSyncProtocol {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ramble.api.MessageSyncProtocol.SendAllMessages prototype) {
+    public static Builder newBuilder(ramble.api.MessageSyncProtocol.SendMessages prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -2017,25 +2775,25 @@ public final class MessageSyncProtocol {
       return builder;
     }
     /**
-     * Protobuf type {@code ramble.api.SendAllMessages}
+     * Protobuf type {@code ramble.api.SendMessages}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:ramble.api.SendAllMessages)
-        ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder {
+        // @@protoc_insertion_point(builder_implements:ramble.api.SendMessages)
+        ramble.api.MessageSyncProtocol.SendMessagesOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendAllMessages_descriptor;
+        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendMessages_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendAllMessages_fieldAccessorTable
+        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendMessages_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ramble.api.MessageSyncProtocol.SendAllMessages.class, ramble.api.MessageSyncProtocol.SendAllMessages.Builder.class);
+                ramble.api.MessageSyncProtocol.SendMessages.class, ramble.api.MessageSyncProtocol.SendMessages.Builder.class);
       }
 
-      // Construct using ramble.api.MessageSyncProtocol.SendAllMessages.newBuilder()
+      // Construct using ramble.api.MessageSyncProtocol.SendMessages.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2063,23 +2821,23 @@ public final class MessageSyncProtocol {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendAllMessages_descriptor;
+        return ramble.api.MessageSyncProtocol.internal_static_ramble_api_SendMessages_descriptor;
       }
 
-      public ramble.api.MessageSyncProtocol.SendAllMessages getDefaultInstanceForType() {
-        return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+      public ramble.api.MessageSyncProtocol.SendMessages getDefaultInstanceForType() {
+        return ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance();
       }
 
-      public ramble.api.MessageSyncProtocol.SendAllMessages build() {
-        ramble.api.MessageSyncProtocol.SendAllMessages result = buildPartial();
+      public ramble.api.MessageSyncProtocol.SendMessages build() {
+        ramble.api.MessageSyncProtocol.SendMessages result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public ramble.api.MessageSyncProtocol.SendAllMessages buildPartial() {
-        ramble.api.MessageSyncProtocol.SendAllMessages result = new ramble.api.MessageSyncProtocol.SendAllMessages(this);
+      public ramble.api.MessageSyncProtocol.SendMessages buildPartial() {
+        ramble.api.MessageSyncProtocol.SendMessages result = new ramble.api.MessageSyncProtocol.SendMessages(this);
         if (messagesBuilder_ == null) {
           result.messages_ = messages_;
         } else {
@@ -2116,16 +2874,16 @@ public final class MessageSyncProtocol {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ramble.api.MessageSyncProtocol.SendAllMessages) {
-          return mergeFrom((ramble.api.MessageSyncProtocol.SendAllMessages)other);
+        if (other instanceof ramble.api.MessageSyncProtocol.SendMessages) {
+          return mergeFrom((ramble.api.MessageSyncProtocol.SendMessages)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ramble.api.MessageSyncProtocol.SendAllMessages other) {
-        if (other == ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance()) return this;
+      public Builder mergeFrom(ramble.api.MessageSyncProtocol.SendMessages other) {
+        if (other == ramble.api.MessageSyncProtocol.SendMessages.getDefaultInstance()) return this;
         if (other.hasMessages()) {
           mergeMessages(other.getMessages());
         }
@@ -2142,11 +2900,11 @@ public final class MessageSyncProtocol {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ramble.api.MessageSyncProtocol.SendAllMessages parsedMessage = null;
+        ramble.api.MessageSyncProtocol.SendMessages parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ramble.api.MessageSyncProtocol.SendAllMessages) e.getUnfinishedMessage();
+          parsedMessage = (ramble.api.MessageSyncProtocol.SendMessages) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2283,39 +3041,39 @@ public final class MessageSyncProtocol {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:ramble.api.SendAllMessages)
+      // @@protoc_insertion_point(builder_scope:ramble.api.SendMessages)
     }
 
-    // @@protoc_insertion_point(class_scope:ramble.api.SendAllMessages)
-    private static final ramble.api.MessageSyncProtocol.SendAllMessages DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:ramble.api.SendMessages)
+    private static final ramble.api.MessageSyncProtocol.SendMessages DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ramble.api.MessageSyncProtocol.SendAllMessages();
+      DEFAULT_INSTANCE = new ramble.api.MessageSyncProtocol.SendMessages();
     }
 
-    public static ramble.api.MessageSyncProtocol.SendAllMessages getDefaultInstance() {
+    public static ramble.api.MessageSyncProtocol.SendMessages getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<SendAllMessages>
-        PARSER = new com.google.protobuf.AbstractParser<SendAllMessages>() {
-      public SendAllMessages parsePartialFrom(
+    private static final com.google.protobuf.Parser<SendMessages>
+        PARSER = new com.google.protobuf.AbstractParser<SendMessages>() {
+      public SendMessages parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new SendAllMessages(input, extensionRegistry);
+          return new SendMessages(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<SendAllMessages> parser() {
+    public static com.google.protobuf.Parser<SendMessages> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<SendAllMessages> getParserForType() {
+    public com.google.protobuf.Parser<SendMessages> getParserForType() {
       return PARSER;
     }
 
-    public ramble.api.MessageSyncProtocol.SendAllMessages getDefaultInstanceForType() {
+    public ramble.api.MessageSyncProtocol.SendMessages getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2337,10 +3095,15 @@ public final class MessageSyncProtocol {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ramble_api_GetAllMessages_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ramble_api_SendAllMessages_descriptor;
+    internal_static_ramble_api_GetMessages_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ramble_api_SendAllMessages_fieldAccessorTable;
+      internal_static_ramble_api_GetMessages_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ramble_api_SendMessages_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ramble_api_SendMessages_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2351,14 +3114,16 @@ public final class MessageSyncProtocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\022message-sync.proto\022\nramble.api\032\024ramble" +
-      "-message.proto\"O\n\007Request\0224\n\016getAllMessa" +
-      "ges\030\001 \001(\0132\032.ramble.api.GetAllMessagesH\000B" +
-      "\016\n\014request_type\"R\n\010Response\0225\n\016sendAllMe" +
-      "ssage\030\001 \001(\0132\033.ramble.api.SendAllMessages" +
-      "H\000B\017\n\rresponse_type\"\020\n\016GetAllMessages\"B\n" +
-      "\017SendAllMessages\022/\n\010messages\030\001 \001(\0132\035.ram" +
-      "ble.api.BulkSignedMessageB!\n\nramble.apiB" +
-      "\023MessageSyncProtocolb\006proto3"
+      "-message.proto\"\177\n\007Request\0224\n\016getAllMessa" +
+      "ges\030\001 \001(\0132\032.ramble.api.GetAllMessagesH\000\022" +
+      ".\n\013getMessages\030\002 \001(\0132\027.ramble.api.GetMes" +
+      "sagesH\000B\016\n\014request_type\"L\n\010Response\022/\n\013s" +
+      "endMessage\030\001 \001(\0132\030.ramble.api.SendMessag" +
+      "esH\000B\017\n\rresponse_type\"\020\n\016GetAllMessages\"" +
+      "$\n\013GetMessages\022\025\n\rmessageDigest\030\001 \003(\014\"?\n" +
+      "\014SendMessages\022/\n\010messages\030\001 \001(\0132\035.ramble" +
+      ".api.BulkSignedMessageB!\n\nramble.apiB\023Me",
+      "ssageSyncProtocolb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2378,24 +3143,30 @@ public final class MessageSyncProtocol {
     internal_static_ramble_api_Request_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_Request_descriptor,
-        new java.lang.String[] { "GetAllMessages", "RequestType", });
+        new java.lang.String[] { "GetAllMessages", "GetMessages", "RequestType", });
     internal_static_ramble_api_Response_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_ramble_api_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_Response_descriptor,
-        new java.lang.String[] { "SendAllMessage", "ResponseType", });
+        new java.lang.String[] { "SendMessage", "ResponseType", });
     internal_static_ramble_api_GetAllMessages_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_ramble_api_GetAllMessages_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_GetAllMessages_descriptor,
         new java.lang.String[] { });
-    internal_static_ramble_api_SendAllMessages_descriptor =
+    internal_static_ramble_api_GetMessages_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_ramble_api_SendAllMessages_fieldAccessorTable = new
+    internal_static_ramble_api_GetMessages_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ramble_api_SendAllMessages_descriptor,
+        internal_static_ramble_api_GetMessages_descriptor,
+        new java.lang.String[] { "MessageDigest", });
+    internal_static_ramble_api_SendMessages_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_ramble_api_SendMessages_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ramble_api_SendMessages_descriptor,
         new java.lang.String[] { "Messages", });
     ramble.api.RambleMessage.getDescriptor();
   }

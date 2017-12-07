@@ -1,4 +1,4 @@
-package ramble.membership;
+package ramble.membership.gossip;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.gossip.GossipSettings;
@@ -12,6 +12,7 @@ import ramble.api.RambleMember;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,7 +46,9 @@ public class ApacheGossipMembershipService implements MembershipService {
             .map(uri -> new RemoteMember(GOSSIP_CLUSTER_NAME, uri, uriToGossipId(uri)))
             .collect(Collectors.toList());
 
-    URI uri = URI.create("udp://127.0.0.1:" + gossipPort);
+    URI uri = URI.create("udp://" + InetAddress.getLocalHost().getHostAddress() + ":" + gossipPort);
+
+    LOG.info("Using URI " + uri + " for Gossip Service");
 
     // There seems to be a bug in Apache Gossip where it only accepts ids of a certain form, so we can't use the id we
     // use everywhere else, we have to use one in the below format
