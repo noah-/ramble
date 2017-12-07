@@ -1,6 +1,8 @@
 package ramble.p2p;
 
 import ramble.db.h2.H2DbStore;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,6 +23,7 @@ public class AntiEntropy {
         if (_lastVerifiedTS.get() < ts)
             _lastVerifiedTS.set(ts);
 
+        System.out.println("Verified TS Before: " + _lastVerifiedTS.get());
         this.ms = ms;
         currentTS = (nts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;;
         dbStore = H2DbStore.getOrCreateStore(db);
@@ -38,7 +41,7 @@ public class AntiEntropy {
 
     public HashSet<String> getDigestBlock(long ts) {
         return dbStore.getRange(ts - BLOCK_TIME_PERIOD, ts).stream().map(
-                msg -> msg.getMessage().getMessage()).collect(
+                msg -> Arrays.toString(msg.getMessage().getMessageDigest().toByteArray())).collect(
                 Collectors.toCollection(HashSet::new));
     }
 
@@ -47,15 +50,8 @@ public class AntiEntropy {
 
         while (current > _lastVerifiedTS.get()) {
             HashSet<String> a = getDigestBlock(current);
-
-            HashSet<String> copy = new HashSet<String>();
-            for (String s : a) {
-                copy.add(s);
-                System.out.println(s);
-            }
-            a = copy;
-
             ms.sendBlock(a);
+
             HashSet<String> b = null;
             try {
                 b = ms.getBlock();
@@ -75,8 +71,6 @@ public class AntiEntropy {
     }
 
     public void flushCache(){
-        System.out.println("Verified TS Before: " + _lastVerifiedTS.get());
-
         for (long k : blockCache.keySet()) {
             HashSet<String> hs = blockCache.get(k);
             // TODO
