@@ -3,7 +3,6 @@ syntax = "proto3";
 package ramble.api;
 
 import "ramble-message.proto";
-import "google/protobuf/empty.proto";
 
 option java_package = "ramble.api";
 option java_outer_classname = "MessageSyncProtocol";
@@ -12,15 +11,19 @@ message Request {
   oneof request_type {
     GetAllMessages getAllMessages = 1;
     GetMessages getMessages = 2;
-    SendMessages sendMessages = 3;
+    BroadcastMessages broadcastMessages = 3;
   }
 }
 
 message Response {
   oneof response_type {
     SendMessages sendMessage = 1;
-    google.protobuf.Empty ack = 2;
+    Ack ack = 2;
   }
+}
+
+message Ack {
+
 }
 
 message GetAllMessages {
@@ -32,5 +35,9 @@ message GetMessages {
 }
 
 message SendMessages {
+  BulkSignedMessage messages = 1;
+}
+
+message BroadcastMessages {
   BulkSignedMessage messages = 1;
 }

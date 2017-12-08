@@ -1,6 +1,5 @@
 package ramble.messagesync.netty;
 
-import com.google.protobuf.ByteString;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -8,12 +7,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.log4j.Logger;
 import ramble.api.MessageSyncProtocol;
-import ramble.api.RambleMessage;
 import ramble.messagesync.api.MessageSyncClient;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import ramble.messagesync.api.MessageSyncHandler;
 
 public class NettyMessageSyncClient implements MessageSyncClient {
 
@@ -22,13 +17,15 @@ public class NettyMessageSyncClient implements MessageSyncClient {
   private final String host;
   private final int port;
   private final EventLoopGroup group;
+  private final MessageSyncHandler messageSyncHandler;
 
   private Channel channel;
 
-  public NettyMessageSyncClient(String host, int port) {
+  public NettyMessageSyncClient(String host, int port, MessageSyncHandler messageSyncHandler) {
     this.host = host;
     this.port = port;
     this.group = new NioEventLoopGroup();
+    this.messageSyncHandler = messageSyncHandler;
   }
 
   @Override
@@ -36,56 +33,16 @@ public class NettyMessageSyncClient implements MessageSyncClient {
     Bootstrap bootstrap = new Bootstrap();
     bootstrap.group(this.group)
             .channel(NioSocketChannel.class)
-            .handler(new NettyMessageSyncClientInitializer());
+            .handler(new NettyMessageSyncClientInitializer(this, this.messageSyncHandler));
 
     LOG.info("Netty client connecting to host " + this.host + " port " + this.port);
     this.channel = bootstrap.connect(this.host, this.port).sync().channel();
+
   }
 
   @Override
-  public Set<RambleMessage.SignedMessage> syncMessages() {
-    NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
-    MessageSyncProtocol.Response resp = handle.sendRequest(MessageSyncProtocol.Request.newBuilder().setGetAllMessages(
-            MessageSyncProtocol.GetAllMessages.newBuilder()).build());
-    return new HashSet<>(resp.getSendMessage().getMessages().getSignedMessageList());
-  }
-
-  /**
-   * Get a {@link Set} of {@link RambleMessage.SignedMessage}s from the remote server that matches the specified
-   * {@link Set} of message digests.
-   */
-  Set<RambleMessage.SignedMessage> getMessages(Set<byte[]> messageDigests) {
-    NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
-
-    Set<ByteString> messageByteStrings = messageDigests.stream().map(ByteString::copyFrom).collect(Collectors.toSet());
-
-    MessageSyncProtocol.GetMessages getMessagesRequest = MessageSyncProtocol.GetMessages.newBuilder()
-            .addAllMessageDigest(messageByteStrings)
-            .build();
-
-    MessageSyncProtocol.Request request = MessageSyncProtocol.Request.newBuilder()
-            .setGetMessages(getMessagesRequest)
-            .build();
-
-    return new HashSet<>(handle.sendRequest(request).getSendMessage().getMessages().getSignedMessageList());
-  }
-
-  void sendMessage(Set<RambleMessage.SignedMessage> message) {
-    NettyMessageSyncClientHandler handle = this.channel.pipeline().get(NettyMessageSyncClientHandler.class);
-
-    RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
-            .addAllSignedMessage(message)
-            .build();
-
-    MessageSyncProtocol.SendMessages sendMessagesRequest = MessageSyncProtocol.SendMessages.newBuilder()
-            .setMessages(bulkMessage)
-            .build();
-
-    MessageSyncProtocol.Request request = MessageSyncProtocol.Request.newBuilder()
-            .setSendMessages(sendMessagesRequest)
-            .build();
-
-    handle.sendRequest(request);
+  public void sendRequest(MessageSyncProtocol.Request request) {
+     this.channel.writeAndFlush(request);
   }
 
   @Override

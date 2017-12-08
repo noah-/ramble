@@ -1,7 +1,6 @@
 package ramble.messagesync.netty;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.Empty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.log4j.Logger;
@@ -36,8 +35,8 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
       case GETMESSAGES:
         ctx.write(handleGetMessagesRequest(msg.getGetMessages()));
         break;
-      case SENDMESSAGES:
-        ctx.write(handleSendMessagesRequest(msg.getSendMessages()));
+      case BROADCASTMESSAGES:
+        ctx.write(handleSendMessagesRequest(msg.getBroadcastMessages()));
         break;
       case REQUESTTYPE_NOT_SET:
         LOG.error("Got a message with an invalid request type, dropping message");
@@ -45,16 +44,16 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
     }
   }
 
-  private Empty handleSendMessagesRequest(MessageSyncProtocol.SendMessages sendMessages) {
+  private MessageSyncProtocol.Response handleSendMessagesRequest(MessageSyncProtocol.BroadcastMessages broadcastMessages) {
     try {
       // Verify messages have valid signatures and store them in the DB
-      if (MessageSigner.verify(sendMessages.getMessages().getSignedMessageList())) {
-        this.dbStore.store(sendMessages.getMessages());
+      if (MessageSigner.verify(broadcastMessages.getMessages().getSignedMessageList())) {
+        this.dbStore.store(broadcastMessages.getMessages());
       }
     } catch (InvalidKeySpecException | NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-      LOG.error("Error while verifying signatures for messages:\n" + sendMessages.getMessages(), e);
+      LOG.error("Error while verifying signatures for messages:\n" + broadcastMessages.getMessages(), e);
     }
-    return Empty.getDefaultInstance();
+    return MessageSyncProtocol.Response.newBuilder().setAck(MessageSyncProtocol.Ack.getDefaultInstance()).build();
   }
 
   private MessageSyncProtocol.Response handleGetMessagesRequest(MessageSyncProtocol.GetMessages getMessagesRequest) {

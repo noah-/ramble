@@ -1,6 +1,6 @@
 package ramble.api;
 
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -12,5 +12,5 @@ public interface MembershipService {
 
   void shutdown();
 
-  List<RambleMember> getMembers();
+  Set<RambleMember> getMembers();
 }

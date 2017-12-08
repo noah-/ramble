@@ -23,6 +23,7 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -104,12 +105,12 @@ public class ApacheGossipMembershipService implements MembershipService {
   }
 
   @Override
-  public List<RambleMember> getMembers() {
+  public Set<RambleMember> getMembers() {
     return this.gossipManager
             .getLiveMembers()
             .stream()
-            .map(mem -> new RambleMember(mem.getUri(),
+            .map(mem -> new RambleMember(mem.getUri().getHost(), mem.getUri().getPort(),
                     Integer.parseInt(mem.getProperties().get(MESSAGE_SYNC_PORT_KEY))))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
   }
 }

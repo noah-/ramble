@@ -1,55 +1,42 @@
 package ramble.messagesync.netty;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.apache.log4j.Logger;
 import ramble.api.MessageSyncProtocol;
-
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import ramble.messagesync.api.MessageSyncClient;
+import ramble.messagesync.api.MessageSyncHandler;
 
 public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<MessageSyncProtocol.Response> {
 
-  private Channel channel;
-  private BlockingQueue<MessageSyncProtocol.Response> resps = new LinkedBlockingQueue<>();
+  private static final Logger LOG = Logger.getLogger(NettyMessageSyncClient.class);
 
-  // Need to re-write this method and re-implement channelRead0
-  MessageSyncProtocol.Response sendRequest(MessageSyncProtocol.Request request) {
-    // Send request
-    this.channel.writeAndFlush(request);
+  private final MessageSyncClient messageSyncClient;
+  private final MessageSyncHandler messageSyncHandler;
 
-    // Now wait for response from server
-    boolean interrupted = false;
-    MessageSyncProtocol.Response resp;
-    while (true) {
-      try {
-        resp = this.resps.take(); // need an ACK
-        break;
-      } catch (InterruptedException ignore) {
-        interrupted = true;
-      }
-    }
-
-    if (interrupted) {
-      Thread.currentThread().interrupt();
-    }
-
-    return resp;
-  }
-
-  @Override
-  public void channelRegistered(ChannelHandlerContext ctx) {
-    channel = ctx.channel();
+  NettyMessageSyncClientHandler(MessageSyncClient messageSyncClient, MessageSyncHandler messageSyncHandler) {
+    this.messageSyncClient = messageSyncClient;
+    this.messageSyncHandler = messageSyncHandler;
   }
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Response msg) {
-    this.resps.add(msg);
+    switch(msg.getResponseTypeCase()) {
+      case SENDMESSAGE:
+        this.messageSyncHandler.handleSendMessagesResponse(this.messageSyncClient, msg.getSendMessage());
+        break;
+      case ACK:
+        this.messageSyncHandler.handleEmptyResponse(this.messageSyncClient, msg.getAck());
+        break;
+      case RESPONSETYPE_NOT_SET:
+        LOG.error("Received unknown response type in message: " + msg);
+        break;
+    }
   }
 
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-    cause.printStackTrace();
+    LOG.error("Caught exception on Netty channel, closing connection", cause);
     ctx.close();
   }
 }

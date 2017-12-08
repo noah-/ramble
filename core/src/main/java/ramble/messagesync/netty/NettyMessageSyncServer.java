@@ -1,5 +1,6 @@
 package ramble.messagesync.netty;
 
+import com.google.common.util.concurrent.AbstractIdleService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -12,7 +13,7 @@ import ramble.messagesync.api.MessageSyncServer;
 
 import java.util.concurrent.CompletableFuture;
 
-public class NettyMessageSyncServer implements MessageSyncServer {
+public class NettyMessageSyncServer extends AbstractIdleService implements MessageSyncServer {
 
   private static final Logger LOG = Logger.getLogger(NettyMessageSyncServer.class);
 
@@ -38,7 +39,7 @@ public class NettyMessageSyncServer implements MessageSyncServer {
   }
 
   @Override
-  public void start() {
+  protected void startUp() {
     LOG.info("Starting Message Sync Server on port " + this.port);
 
     // TODO not sure if running this async is necessary / safe
@@ -52,7 +53,7 @@ public class NettyMessageSyncServer implements MessageSyncServer {
   }
 
   @Override
-  public void stop() {
+  protected void shutDown() {
     this.serverGroup.shutdownGracefully();
     this.workerGroup.shutdownGracefully();
   }
