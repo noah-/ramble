@@ -74,16 +74,18 @@ public class RambleCli {
       System.exit(0);
     }
 
-    if (!cmd.hasOption("pu")) {
-      System.out.println("Missing required option -pu!");
-      formatter.printHelp("ramble-cli", options);
-      System.exit(0);
+    String pkpath;
+    if (cmd.hasOption("pu")) {
+      pkpath = cmd.getOptionValue("pu");
+    } else {
+      pkpath = "/tmp/ramble-key-store/ramble-cli.pub";
     }
 
-    if (!cmd.hasOption("pr")) {
-      System.out.println("Missing required option -pr!");
-      formatter.printHelp("ramble-cli", options);
-      System.exit(0);
+    String skpath;
+    if (cmd.hasOption("pr")) {
+      skpath = cmd.getOptionValue("pr");
+    } else {
+      skpath = "/tmp/ramble-key-store/ramble-cli";
     }
 
     int gossipPort;
@@ -109,8 +111,8 @@ public class RambleCli {
     }
 
     KeyReader keyReader = new KeyReader();
-    PublicKey publicKey = keyReader.getPublicKey(Paths.get(cmd.getOptionValue("pu")));
-    PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(cmd.getOptionValue("pr")));
+    PublicKey publicKey = keyReader.getPublicKey(Paths.get(pkpath));
+    PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(skpath));
 
     // Create the RAMBLE service
     this.ramble = new RambleImpl(peers, publicKey, privateKey, gossipPort, messageSyncPort);
@@ -146,7 +148,7 @@ public class RambleCli {
           });
           try {
             while ((message = ramble.listen().take()) != null) {
-              writer.write(message.getMessage());
+              writer.write(message.getTimestamp() + ":" +  message.getMessage());
               writer.write('\n');
               writer.flush(); // Flush the file on every write to making testing easier
             }
