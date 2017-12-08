@@ -8,7 +8,6 @@ import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.db.api.DbStore;
 import ramble.messagesync.api.MessageSyncClient;
-import ramble.messagesync.api.MessageSyncHandler;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 
-public class StorageMessageSyncHandler implements MessageSyncHandler {
+public class StorageMessageSyncHandler extends TypedMessageSyncHandler {
 
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
 

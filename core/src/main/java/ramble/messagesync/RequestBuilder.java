@@ -1,7 +1,6 @@
 package ramble.messagesync;
 
 import com.google.protobuf.ByteString;
-
 import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
 
@@ -40,6 +39,18 @@ public class RequestBuilder {
 
     return MessageSyncProtocol.Request.newBuilder()
             .setBroadcastMessages(broadcastMessages)
+            .build();
+  }
+
+  public static MessageSyncProtocol.Request buildGetComplementRequest(Set<byte[]> messageDigests, long blockStartTime, long blockEndTime) {
+    MessageSyncProtocol.GetComplement getComplement = MessageSyncProtocol.GetComplement.newBuilder()
+            .addAllMessageDigest(messageDigests.stream().map(ByteString::copyFrom).collect(Collectors.toList()))
+            .setBlockStartTime(blockStartTime)
+            .setBlockEndTime(blockEndTime)
+            .build();
+
+    return MessageSyncProtocol.Request.newBuilder()
+            .setGetComplement(getComplement)
             .build();
   }
 }

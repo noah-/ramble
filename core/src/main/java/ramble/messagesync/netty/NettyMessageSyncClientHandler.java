@@ -21,17 +21,7 @@ public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<M
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Response msg) {
-    switch(msg.getResponseTypeCase()) {
-      case SENDMESSAGE:
-        this.messageSyncHandler.handleSendMessagesResponse(this.messageSyncClient, msg.getSendMessage());
-        break;
-      case ACK:
-        this.messageSyncHandler.handleEmptyResponse(this.messageSyncClient, msg.getAck());
-        break;
-      case RESPONSETYPE_NOT_SET:
-        LOG.error("Received unknown response type in message: " + msg);
-        break;
-    }
+    this.messageSyncHandler.handleResponse(this.messageSyncClient, msg);
   }
 
   @Override

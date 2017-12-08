@@ -1,5 +1,6 @@
 package ramble.messagesync.netty;
 
+import com.google.common.collect.Sets;
 import com.google.protobuf.ByteString;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -38,10 +39,37 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
       case BROADCASTMESSAGES:
         ctx.write(handleSendMessagesRequest(msg.getBroadcastMessages()));
         break;
+      case GETCOMPLEMENT:
+        ctx.write(handleGetComplementRequest(msg.getGetComplement()));
       case REQUESTTYPE_NOT_SET:
         LOG.error("Got a message with an invalid request type, dropping message");
         break;
     }
+  }
+
+  private MessageSyncProtocol.Response handleGetComplementRequest(MessageSyncProtocol.GetComplement getComplement) {
+    MessageSyncProtocol.Response.Builder responseBuilder = MessageSyncProtocol.Response.newBuilder();
+    Set<byte[]> localBlock = this.dbStore.getDigestRange(getComplement.getBlockStartTime(),
+            getComplement.getBlockEndTime());
+
+    Set<byte[]> complement = computeComplement(localBlock, getComplement
+            .getMessageDigestList()
+            .stream()
+            .map(ByteString::toByteArray)
+            .collect(Collectors.toSet()));
+
+    MessageSyncProtocol.SendMessageDigests sendMessageDigests = MessageSyncProtocol.SendMessageDigests.newBuilder()
+            .addAllMessageDigest(complement
+                    .stream()
+                    .map(ByteString::copyFrom)
+                    .collect(Collectors.toSet()))
+            .build();
+
+    return responseBuilder.setSendMessageDigests(sendMessageDigests).build();
+  }
+
+  private Set<byte[]> computeComplement(Set<byte[]> localBlock, Set<byte[]> remoteBlock) {
+    return Sets.difference(localBlock, remoteBlock);
   }
 
   private MessageSyncProtocol.Response handleSendMessagesRequest(MessageSyncProtocol.BroadcastMessages broadcastMessages) {
