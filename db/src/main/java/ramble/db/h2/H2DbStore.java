@@ -124,6 +124,25 @@ public class H2DbStore implements DbStore {
   }
 
   @Override
+  public Set<byte[]> getDigestRange(long startTimestamp, long endTimestamp) {
+    String sql = "SELECT messagedigest FROM messages WHERE timestamp BETWEEN ? AND ?";
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setLong(1, startTimestamp);
+      ps.setLong(2, endTimestamp);
+      Set<byte[]> digests = new HashSet<>();
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          digests.add(rs.getBytes(1));
+        }
+        return digests;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public Set<RambleMessage.SignedMessage> getRange(long startTimestamp, long endTimestamp) {
     String sql = "SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM " +
             "messages WHERE timestamp BETWEEN ? AND ?";
