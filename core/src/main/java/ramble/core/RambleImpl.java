@@ -69,6 +69,7 @@ public class RambleImpl implements Ramble {
     this.messageQueue = new ArrayBlockingQueue<>(1024);
     this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService);
 
+    services.add(this.membershipService);
     services.add(MessageSyncServerFactory.getMessageSyncServer(this.dbStore, messageSyncPort));
     services.add(new SyncAllMessagesService(this.membershipService, this.id, this.messageQueue));
     services.add(this.messageBroadcaster);
@@ -77,7 +78,6 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void start() {
-    this.membershipService.start();
     this.serviceManager.startAsync();
   }
 
@@ -112,7 +112,6 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void shutdown() {
-    this.membershipService.shutdown();
     this.serviceManager.stopAsync();
   }
 

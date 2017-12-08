@@ -1,5 +1,6 @@
 package ramble.membership.gossip;
 
+import com.google.common.util.concurrent.AbstractIdleService;
 import org.apache.commons.io.FileUtils;
 import org.apache.gossip.GossipSettings;
 import org.apache.gossip.Member;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * Provides membership lists for a Ramble Cluster using Apache Gossip
  */
-public class ApacheGossipMembershipService implements MembershipService {
+public class ApacheGossipMembershipService extends AbstractIdleService implements MembershipService {
 
   private static final String GOSSIP_CLUSTER_NAME = "ramble";
   private static final String MESSAGE_SYNC_PORT_KEY = "ramble.message-sync.port";
@@ -95,16 +96,6 @@ public class ApacheGossipMembershipService implements MembershipService {
   }
 
   @Override
-  public void start() {
-    this.gossipManager.init();
-  }
-
-  @Override
-  public void shutdown() {
-    this.gossipManager.shutdown();
-  }
-
-  @Override
   public Set<RambleMember> getMembers() {
     return this.gossipManager
             .getLiveMembers()
@@ -112,5 +103,15 @@ public class ApacheGossipMembershipService implements MembershipService {
             .map(mem -> new RambleMember(mem.getUri().getHost(), mem.getUri().getPort(),
                     Integer.parseInt(mem.getProperties().get(MESSAGE_SYNC_PORT_KEY))))
             .collect(Collectors.toSet());
+  }
+
+  @Override
+  protected void startUp() {
+    this.gossipManager.init();
+  }
+
+  @Override
+  protected void shutDown() {
+    this.gossipManager.shutdown();
   }
 }
