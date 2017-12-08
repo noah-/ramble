@@ -1,6 +1,5 @@
 package ramble.api;
 
-import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
@@ -36,5 +35,5 @@ public interface Ramble {
 
   Set<RambleMessage.Message> getAllMessages();
 
-  Set<URI> getMembers();
+  Set<RambleMember> getMembers();
 }

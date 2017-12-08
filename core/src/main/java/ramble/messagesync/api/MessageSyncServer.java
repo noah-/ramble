@@ -1,8 +1,7 @@
 package ramble.messagesync.api;
 
-public interface MessageSyncServer {
+import com.google.common.util.concurrent.Service;
 
-  void start() throws InterruptedException;
+public interface MessageSyncServer extends Service {
 
-  void stop();
 }

@@ -11,13 +11,19 @@ message Request {
   oneof request_type {
     GetAllMessages getAllMessages = 1;
     GetMessages getMessages = 2;
+    BroadcastMessages broadcastMessages = 3;
   }
 }
 
 message Response {
   oneof response_type {
     SendMessages sendMessage = 1;
+    Ack ack = 2;
   }
+}
+
+message Ack {
+
 }
 
 message GetAllMessages {
@@ -29,5 +35,9 @@ message GetMessages {
 }
 
 message SendMessages {
+  BulkSignedMessage messages = 1;
+}
+
+message BroadcastMessages {
   BulkSignedMessage messages = 1;
 }

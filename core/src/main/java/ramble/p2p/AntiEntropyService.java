@@ -1,25 +1,29 @@
 package ramble.p2p;
 
+import com.google.common.util.concurrent.AbstractScheduledService;
+import com.google.common.util.concurrent.Service;
 import ramble.db.h2.H2DbStore;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
-public class AntiEntropy {
+public class AntiEntropyService extends AbstractScheduledService implements Service {
 
     private static final long BLOCK_TIME_PERIOD = 300000; // 5 mins
     private static AtomicLong _lastVerifiedTS = new AtomicLong(0);
 
     private final H2DbStore dbStore;
     private long currentTS;
-    private HashMap<Long,HashSet<String>> blockCache = new HashMap<>();
-    private MessageService ms;
+    private Map<Long,Set<byte[]>> blockCache = new HashMap<>();
+    private LocalMessageService ms;
 
-    public AntiEntropy(MessageService ms, String db, long ts, long nts) {
+    public AntiEntropyService(LocalMessageService ms, String db, long ts, long nts) {
         if (_lastVerifiedTS.get() < ts)
             _lastVerifiedTS.set(ts);
 
@@ -29,30 +33,30 @@ public class AntiEntropy {
         dbStore = H2DbStore.getOrCreateStore(db);
     }
 
-    public void computeComplement(HashSet<String> a, HashSet<String> b) {
-        Iterator<String> iterator = b.iterator();
+    public void computeComplement(Set<byte[]> a, Set<byte[]> b) {
+        Iterator<byte[]> iterator = b.iterator();
         while (iterator.hasNext()) {
-            String e = iterator.next();
-            if (a.remove(e)) {
+            byte[] e = iterator.next();
+            if (a.contains(e)) {
+                a.remove(e);
                 iterator.remove();
             }
         }
     }
 
-    public HashSet<String> getDigestBlock(long ts) {
-        return dbStore.getRange(ts - BLOCK_TIME_PERIOD, ts).stream().map(
-                msg -> Arrays.toString(msg.getMessage().getMessageDigest().toByteArray())).collect(
-                Collectors.toCollection(HashSet::new));
+    public Set<byte[]> getDigestBlock(long ts) {
+        return dbStore.getDigestRange(ts - BLOCK_TIME_PERIOD, ts);
     }
 
-    public void run() {
+    @Override
+    public void runOneIteration() throws Exception {
         long current = currentTS;
 
         while (current > _lastVerifiedTS.get()) {
-            HashSet<String> a = getDigestBlock(current);
+            Set<byte[]> a = getDigestBlock(current);
             ms.sendBlock(a);
 
-            HashSet<String> b = null;
+            Set<byte[]> b = null;
             try {
                 b = ms.getBlock();
             } catch (InterruptedException e)
@@ -70,14 +74,14 @@ public class AntiEntropy {
         }
     }
 
-    public void flushCache(){
+    public void flushCache(String id){ // blocking queue
         for (long k : blockCache.keySet()) {
-            HashSet<String> hs = blockCache.get(k);
+            Set<byte[]> hs = blockCache.get(k);
             // TODO
             // request messages with the following digests in hs
             // save them to database
-            for (String s : hs)
-                System.out.println(s);
+            System.out.println("set diff for id = " + id + " " + Arrays.toString(
+                    hs.stream().map(s -> new String(s, StandardCharsets.UTF_8)).sorted().toArray()));
         }
 
         _lastVerifiedTS.set(currentTS);
@@ -85,4 +89,8 @@ public class AntiEntropy {
         blockCache.clear();
     }
 
+    @Override
+    protected Scheduler scheduler() {
+        return Scheduler.newFixedRateSchedule(1500, 1000, TimeUnit.MILLISECONDS);
+    }
 }
