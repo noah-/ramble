@@ -1,21 +1,33 @@
-DROP TABLE IF EXISTS messages;
-DROP TABLE IF EXISTS iplist;
+DROP TABLE IF EXISTS MESSAGES;
+DROP TABLE IF EXISTS FINGERPRINT;
+DROP TABLE IF EXISTS TIMEBLOCK;
 
-CREATE TABLE messages
+CREATE TABLE MESSAGES
   (
-     sourceid      VARCHAR(255),
-     message       VARCHAR(255),
-     messagedigest BINARY(128),
-     timestamp     BIGINT,
-     publickey     BINARY(1024),
-     signature     BINARY(1024),
-     PRIMARY KEY(sourceid, messagedigest, timestamp)
+     SOURCEID      VARCHAR(255),
+     MESSAGE       VARCHAR(255),
+     MESSAGEDIGEST BINARY(128),
+     PARENTDIGEST  BINARY(128),
+     IPADDRESS     INT,
+     TIMESTAMP     BIGINT,
+     PUBLICKEY     BINARY(1024),
+     SIGNATURE     BINARY(1024),
+     PRIMARY KEY(SOURCEID, MESSAGEDIGEST, TIMESTAMP)
   );
 
-CREATE TABLE iplist
+CREATE TABLE FINGERPRINT
   (
-     publickey VARCHAR(255),
-     ipaddress INT,
-     timestamp BIGINT,
-     count     INT
+     PUBLICKEY     VARCHAR(255),
+     IPADDRESS     INT,
+     COUNT         INT,
+     TSSTART       BIGINT,
+     TSEND         BIGINT
+     PRIMARY KEY(PUBLICKEY)
   );
+
+CREATE TABLE BLOCKCONF
+  {
+     TIMESTAMP     BIGINT,
+     COUNT         INT
+     PRIMARY KEY(TIMESTAMP)
+  };

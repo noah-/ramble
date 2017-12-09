@@ -53,7 +53,7 @@ public class H2DbStore implements DbStore {
 
   @Override
   public boolean exists(RambleMessage.SignedMessage message) {
-    String sql = "SELECT EXISTS (SELECT * FROM messages WHERE sourceid = ? AND messagedigest = ? AND timestamp = ?)";
+    String sql = "SELECT EXISTS (SELECT * FROM MESSAGES WHERE SOURCEID = ? AND MESSAGEDIGEST = ? AND TIMESTAMP = ?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -75,7 +75,8 @@ public class H2DbStore implements DbStore {
 
   @Override
   public void store(RambleMessage.SignedMessage message) {
-    String sql = "INSERT INTO messages(sourceid, message, messagedigest, timestamp, publickey, signature) VALUES (?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO MESSAGES(SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, PUBLICKEY, " +
+            "SIGNATURE) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -83,9 +84,15 @@ public class H2DbStore implements DbStore {
       ps.setString(1, message.getMessage().getSourceId());
       ps.setString(2, message.getMessage().getMessage());
       ps.setBytes(3, message.getMessage().getMessageDigest().toByteArray());
-      ps.setLong(4, message.getMessage().getTimestamp());
-      ps.setBytes(5, message.getPublicKey().toByteArray());
-      ps.setBytes(6, message.getSignature().toByteArray());
+      // TODO: Implement parentDigest()
+      // ps.setLong(4, message.getMessage().getParentDigest.toByteArray());
+      ps.setLong(4, 0);
+      // TODO: Implement getIpAddress()
+      // ps.setLong(5, message.getMessage().getIpAddress());
+      ps.setLong(5, 0);
+      ps.setLong(6, message.getMessage().getTimestamp());
+      ps.setBytes(7, message.getPublicKey().toByteArray());
+      ps.setBytes(8, message.getSignature().toByteArray());
 
       ps.executeUpdate();
     } catch (SQLException e) {
@@ -95,8 +102,8 @@ public class H2DbStore implements DbStore {
 
   @Override
   public Set<RambleMessage.SignedMessage> getRange(long startTimestamp, long endTimestamp) {
-    return runSelectAllQuery("SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM " +
-            "messages WHERE timestamp BETWEEN " + startTimestamp + " AND " +  endTimestamp);
+    return runSelectAllQuery("SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, " +
+            "PUBLICKEY, SIGNATURE FROM MESSAGES WHERE TIMESTAMP BETWEEN " + startTimestamp + " AND " + endTimestamp);
   }
 
   /**
@@ -106,14 +113,14 @@ public class H2DbStore implements DbStore {
    */
   @Override
   public Set<RambleMessage.SignedMessage> getAllMessages() {
-    return runSelectAllQuery("SELECT sourceid, message, messagedigest, timestamp, publickey, signature " +
-            "FROM messages");
+    return runSelectAllQuery("SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, " +
+            "PUBLICKEY, SIGNATURE FROM MESSAGES");
   }
 
   @Override
   public Set<RambleMessage.SignedMessage> getMessages(Set<byte[]> messageDigest) {
-    String sql = "SELECT sourceid, message, messagedigest, timestamp, publickey, signature FROM messages WHERE " +
-            "messagedigest IN (?)";
+    String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, PUBLICKEY, SIGNATURE " +
+            "FROM MESSAGES WHERE MESSAGEDIGEST IN (?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -124,6 +131,31 @@ public class H2DbStore implements DbStore {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public void updateBlockConfirmation(long ts) {
+    String sql = "SELECT COUNT FROM BLOCKCONF WHERE TIMESTAMP = ?";
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setObject(1, ts);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          int count = rs.getInt(1);
+          // TODO: write back updated value or create new if doesn't exist
+          // Look at how to make sure new entry is not made.
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void getFingerPrint() {
+
+  }
+
+  public void updateFingerPrint() {
+
   }
 
   private Set<RambleMessage.SignedMessage> runSelectAllQuery(String sql) {
@@ -145,13 +177,17 @@ public class H2DbStore implements DbStore {
               .setSourceId(rs.getString(1))
               .setMessage(rs.getString(2))
               .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
-              .setTimestamp(rs.getLong(4))
+              // TODO: implement setParentDigest
+              //.setParentDigest(ByteString.copyFrom(rs.getBytes(4)))
+              // TODO: implement setIpAddress
+              //.setParentDigest(ByteString.copyFrom(rs.getBytes(5)))
+              .setTimestamp(rs.getLong(6))
               .build();
 
       messages.add(RambleMessage.SignedMessage.newBuilder()
               .setMessage(message)
-              .setPublicKey(ByteString.copyFrom(rs.getBytes(5)))
-              .setSignature(ByteString.copyFrom(rs.getBytes(6)))
+              .setPublicKey(ByteString.copyFrom(rs.getBytes(7)))
+              .setSignature(ByteString.copyFrom(rs.getBytes(8)))
               .build());
     }
     return messages;
