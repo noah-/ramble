@@ -1,28 +1,6 @@
 package ramble.webclient;
 
-import static spark.Spark.*;
-import spark.*;
-
 import com.google.common.base.Splitter;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.UUID;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -34,7 +12,26 @@ import ramble.api.Ramble;
 import ramble.api.RambleMessage;
 import ramble.core.RambleImpl;
 import ramble.crypto.KeyReader;
-import spark.template.velocity.*;
+import spark.ModelAndView;
+import spark.template.velocity.VelocityTemplateEngine;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static spark.Spark.get;
+import static spark.Spark.staticFiles;
 
 public class RambleClient {
 
@@ -149,7 +146,7 @@ public class RambleClient {
 
 
     get("/allmessage", (req, res) -> {
-      Map<String, Object> model = new HashMap();
+      Map<String, Object> model = new HashMap<>();
       model.put("msgs", this.GetMessageSet("0"));
       model.put("this_msg_id", "0");
       model.put("header", "All Top Messages");
@@ -157,7 +154,7 @@ public class RambleClient {
     });
 
     get("/message/*", (req, res) -> {
-      Map<String, Object> model = new HashMap();
+      Map<String, Object> model = new HashMap<>();
       model.put("msgs",this.GetMessageSet(req.splat()[0]));
       model.put("this_msg_id", req.splat()[0]);
       model.put("header", "reply for message");

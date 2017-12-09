@@ -67,10 +67,10 @@ public class RambleImpl implements Ramble {
             messageSyncPort,
             this.id);
     this.messageQueue = new ArrayBlockingQueue<>(1024);
-    this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService);
+    this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService, 3); // default fanout to 3
 
     services.add(this.membershipService);
-    services.add(MessageSyncServerFactory.getMessageSyncServer(this.dbStore, messageSyncPort));
+    services.add(MessageSyncServerFactory.getMessageSyncServer(this.dbStore, messageSyncPort, this));
     services.add(new SyncAllMessagesService(this.membershipService, this.id, this.messageQueue)); // replace with ComputeComplementService when ready
     services.add(this.messageBroadcaster);
     this.serviceManager = new ServiceManager(services);
@@ -83,7 +83,7 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void post(String message) {
-    LOG.info("Posting message: " + message);
+    LOG.info("[id = " + this.id +  " ] Posting message: " + message);
 
     // Create signed message
     RambleMessage.SignedMessage signedMessage = buildSignedMessage(message);
@@ -92,11 +92,7 @@ public class RambleImpl implements Ramble {
     DbStoreFactory.getDbStore(this.id).store(signedMessage);
 
     // Broadcast the message
-    try {
-      this.messageBroadcaster.broadcastMessage(signedMessage);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+    broadcast(signedMessage);
 
     try {
       this.messageQueue.put(signedMessage.getMessage());
@@ -132,6 +128,15 @@ public class RambleImpl implements Ramble {
   @Override
   public Set<RambleMember> getMembers() {
     return this.membershipService.getMembers();
+  }
+
+  @Override
+  public void broadcast(RambleMessage.SignedMessage message) {
+    try {
+      this.messageBroadcaster.broadcastMessage(message);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private RambleMessage.SignedMessage buildSignedMessage(String message) {

@@ -41,7 +41,7 @@ public class SyncAllMessagesService extends AbstractScheduledService implements 
       RambleMember target = this.targetSelector.getTarget(peers);
 
       MessageSyncClient client = MessageSyncClientFactory.getMessageSyncClient(target.getAddr(),
-              target.getMessageSyncPort(), new StorageMessageSyncHandler(this.messageQueue, this.id));
+              target.getMessageSyncPort(), new MessageQueueMessageSyncHandler(this.messageQueue, this.id));
 
       // May need to add an explicit disconnect here in case there is an error while sending the request, but Netty may
       // handle it internally so its ok for now
@@ -52,6 +52,6 @@ public class SyncAllMessagesService extends AbstractScheduledService implements 
 
   @Override
   protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(1500, 1000, TimeUnit.MILLISECONDS);
+    return Scheduler.newFixedRateSchedule(1500, 5000, TimeUnit.MILLISECONDS);
   }
 }
