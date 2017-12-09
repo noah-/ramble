@@ -1,6 +1,7 @@
 package ramble.webclient;
 
 import static spark.Spark.*;
+import spark.*;
 
 import com.google.common.base.Splitter;
 import java.io.BufferedWriter;
@@ -17,6 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,6 +34,7 @@ import ramble.api.Ramble;
 import ramble.api.RambleMessage;
 import ramble.core.RambleImpl;
 import ramble.crypto.KeyReader;
+import spark.template.velocity.*;
 
 public class RambleClient {
 
@@ -38,7 +45,6 @@ public class RambleClient {
 
   private RambleClient(String args[])
           throws IOException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
-
     // Parse the CLI options
     Options options = new Options();
     options.addOption("p", "peers", true, "Comma-separated list of initial peers to connect to");
@@ -65,16 +71,18 @@ public class RambleClient {
       System.exit(0);
     }
 
-    if (!cmd.hasOption("pu")) {
-      System.out.println("Missing required option -pu!");
-      formatter.printHelp("ramble-cli", options);
-      System.exit(0);
+    String pkpath;
+    if (cmd.hasOption("pu")) {
+      pkpath = cmd.getOptionValue("pu");
+    } else {
+      pkpath = "/tmp/ramble-key-store/ramble-cli.pub";
     }
 
-    if (!cmd.hasOption("pr")) {
-      System.out.println("Missing required option -pr!");
-      formatter.printHelp("ramble-cli", options);
-      System.exit(0);
+    String skpath;
+    if (cmd.hasOption("pr")) {
+      skpath = cmd.getOptionValue("pr");
+    } else {
+      skpath = "/tmp/ramble-key-store/ramble-cli";
     }
 
     int gossipPort;
@@ -100,12 +108,23 @@ public class RambleClient {
     }
 
     KeyReader keyReader = new KeyReader();
-    PublicKey publicKey = keyReader.getPublicKey(Paths.get(cmd.getOptionValue("pu")));
-    PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(cmd.getOptionValue("pr")));
+    PublicKey publicKey = keyReader.getPublicKey(Paths.get(pkpath));
+    PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(skpath));
 
     // Create the RAMBLE service
     this.ramble = new RambleImpl(peers, publicKey, privateKey, gossipPort, messageSyncPort);
     this.dumpFile = new File(cmd.getOptionValue('f'));
+
+  }
+
+  private List<RambleMessage.Message> GetMessageSet(String parent) {
+    List<RambleMessage.Message> ret = new ArrayList<RambleMessage.Message>();
+    for (RambleMessage.Message msg : this.ramble.getAllMessages()) {
+      if (msg.getMessage().split(":")[1].equals(parent)) {
+        ret.add(msg);
+      }
+    }
+    return ret;
   }
 
   private void run() {
@@ -117,18 +136,32 @@ public class RambleClient {
       }
     });
 
+    staticFiles.location("/public");
 
-    get("/ok", (req, res) -> "ok");
-    post("/postmessage", (req, res) -> {
-      this.ramble.post("Message here");
-      return "response";
+    get("/postmessage/*", (req, res) -> {
+      if(req.queryParams("msg") != null) {
+        this.ramble.post(UUID.randomUUID() +":" + req.splat()[0]
+            + ":" + req.queryParams("msg"));
+      }
+      res.redirect("/message/" + req.splat()[0]);
+      return "Not important";
     });
+
+
     get("/allmessage", (req, res) -> {
-      this.ramble.getAllMessages();
-      return "response";
+      Map<String, Object> model = new HashMap();
+      model.put("msgs", this.GetMessageSet("0"));
+      model.put("this_msg_id", "0");
+      model.put("header", "All Top Messages");
+     return new VelocityTemplateEngine().render(new ModelAndView(model, "template/message.vm"));
     });
-    get("/thread/*", (req, res) -> {
-      return "response";
+
+    get("/message/*", (req, res) -> {
+      Map<String, Object> model = new HashMap();
+      model.put("msgs",this.GetMessageSet(req.splat()[0]));
+      model.put("this_msg_id", req.splat()[0]);
+      model.put("header", "reply for message");
+      return new VelocityTemplateEngine().render(new ModelAndView(model, "template/message.vm"));
     });
   }
 

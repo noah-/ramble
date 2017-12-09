@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vew Message</title>
+  </head>
+  <body>
+    <h1>$header</h1>
+
+    <a href="/allmessage">all message</a>
+    <form action="/postmessage/$this_msg_id" method="get">
+      Reply/Post: <input type="text" name="msg"><br>
+      <input type="submit" value="Submit">
+    </form>
+    <hr>
+    <hr>
+    #foreach( $msg in $msgs )
+    <p>$msg.getMessage().split(":")[2] </p> <a href="/message/$msg.getMessage().split(':')[0]">show replies</a>
+    <hr>
+    #end
+
+
+  </body>
+</html>
+
