@@ -14,7 +14,6 @@ import ramble.messagesync.api.MessageSyncServer;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class NettyClientServerTest {
 
@@ -37,7 +36,7 @@ public class NettyClientServerTest {
     CompletableFuture future = CompletableFuture.runAsync(nettyServer::startAsync);
 
     for (int i = 0; i < 10; i++) {
-      MessageSyncClient nettyClient = MessageSyncClientFactory.getMessageSyncClient("localhost", 6000, new StorageMessageSyncHandler(new LinkedBlockingQueue<>(), "netty-test"));
+      MessageSyncClient nettyClient = MessageSyncClientFactory.getMessageSyncClient("localhost", 6000, new StorageMessageSyncHandler("netty-test"));
       nettyClient.connect();
       Thread.sleep(1000);
       nettyClient.sendRequest(RequestBuilder.buildGetAllMessagesRequest());

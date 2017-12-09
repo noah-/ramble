@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class MessageBroadcaster extends AbstractExecutionThreadService implements Service {
@@ -53,7 +52,7 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
                 broadcastMessages.stream().map(msg -> msg.getMessage().getMessage()).toArray()) + " from id = " + this.id + " to target " + target.getAddr() + ":" + target.getMessageSyncPort());
 
         MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(target.getAddr(),
-                target.getMessageSyncPort(), new StorageMessageSyncHandler(new LinkedBlockingQueue<>(), this.id));
+                target.getMessageSyncPort(), new AckMessageSyncHandler());
         messageSyncClient.connect();
         messageSyncClient.sendRequest(RequestBuilder.buildBroadcastMessagesRequest(broadcastMessages));
       }
