@@ -8,14 +8,17 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import ramble.api.MessageSyncProtocol;
+import ramble.api.Ramble;
 import ramble.db.api.DbStore;
 
 public class NettyMessageSyncServerInitializer extends ChannelInitializer<SocketChannel> {
 
-  private DbStore dbStore;
+  private final DbStore dbStore;
+  private final Ramble ramble;
 
-  NettyMessageSyncServerInitializer(DbStore dbStore) {
+  NettyMessageSyncServerInitializer(DbStore dbStore, Ramble ramble) {
     this.dbStore = dbStore;
+    this.ramble = ramble;
   }
 
   @Override
@@ -27,6 +30,6 @@ public class NettyMessageSyncServerInitializer extends ChannelInitializer<Socket
     p.addLast(new ProtobufVarint32LengthFieldPrepender());
     p.addLast(new ProtobufEncoder());
 
-    p.addLast(new NettyMessageSyncServerHandler(this.dbStore));
+    p.addLast(new NettyMessageSyncServerHandler(this.dbStore, this.ramble));
   }
 }

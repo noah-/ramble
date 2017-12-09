@@ -7,4 +7,6 @@ import java.util.Set;
 public interface TargetSelector {
 
   RambleMember getTarget(Set<RambleMember> members);
+
+  Set<RambleMember> getTargets(Set<RambleMember> members, int numTargets);
 }

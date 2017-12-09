@@ -9,6 +9,7 @@ import ramble.api.RambleMessage;
 import ramble.messagesync.api.MessageSyncClient;
 import ramble.messagesync.api.TargetSelector;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -24,11 +25,13 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
   private final MembershipService membershipService;
   private final TargetSelector targetSelector;
   private final String id;
+  private final int fanout;
 
-  public MessageBroadcaster(String id, MembershipService membershipService) {
+  public MessageBroadcaster(String id, MembershipService membershipService, int fanout) {
     this.id = id;
     this.messages = new ArrayBlockingQueue<>(1024);
     this.membershipService = membershipService;
+    this.fanout = fanout;
     this.targetSelector = new RandomTargetSelector();
   }
 
@@ -41,15 +44,19 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
     while (isRunning()) {
       Set<RambleMessage.SignedMessage> broadcastMessages = new HashSet<>();
       broadcastMessages.add(this.messages.take());
+      this.messages.drainTo(broadcastMessages);
 
-      RambleMember target = this.targetSelector.getTarget(this.membershipService.getMembers());
+      Set<RambleMember> targets = this.targetSelector.getTargets(this.membershipService.getMembers(), this.fanout);
 
-      LOG.info("Broadcasting messages from id = " + this.id + " to target " + target.getAddr());
+      for (RambleMember target : targets) {
+        LOG.info("Broadcasting messages: " + Arrays.toString(
+                broadcastMessages.stream().map(msg -> msg.getMessage().getMessage()).toArray()) + " from id = " + this.id + " to target " + target.getAddr() + ":" + target.getMessageSyncPort());
 
-      MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(target.getAddr(),
-              target.getMessageSyncPort(), new StorageMessageSyncHandler(new LinkedBlockingQueue<>(), this.id));
-      messageSyncClient.connect();
-      messageSyncClient.sendRequest(RequestBuilder.buildBroadcastMessagesRequest(broadcastMessages));
+        MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(target.getAddr(),
+                target.getMessageSyncPort(), new StorageMessageSyncHandler(new LinkedBlockingQueue<>(), this.id));
+        messageSyncClient.connect();
+        messageSyncClient.sendRequest(RequestBuilder.buildBroadcastMessagesRequest(broadcastMessages));
+      }
     }
   }
 }

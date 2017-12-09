@@ -2,6 +2,8 @@ package ramble.cluster;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import ramble.api.Ramble;
@@ -31,6 +33,8 @@ public class RambleCluster {
 
   @Test
   public void rambleClusterTest() throws InterruptedException, IOException, NoSuchAlgorithmException {
+
+    Logger.getLogger("io.netty").setLevel(Level.OFF);
 
     String addr = InetAddress.getLocalHost().getHostAddress();
 
@@ -79,7 +83,7 @@ public class RambleCluster {
     clients.forEach(Ramble::start);
 
     // Wait for them to discover each other
-    Thread.sleep(1000);
+    Thread.sleep(5000);
 
     // Validate each member has seen all other members
     clients.forEach(mem -> Assert.assertEquals(mem.getMembers().size(), 4));
@@ -88,7 +92,7 @@ public class RambleCluster {
     for (int i = 0; i < 3; i++) {
       clients.forEach(gossipService -> gossipService.post(getRandomLoremIpsum(loremIpsum)));
 
-      Thread.sleep(1000);
+      Thread.sleep(5000);
     }
 
     // Wait for everything to converge

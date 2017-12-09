@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.apache.log4j.Logger;
+import ramble.api.Ramble;
 import ramble.db.api.DbStore;
 import ramble.messagesync.api.MessageSyncServer;
 
@@ -23,7 +24,7 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
   private final EventLoopGroup workerGroup;
   private final ServerBootstrap bootStrap;
 
-  public NettyMessageSyncServer(DbStore dbStore, int port) {
+  public NettyMessageSyncServer(DbStore dbStore, int port, Ramble ramble) {
     this.port = port;
 
     // Create event loop groups. One for incoming connections handling and
@@ -35,7 +36,7 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
     this.bootStrap.group(serverGroup, workerGroup)
             .channel(NioServerSocketChannel.class)
             .handler(new LoggingHandler(LogLevel.INFO))
-            .childHandler(new NettyMessageSyncServerInitializer(dbStore));
+            .childHandler(new NettyMessageSyncServerInitializer(dbStore, ramble));
   }
 
   @Override
@@ -48,6 +49,9 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
         bootStrap.bind(this.port).sync().channel().closeFuture().sync();
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
+      } finally {
+        this.serverGroup.shutdownGracefully();
+        this.workerGroup.shutdownGracefully();
       }
     });
   }

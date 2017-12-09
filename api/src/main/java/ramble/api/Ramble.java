@@ -36,4 +36,6 @@ public interface Ramble {
   Set<RambleMessage.Message> getAllMessages();
 
   Set<RambleMember> getMembers();
+
+  void broadcast(RambleMessage.SignedMessage message);
 }

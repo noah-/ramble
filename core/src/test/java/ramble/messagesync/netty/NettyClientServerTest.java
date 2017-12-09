@@ -32,7 +32,7 @@ public class NettyClientServerTest {
 
 //    NettyMessageSyncServer nettyServer = new NettyMessageSyncServer(6000);
     MessageSyncServer nettyServer = MessageSyncServerFactory.getMessageSyncServer(
-            DbStoreFactory.getDbStore("netty-test"), 6000);
+            DbStoreFactory.getDbStore("netty-test"), 6000, null);
 
     CompletableFuture future = CompletableFuture.runAsync(nettyServer::startAsync);
 

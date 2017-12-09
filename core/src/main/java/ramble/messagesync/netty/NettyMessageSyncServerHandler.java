@@ -2,10 +2,12 @@ package ramble.messagesync.netty;
 
 import com.google.common.collect.Sets;
 import com.google.protobuf.ByteString;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.log4j.Logger;
 import ramble.api.MessageSyncProtocol;
+import ramble.api.Ramble;
 import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
 import ramble.db.api.DbStore;
@@ -21,26 +23,28 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
 
   private static final Logger LOG = Logger.getLogger(NettyMessageSyncServerHandler.class);
 
-  private DbStore dbStore;
+  private final DbStore dbStore;
+  private final Ramble ramble;
 
-  NettyMessageSyncServerHandler(DbStore dbStore) {
+  NettyMessageSyncServerHandler(DbStore dbStore, Ramble ramble) {
     this.dbStore = dbStore;
+    this.ramble = ramble;
   }
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Request msg) {
     switch(msg.getRequestTypeCase()) {
       case GETALLMESSAGES:
-        ctx.write(handleGetAllMessagesRequest());
+        ctx.write(handleGetAllMessagesRequest()).addListener(ChannelFutureListener.CLOSE);
         break;
       case GETMESSAGES:
-        ctx.write(handleGetMessagesRequest(msg.getGetMessages()));
+        ctx.write(handleGetMessagesRequest(msg.getGetMessages())).addListener(ChannelFutureListener.CLOSE);
         break;
       case BROADCASTMESSAGES:
-        ctx.write(handleSendMessagesRequest(msg.getBroadcastMessages()));
+        ctx.write(handleSendMessagesRequest(msg.getBroadcastMessages())).addListener(ChannelFutureListener.CLOSE);
         break;
       case GETCOMPLEMENT:
-        ctx.write(handleGetComplementRequest(msg.getGetComplement()));
+        ctx.write(handleGetComplementRequest(msg.getGetComplement())).addListener(ChannelFutureListener.CLOSE);
       case REQUESTTYPE_NOT_SET:
         LOG.error("Got a message with an invalid request type, dropping message");
         break;
@@ -76,7 +80,17 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
     try {
       // Verify messages have valid signatures and store them in the DB
       if (MessageSigner.verify(broadcastMessages.getMessages().getSignedMessageList())) {
-        this.dbStore.store(broadcastMessages.getMessages());
+        for (RambleMessage.SignedMessage signedMessage : broadcastMessages.getMessages().getSignedMessageList()) {
+          if (!this.dbStore.exists(signedMessage)) {
+            this.dbStore.store(signedMessage);
+            LOG.info("[id = " + ramble.getId() + "] Ready to re-broadcast message " + signedMessage.getMessage().getMessage());
+            this.ramble.broadcast(signedMessage);
+          } else {
+            LOG.info("[id = " + ramble.getId() + "] Message exists so dropping it " + signedMessage.getMessage().getMessage());
+          }
+        }
+      } else {
+        LOG.error("Verification of signature for message " + broadcastMessages + " failed");
       }
     } catch (InvalidKeySpecException | NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
       LOG.error("Error while verifying signatures for messages:\n" + broadcastMessages.getMessages(), e);
