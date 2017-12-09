@@ -13,7 +13,9 @@ import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.db.api.DbStore;
 import ramble.membership.MembershipServiceFactory;
-import ramble.messagesync.MessageSyncService;
+import ramble.messagesync.MessageBroadcaster;
+import ramble.messagesync.MessageSyncServerFactory;
+import ramble.messagesync.SyncAllMessagesService;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,8 +35,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Main implementation of {@link Ramble}. Currently just runs a {@link MembershipService}. More RAMBLE-specific logic
- * can be added here.
+ * Main implementation of {@link Ramble}.
  */
 public class RambleImpl implements Ramble {
 
@@ -47,6 +48,7 @@ public class RambleImpl implements Ramble {
   private final String id;
   private final DbStore dbStore;
   private final BlockingQueue<RambleMessage.Message> messageQueue;
+  private final MessageBroadcaster messageBroadcaster;
 
   public RambleImpl(List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort, int messageSyncPort)
           throws IOException {
@@ -65,22 +67,17 @@ public class RambleImpl implements Ramble {
             messageSyncPort,
             this.id);
     this.messageQueue = new ArrayBlockingQueue<>(1024);
+    this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService);
 
-    MessageSyncService messageSyncService = new MessageSyncService(
-            this.membershipService,
-            this.dbStore,
-            messageSyncPort,
-            this.id,
-            this.messageQueue);
-
-    services.add(messageSyncService);
-
+    services.add(this.membershipService);
+    services.add(MessageSyncServerFactory.getMessageSyncServer(this.dbStore, messageSyncPort));
+    services.add(new SyncAllMessagesService(this.membershipService, this.id, this.messageQueue)); // replace with ComputeComplementService when ready
+    services.add(this.messageBroadcaster);
     this.serviceManager = new ServiceManager(services);
   }
 
   @Override
   public void start() {
-    this.membershipService.start();
     this.serviceManager.startAsync();
   }
 
@@ -88,34 +85,18 @@ public class RambleImpl implements Ramble {
   public void post(String message) {
     LOG.info("Posting message: " + message);
 
-    byte[] digest;
-    try {
-      MessageDigest md = MessageDigest.getInstance("MD5");
-      md.update(message.getBytes(StandardCharsets.UTF_8));
-      digest = md.digest();
-    } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    }
+    // Create signed message
+    RambleMessage.SignedMessage signedMessage = buildSignedMessage(message);
 
-    RambleMessage.Message rambleMessage = RambleMessage.Message.newBuilder()
-            .setMessage(message)
-            .setTimestamp(System.currentTimeMillis())
-            .setSourceId(this.id)
-            .setMessageDigest(ByteString.copyFrom(digest))
-            .build();
-
-    RambleMessage.SignedMessage signedMessage;
-    try {
-      signedMessage = RambleMessage.SignedMessage.newBuilder()
-              .setMessage(rambleMessage)
-              .setSignature(ByteString.copyFrom(MessageSigner.sign(this.privateKey, rambleMessage.toByteArray())))
-              .setPublicKey(ByteString.copyFrom(this.publicKey.getEncoded()))
-              .build();
-    } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    }
-
+    // Store the message in the local db
     DbStoreFactory.getDbStore(this.id).store(signedMessage);
+
+    // Broadcast the message
+    try {
+      this.messageBroadcaster.broadcastMessage(signedMessage);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
 
     try {
       this.messageQueue.put(signedMessage.getMessage());
@@ -131,7 +112,6 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void shutdown() {
-    this.membershipService.shutdown();
     this.serviceManager.stopAsync();
   }
 
@@ -150,11 +130,38 @@ public class RambleImpl implements Ramble {
   }
 
   @Override
-  public Set<URI> getMembers() {
-    return this.membershipService
-            .getMembers()
-            .stream()
-            .map(RambleMember::getUri)
-            .collect(Collectors.toSet());
+  public Set<RambleMember> getMembers() {
+    return this.membershipService.getMembers();
+  }
+
+  private RambleMessage.SignedMessage buildSignedMessage(String message) {
+    byte[] digest = generateMessageDigest(message);
+
+    RambleMessage.Message rambleMessage = RambleMessage.Message.newBuilder()
+            .setMessage(message)
+            .setTimestamp(System.currentTimeMillis())
+            .setSourceId(this.id)
+            .setMessageDigest(ByteString.copyFrom(digest))
+            .build();
+
+    try {
+      return RambleMessage.SignedMessage.newBuilder()
+              .setMessage(rambleMessage)
+              .setSignature(ByteString.copyFrom(MessageSigner.sign(this.privateKey, rambleMessage.toByteArray())))
+              .setPublicKey(ByteString.copyFrom(this.publicKey.getEncoded()))
+              .build();
+    } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private byte[] generateMessageDigest(String message) {
+    try {
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      md.update(message.getBytes(StandardCharsets.UTF_8));
+      return md.digest();
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

@@ -1,8 +1,6 @@
 package ramble.messagesync.api;
 
-import ramble.api.RambleMessage;
-
-import java.util.Set;
+import ramble.api.MessageSyncProtocol;
 
 public interface MessageSyncClient {
 
@@ -11,10 +9,7 @@ public interface MessageSyncClient {
    */
   void connect() throws InterruptedException;
 
-  /**
-   * Runs the message sync protocol with the remote node and returns any new {@link RambleMessage.SignedMessage}s
-   */
-  Set<RambleMessage.SignedMessage> syncMessages();
+  void sendRequest(MessageSyncProtocol.Request request);
 
   void disconnect();
 }

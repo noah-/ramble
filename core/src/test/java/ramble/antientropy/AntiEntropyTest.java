@@ -1,4 +1,4 @@
-package ramble.local.antientropy;
+package ramble.antientropy;
 
 import com.google.protobuf.ByteString;
 import ramble.api.RambleMessage;
@@ -7,7 +7,7 @@ import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.db.h2.H2DbStore;
 import ramble.p2p.AntiEntropy;
-import ramble.p2p.MessageService;
+import ramble.p2p.LocalMessageService;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -32,7 +32,7 @@ public class AntiEntropyTest {
                 .setMessage(message)
                 .setTimestamp(ts)
                 .setSourceId("dead")
-                .setMessageDigest(ByteString.copyFrom(digest))
+                .setMessageDigest(ByteString.copyFromUtf8(message))
                 .build();
 
         RambleMessage.SignedMessage signedMessage;
@@ -64,16 +64,16 @@ public class AntiEntropyTest {
         RambleMessage.SignedMessage s4 = AntiEntropyTest.create(kg,"Beef", System.currentTimeMillis() - 340000);
         RambleMessage.SignedMessage s5 = AntiEntropyTest.create(kg,"OLD", System.currentTimeMillis() - 1100000);
 
-        DbStoreFactory.getDbStore("ae-test0").store(s0);
-        DbStoreFactory.getDbStore("ae-test0").store(s1);
-        DbStoreFactory.getDbStore("ae-test0").store(s2);
-        DbStoreFactory.getDbStore("ae-test0").store(s3);
-        DbStoreFactory.getDbStore("ae-test0").store(s5);
+        DbStoreFactory.getDbStore("ae-test0").store(s0); // hello
+        DbStoreFactory.getDbStore("ae-test0").store(s1); // world
+        DbStoreFactory.getDbStore("ae-test0").store(s2); // dead
+        DbStoreFactory.getDbStore("ae-test0").store(s3); // cow
+        DbStoreFactory.getDbStore("ae-test0").store(s5); // dead
 
-        DbStoreFactory.getDbStore("ae-test1").store(s0);
-        DbStoreFactory.getDbStore("ae-test1").store(s1);
-        DbStoreFactory.getDbStore("ae-test1").store(s2);
-        DbStoreFactory.getDbStore("ae-test1").store(s4);
+        DbStoreFactory.getDbStore("ae-test1").store(s0); // hello
+        DbStoreFactory.getDbStore("ae-test1").store(s1); // world
+        DbStoreFactory.getDbStore("ae-test1").store(s2); // dead
+        DbStoreFactory.getDbStore("ae-test1").store(s4); // beef
 
         AntiEntropyRunnable ae_test0 = new AntiEntropyRunnable(0,"ae-test0", System.currentTimeMillis());
         AntiEntropyRunnable ae_test1 = new AntiEntropyRunnable(1,"ae-test1", System.currentTimeMillis());
@@ -99,9 +99,13 @@ class AntiEntropyRunnable implements Runnable {
 
     public void run() {
         long last_ts = ((ts - 300000) / 300000) * 300000;
-        MessageService ms = new MessageService(n);
+        LocalMessageService ms = new LocalMessageService(n);
         AntiEntropy ae = new AntiEntropy(ms, id, last_ts, ts);
-        ae.run();
-        ae.flushCache();
+        try {
+            ae.runOneIteration();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ae.flushCache(id);
     }
 }

@@ -11,14 +11,20 @@ message Request {
   oneof request_type {
     GetAllMessages getAllMessages = 1;
     GetMessages getMessages = 2;
+    BroadcastMessages broadcastMessages = 3;
+    GetComplement getComplement = 4;
   }
 }
 
 message Response {
   oneof response_type {
     SendMessages sendMessage = 1;
+    SendMessageDigests sendMessageDigests = 2;
+    Ack ack = 3;
   }
 }
+
+// Requests
 
 message GetAllMessages {
 
@@ -28,6 +34,27 @@ message GetMessages {
   repeated bytes messageDigest = 1;
 }
 
+message BroadcastMessages {
+  BulkSignedMessage messages = 1;
+}
+
+
+message GetComplement {
+  repeated bytes messageDigest = 1;
+  uint64 blockStartTime = 2;
+  uint64 blockEndTime = 3;
+}
+
+// Reponses
+
 message SendMessages {
   BulkSignedMessage messages = 1;
+}
+
+message SendMessageDigests {
+  repeated bytes messageDigest = 1;
+}
+
+message Ack {
+
 }

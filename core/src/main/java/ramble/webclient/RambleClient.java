@@ -1,20 +1,9 @@
-package ramble.cli;
+package ramble.webclient;
+
+import static spark.Spark.*;
+import spark.*;
 
 import com.google.common.base.Splitter;
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-
-import org.apache.log4j.Logger;
-
-import ramble.api.Ramble;
-import ramble.api.RambleMessage;
-import ramble.core.RambleImpl;
-import ramble.crypto.KeyReader;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -29,25 +18,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Logger;
+import ramble.api.Ramble;
+import ramble.api.RambleMessage;
+import ramble.core.RambleImpl;
+import ramble.crypto.KeyReader;
+import spark.template.velocity.*;
 
+public class RambleClient {
 
-/**
- * Simple CLI service that allows users to launch and interact with RAMBLE via the command line. The CLI will write all
- * incoming messages to a specified file. The CLI has a user-prompt so that users can write and post messages to
- * RAMBLE. By default, the CLI starts a Gossip service on localhost port 50000 and a message sync service on port 5001.
- * However, different port numbers can be specified. By default, the CLI starts with no peers, in which case it is part
- * of its own RAMBLE network. A list of known peers can be specified that RAMBLE will connect to on startup.
- */
-public class RambleCli {
-
-  private static final Logger LOG = Logger.getLogger(RambleCli.class);
+  private static final Logger LOG = Logger.getLogger(RambleClient.class);
 
   private final Ramble ramble;
   private final File dumpFile;
 
-  private RambleCli(String args[])
+  private RambleClient(String args[])
           throws IOException, ParseException, NoSuchAlgorithmException, InvalidKeySpecException {
-
     // Parse the CLI options
     Options options = new Options();
     options.addOption("p", "peers", true, "Comma-separated list of initial peers to connect to");
@@ -117,11 +114,21 @@ public class RambleCli {
     // Create the RAMBLE service
     this.ramble = new RambleImpl(peers, publicKey, privateKey, gossipPort, messageSyncPort);
     this.dumpFile = new File(cmd.getOptionValue('f'));
+
+  }
+
+  private List<RambleMessage.Message> GetMessageSet(String parent) {
+    List<RambleMessage.Message> ret = new ArrayList<RambleMessage.Message>();
+    for (RambleMessage.Message msg : this.ramble.getAllMessages()) {
+      if (msg.getMessage().split(":")[1].equals(parent)) {
+        ret.add(msg);
+      }
+    }
+    return ret;
   }
 
   private void run() {
     this.ramble.start();
-
     Runtime.getRuntime().addShutdownHook(new Thread(){
       @Override
       public void run() {
@@ -129,51 +136,37 @@ public class RambleCli {
       }
     });
 
-    // Create a thread that reads all incoming messages and writes it to a file
-    Thread dumpThread = new Thread() {
-      @Override
-      public void run() {
-        RambleMessage.Message message = null;
+    staticFiles.location("/public");
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(dumpFile))) {
-          Runtime.getRuntime().addShutdownHook(new Thread(){
-            @Override
-            public void run() {
-              try {
-                writer.close();
-              } catch (IOException e) {
-                LOG.error("Unable to close dump file " + dumpFile);
-              }
-            }
-          });
-          try {
-            while ((message = ramble.listen().take()) != null) {
-              writer.write(message.getTimestamp() + ":" +  message.getMessage());
-              writer.write('\n');
-              writer.flush(); // Flush the file on every write to making testing easier
-            }
-          } catch (InterruptedException | IOException e) {
-            LOG.error("Unable to write message " + message + " to file " + dumpFile, e);
-          }
-        } catch (IOException e) {
-          LOG.error("Unable to open file " + dumpFile);
-        }
+    get("/postmessage/*", (req, res) -> {
+      if(req.queryParams("msg") != null) {
+        this.ramble.post(UUID.randomUUID() +":" + req.splat()[0]
+            + ":" + req.queryParams("msg"));
       }
-    };
-    dumpThread.setUncaughtExceptionHandler((t, e) -> LOG.error("Exception while writing messages to the file "
-            + dumpFile, e));
-    dumpThread.start();
+      res.redirect("/message/" + req.splat()[0]);
+      return "Not important";
+    });
 
-    // Scan System.in for any user input and post each line via RAMBLE
-    Scanner sc = new Scanner(System.in);
-    while (true) {
-      System.out.print("Post Message: ");
-      this.ramble.post(sc.nextLine());
-    }
+
+    get("/allmessage", (req, res) -> {
+      Map<String, Object> model = new HashMap();
+      model.put("msgs", this.GetMessageSet("0"));
+      model.put("this_msg_id", "0");
+      model.put("header", "All Top Messages");
+     return new VelocityTemplateEngine().render(new ModelAndView(model, "template/message.vm"));
+    });
+
+    get("/message/*", (req, res) -> {
+      Map<String, Object> model = new HashMap();
+      model.put("msgs",this.GetMessageSet(req.splat()[0]));
+      model.put("this_msg_id", req.splat()[0]);
+      model.put("header", "reply for message");
+      return new VelocityTemplateEngine().render(new ModelAndView(model, "template/message.vm"));
+    });
   }
 
   public static void main(String args[]) throws IOException, ParseException, NoSuchAlgorithmException,
           InvalidKeySpecException {
-    new RambleCli(args).run();
+    new RambleClient(args).run();
   }
 }

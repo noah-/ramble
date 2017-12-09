@@ -1,22 +1,26 @@
 package ramble.api;
 
-import java.net.URI;
-
 public class RambleMember {
 
-  private final URI uri;
+  private final String addr;
+  private final int gossipPort;
   private final int messageSyncPort;
 
-  public RambleMember(URI uri, int messageSyncPort) {
-    this.uri = uri;
+  public RambleMember(String addr, int gossipPort, int messageSyncPort) {
+    this.addr = addr;
+    this.gossipPort = gossipPort;
     this.messageSyncPort = messageSyncPort;
+  }
+
+  public String getAddr() {
+    return addr;
+  }
+
+  public int getGossipPort() {
+    return gossipPort;
   }
 
   public int getMessageSyncPort() {
     return messageSyncPort;
-  }
-
-  public URI getUri() {
-    return uri;
   }
 }

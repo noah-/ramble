@@ -1,10 +1,8 @@
 package ramble.db.h2;
 
 import com.google.protobuf.ByteString;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
 
@@ -15,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -101,9 +100,70 @@ public class H2DbStore implements DbStore {
   }
 
   @Override
+  public void store(RambleMessage.BulkSignedMessage messages) {
+    if (!messages.getSignedMessageList().isEmpty()) {
+      StringBuilder sql = new StringBuilder("INSERT INTO messages(sourceid, message, messagedigest, timestamp, " +
+              "publickey, signature) VALUES (?, ?, ?, ?, ?, ?)");
+
+      for (int i = 1; i < messages.getSignedMessageList().size(); i++) {
+        sql.append(", (?, ?, ?, ?, ?, ?)");
+      }
+
+      try (Connection con = this.hikariDataSource.getConnection();
+           PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+        List<RambleMessage.SignedMessage> messageList = messages.getSignedMessageList();
+        for (int i = 0, j = 1; i < messageList.size(); i++, j+=6) {
+          ps.setString(j, messageList.get(i).getMessage().getSourceId());
+          ps.setString(j + 1, messageList.get(i).getMessage().getMessage());
+          ps.setBytes(j + 2, messageList.get(i).getMessage().getMessageDigest().toByteArray());
+          ps.setLong(j + 3, messageList.get(i).getMessage().getTimestamp());
+          ps.setBytes(j + 4, messageList.get(i).getPublicKey().toByteArray());
+          ps.setBytes(j + 5, messageList.get(i).getSignature().toByteArray());
+        }
+
+        ps.executeUpdate();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  @Override
+  public Set<byte[]> getDigestRange(long startTimestamp, long endTimestamp) {
+    String sql = "SELECT messagedigest FROM messages WHERE timestamp BETWEEN ? AND ?";
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setLong(1, startTimestamp);
+      ps.setLong(2, endTimestamp);
+      Set<byte[]> digests = new HashSet<>();
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          digests.add(rs.getBytes(1));
+        }
+        return digests;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public Set<RambleMessage.SignedMessage> getRange(long startTimestamp, long endTimestamp) {
-    return runSelectAllQuery("SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, " +
-            "PUBLICKEY, SIGNATURE FROM MESSAGES WHERE TIMESTAMP BETWEEN " + startTimestamp + " AND " + endTimestamp);
+
+    String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, " +
+            "PUBLICKEY, SIGNATURE FROM MESSAGES WHERE TIMESTAMP BETWEEN ? AND ?";
+
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setLong(1, startTimestamp);
+      ps.setLong(2, endTimestamp);
+      try (ResultSet rs = ps.executeQuery()) {
+        return resultSetToSignedMessages(rs);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**

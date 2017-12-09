@@ -1,26 +1,26 @@
 package ramble.p2p;
 
-import java.util.HashSet;
+import java.util.Set;
 
-public class MessageService {
-    public static HashSet<String> hs0 = null;
-    public static HashSet<String> hs1 = null;
+public class LocalMessageService {
+    public static Set<byte[]> hs0 = null;
+    public static Set<byte[]> hs1 = null;
 
     private int id;
 
-    public MessageService(int id) {
+    public LocalMessageService(int id) {
         this.id = id;
     }
 
-    public void sendBlock(HashSet<String> hs) {
+    public void sendBlock(Set<byte[]> hs) { // integrate this directly with netty
         if (id == 0)
             hs0 = hs;
         else
             hs1 = hs;
     }
 
-    public HashSet<String> getBlock() throws InterruptedException{
-        HashSet<String> hs;
+    public Set<byte[]> getBlock() throws InterruptedException{ // same here - any paraeter for connection peer uri
+        Set<byte[]> hs;
 
         if (id == 0)
             hs = hs1;

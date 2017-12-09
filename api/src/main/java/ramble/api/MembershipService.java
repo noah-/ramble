@@ -1,16 +1,14 @@
 package ramble.api;
 
-import java.util.List;
+import com.google.common.util.concurrent.Service;
+
+import java.util.Set;
 
 
 /**
  * A service that provides membership lists for a Ramble cluster.
  */
-public interface MembershipService {
+public interface MembershipService extends Service {
 
-  void start();
-
-  void shutdown();
-
-  List<RambleMember> getMembers();
+  Set<RambleMember> getMembers();
 }
