@@ -71,7 +71,7 @@ public class RambleImpl implements Ramble {
 
     services.add(this.membershipService);
     services.add(MessageSyncServerFactory.getMessageSyncServer(this.dbStore, messageSyncPort));
-    services.add(new SyncAllMessagesService(this.membershipService, this.id, this.messageQueue)); // replace with AntiEntropyService when ready
+    services.add(new SyncAllMessagesService(this.membershipService, this.id, this.messageQueue)); // replace with ComputeComplementService when ready
     services.add(this.messageBroadcaster);
     this.serviceManager = new ServiceManager(services);
   }

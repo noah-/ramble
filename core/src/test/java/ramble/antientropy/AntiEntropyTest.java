@@ -6,7 +6,7 @@ import ramble.crypto.JavaKeyGenerator;
 import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.db.h2.H2DbStore;
-import ramble.p2p.AntiEntropyService;
+import ramble.p2p.AntiEntropy;
 import ramble.p2p.LocalMessageService;
 
 import java.nio.charset.StandardCharsets;
@@ -100,7 +100,7 @@ class AntiEntropyRunnable implements Runnable {
     public void run() {
         long last_ts = ((ts - 300000) / 300000) * 300000;
         LocalMessageService ms = new LocalMessageService(n);
-        AntiEntropyService ae = new AntiEntropyService(ms, id, last_ts, ts);
+        AntiEntropy ae = new AntiEntropy(ms, id, last_ts, ts);
         try {
             ae.runOneIteration();
         } catch (Exception e) {
