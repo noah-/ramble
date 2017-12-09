@@ -74,7 +74,7 @@ public class H2DbStore implements DbStore {
 
   @Override
   public void store(RambleMessage.SignedMessage message) {
-    String sql = "INSERT INTO MESSAGES(SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, PUBLICKEY, " +
+    String sql = "INSERT INTO MESSAGES(SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, TIMESTAMP, PUBLICKEY, " +
             "SIGNATURE) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
@@ -86,12 +86,9 @@ public class H2DbStore implements DbStore {
       // TODO: Implement parentDigest()
       // ps.setLong(4, message.getMessage().getParentDigest.toByteArray());
       ps.setLong(4, 0);
-      // TODO: Implement getIpAddress()
-      // ps.setLong(5, message.getMessage().getIpAddress());
-      ps.setLong(5, 0);
-      ps.setLong(6, message.getMessage().getTimestamp());
-      ps.setBytes(7, message.getPublicKey().toByteArray());
-      ps.setBytes(8, message.getSignature().toByteArray());
+      ps.setLong(5, message.getMessage().getTimestamp());
+      ps.setBytes(6, message.getPublicKey().toByteArray());
+      ps.setBytes(7, message.getSignature().toByteArray());
 
       ps.executeUpdate();
     } catch (SQLException e) {
@@ -102,11 +99,11 @@ public class H2DbStore implements DbStore {
   @Override
   public void store(RambleMessage.BulkSignedMessage messages) {
     if (!messages.getSignedMessageList().isEmpty()) {
-      StringBuilder sql = new StringBuilder("INSERT INTO messages(sourceid, message, messagedigest, timestamp, " +
-              "publickey, signature) VALUES (?, ?, ?, ?, ?, ?)");
+      StringBuilder sql = new StringBuilder("INSERT INTO MESSAGES(SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, " +
+              "TIMESTAMP, PUBLICKEY, SIGNATURE) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
       for (int i = 1; i < messages.getSignedMessageList().size(); i++) {
-        sql.append(", (?, ?, ?, ?, ?, ?)");
+        sql.append(", (?, ?, ?, ?, ?, ?, ?)");
       }
 
       try (Connection con = this.hikariDataSource.getConnection();
@@ -131,7 +128,7 @@ public class H2DbStore implements DbStore {
 
   @Override
   public Set<byte[]> getDigestRange(long startTimestamp, long endTimestamp) {
-    String sql = "SELECT messagedigest FROM messages WHERE timestamp BETWEEN ? AND ?";
+    String sql = "SELECT MESSAGEDIGEST FROM MESSAGES WHERE TIMESTAMP BETWEEN ? AND ?";
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setLong(1, startTimestamp);
@@ -151,7 +148,7 @@ public class H2DbStore implements DbStore {
   @Override
   public Set<RambleMessage.SignedMessage> getRange(long startTimestamp, long endTimestamp) {
 
-    String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, " +
+    String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, TIMESTAMP, " +
             "PUBLICKEY, SIGNATURE FROM MESSAGES WHERE TIMESTAMP BETWEEN ? AND ?";
 
     try (Connection con = this.hikariDataSource.getConnection();
@@ -173,13 +170,13 @@ public class H2DbStore implements DbStore {
    */
   @Override
   public Set<RambleMessage.SignedMessage> getAllMessages() {
-    return runSelectAllQuery("SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, " +
+    return runSelectAllQuery("SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, " +
             "PUBLICKEY, SIGNATURE FROM MESSAGES");
   }
 
   @Override
   public Set<RambleMessage.SignedMessage> getMessages(Set<byte[]> messageDigest) {
-    String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, PUBLICKEY, SIGNATURE " +
+    String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, TIMESTAMP, PUBLICKEY, SIGNATURE " +
             "FROM MESSAGES WHERE MESSAGEDIGEST IN (?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
@@ -239,15 +236,13 @@ public class H2DbStore implements DbStore {
               .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
               // TODO: implement setParentDigest
               //.setParentDigest(ByteString.copyFrom(rs.getBytes(4)))
-              // TODO: implement setIpAddress
-              //.setParentDigest(ByteString.copyFrom(rs.getBytes(5)))
-              .setTimestamp(rs.getLong(6))
+              .setTimestamp(rs.getLong(5))
               .build();
 
       messages.add(RambleMessage.SignedMessage.newBuilder()
               .setMessage(message)
-              .setPublicKey(ByteString.copyFrom(rs.getBytes(7)))
-              .setSignature(ByteString.copyFrom(rs.getBytes(8)))
+              .setPublicKey(ByteString.copyFrom(rs.getBytes(6)))
+              .setSignature(ByteString.copyFrom(rs.getBytes(7)))
               .build());
     }
     return messages;
