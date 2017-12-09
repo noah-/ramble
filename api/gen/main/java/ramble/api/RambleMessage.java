@@ -44,7 +44,12 @@ public final class RambleMessage {
     com.google.protobuf.ByteString getMessageDigest();
 
     /**
-     * <code>uint64 timestamp = 4;</code>
+     * <code>bytes parentDigest = 4;</code>
+     */
+    com.google.protobuf.ByteString getParentDigest();
+
+    /**
+     * <code>uint64 timestamp = 5;</code>
      */
     long getTimestamp();
   }
@@ -64,6 +69,7 @@ public final class RambleMessage {
       sourceId_ = "";
       message_ = "";
       messageDigest_ = com.google.protobuf.ByteString.EMPTY;
+      parentDigest_ = com.google.protobuf.ByteString.EMPTY;
       timestamp_ = 0L;
     }
 
@@ -112,7 +118,12 @@ public final class RambleMessage {
               messageDigest_ = input.readBytes();
               break;
             }
-            case 32: {
+            case 34: {
+
+              parentDigest_ = input.readBytes();
+              break;
+            }
+            case 40: {
 
               timestamp_ = input.readUInt64();
               break;
@@ -218,10 +229,19 @@ public final class RambleMessage {
       return messageDigest_;
     }
 
-    public static final int TIMESTAMP_FIELD_NUMBER = 4;
+    public static final int PARENTDIGEST_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString parentDigest_;
+    /**
+     * <code>bytes parentDigest = 4;</code>
+     */
+    public com.google.protobuf.ByteString getParentDigest() {
+      return parentDigest_;
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 5;
     private long timestamp_;
     /**
-     * <code>uint64 timestamp = 4;</code>
+     * <code>uint64 timestamp = 5;</code>
      */
     public long getTimestamp() {
       return timestamp_;
@@ -248,8 +268,11 @@ public final class RambleMessage {
       if (!messageDigest_.isEmpty()) {
         output.writeBytes(3, messageDigest_);
       }
+      if (!parentDigest_.isEmpty()) {
+        output.writeBytes(4, parentDigest_);
+      }
       if (timestamp_ != 0L) {
-        output.writeUInt64(4, timestamp_);
+        output.writeUInt64(5, timestamp_);
       }
       unknownFields.writeTo(output);
     }
@@ -269,9 +292,13 @@ public final class RambleMessage {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, messageDigest_);
       }
+      if (!parentDigest_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, parentDigest_);
+      }
       if (timestamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(4, timestamp_);
+          .computeUInt64Size(5, timestamp_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -295,6 +322,8 @@ public final class RambleMessage {
           .equals(other.getMessage());
       result = result && getMessageDigest()
           .equals(other.getMessageDigest());
+      result = result && getParentDigest()
+          .equals(other.getParentDigest());
       result = result && (getTimestamp()
           == other.getTimestamp());
       result = result && unknownFields.equals(other.unknownFields);
@@ -314,6 +343,8 @@ public final class RambleMessage {
       hash = (53 * hash) + getMessage().hashCode();
       hash = (37 * hash) + MESSAGEDIGEST_FIELD_NUMBER;
       hash = (53 * hash) + getMessageDigest().hashCode();
+      hash = (37 * hash) + PARENTDIGEST_FIELD_NUMBER;
+      hash = (53 * hash) + getParentDigest().hashCode();
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTimestamp());
@@ -452,6 +483,8 @@ public final class RambleMessage {
 
         messageDigest_ = com.google.protobuf.ByteString.EMPTY;
 
+        parentDigest_ = com.google.protobuf.ByteString.EMPTY;
+
         timestamp_ = 0L;
 
         return this;
@@ -479,6 +512,7 @@ public final class RambleMessage {
         result.sourceId_ = sourceId_;
         result.message_ = message_;
         result.messageDigest_ = messageDigest_;
+        result.parentDigest_ = parentDigest_;
         result.timestamp_ = timestamp_;
         onBuilt();
         return result;
@@ -531,6 +565,9 @@ public final class RambleMessage {
         }
         if (other.getMessageDigest() != com.google.protobuf.ByteString.EMPTY) {
           setMessageDigest(other.getMessageDigest());
+        }
+        if (other.getParentDigest() != com.google.protobuf.ByteString.EMPTY) {
+          setParentDigest(other.getParentDigest());
         }
         if (other.getTimestamp() != 0L) {
           setTimestamp(other.getTimestamp());
@@ -729,15 +766,44 @@ public final class RambleMessage {
         return this;
       }
 
+      private com.google.protobuf.ByteString parentDigest_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes parentDigest = 4;</code>
+       */
+      public com.google.protobuf.ByteString getParentDigest() {
+        return parentDigest_;
+      }
+      /**
+       * <code>bytes parentDigest = 4;</code>
+       */
+      public Builder setParentDigest(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        parentDigest_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes parentDigest = 4;</code>
+       */
+      public Builder clearParentDigest() {
+        
+        parentDigest_ = getDefaultInstance().getParentDigest();
+        onChanged();
+        return this;
+      }
+
       private long timestamp_ ;
       /**
-       * <code>uint64 timestamp = 4;</code>
+       * <code>uint64 timestamp = 5;</code>
        */
       public long getTimestamp() {
         return timestamp_;
       }
       /**
-       * <code>uint64 timestamp = 4;</code>
+       * <code>uint64 timestamp = 5;</code>
        */
       public Builder setTimestamp(long value) {
         
@@ -746,7 +812,7 @@ public final class RambleMessage {
         return this;
       }
       /**
-       * <code>uint64 timestamp = 4;</code>
+       * <code>uint64 timestamp = 5;</code>
        */
       public Builder clearTimestamp() {
         
@@ -2292,15 +2358,15 @@ public final class RambleMessage {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\024ramble-message.proto\022\nramble.api\"V\n\007Me" +
+      "\n\024ramble-message.proto\022\nramble.api\"l\n\007Me" +
       "ssage\022\020\n\010sourceId\030\001 \001(\t\022\017\n\007message\030\002 \001(\t" +
-      "\022\025\n\rmessageDigest\030\003 \001(\014\022\021\n\ttimestamp\030\004 \001" +
-      "(\004\"[\n\rSignedMessage\022$\n\007message\030\001 \001(\0132\023.r" +
-      "amble.api.Message\022\021\n\tpublicKey\030\002 \001(\014\022\021\n\t" +
-      "signature\030\003 \001(\014\"E\n\021BulkSignedMessage\0220\n\r" +
-      "signedMessage\030\001 \003(\0132\031.ramble.api.SignedM" +
-      "essageB\033\n\nramble.apiB\rRambleMessageb\006pro" +
-      "to3"
+      "\022\025\n\rmessageDigest\030\003 \001(\014\022\024\n\014parentDigest\030" +
+      "\004 \001(\014\022\021\n\ttimestamp\030\005 \001(\004\"[\n\rSignedMessag" +
+      "e\022$\n\007message\030\001 \001(\0132\023.ramble.api.Message\022" +
+      "\021\n\tpublicKey\030\002 \001(\014\022\021\n\tsignature\030\003 \001(\014\"E\n" +
+      "\021BulkSignedMessage\0220\n\rsignedMessage\030\001 \003(" +
+      "\0132\031.ramble.api.SignedMessageB\033\n\nramble.a" +
+      "piB\rRambleMessageb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2319,7 +2385,7 @@ public final class RambleMessage {
     internal_static_ramble_api_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_Message_descriptor,
-        new java.lang.String[] { "SourceId", "Message", "MessageDigest", "Timestamp", });
+        new java.lang.String[] { "SourceId", "Message", "MessageDigest", "ParentDigest", "Timestamp", });
     internal_static_ramble_api_SignedMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_ramble_api_SignedMessage_fieldAccessorTable = new

@@ -9,7 +9,8 @@ message Message {
   string sourceId = 1;
   string message = 2;
   bytes messageDigest = 3;
-  uint64 timestamp = 4;
+  bytes parentDigest = 4;
+  uint64 timestamp = 5;
 }
 
 message SignedMessage {

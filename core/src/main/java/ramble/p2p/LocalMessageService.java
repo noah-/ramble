@@ -5,6 +5,7 @@ import java.util.Set;
 public class LocalMessageService {
     public static Set<byte[]> hs0 = null;
     public static Set<byte[]> hs1 = null;
+    public static long ts = 0;
 
     private int id;
 
@@ -36,5 +37,13 @@ public class LocalMessageService {
         }
 
         return hs;
+    }
+
+    public long getEndTS() {
+        return ts;
+    }
+
+    public void sendEndTS(long end) {
+        ts = end;
     }
 }

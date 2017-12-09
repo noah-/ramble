@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.BlockingQueue;
 
 public class AntiEntropy extends AbstractScheduledService implements Service {
 
@@ -21,6 +22,7 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
   private final H2DbStore dbStore;
   private long currentTS;
   private Map<Long, Set<byte[]>> blockCache = new HashMap<>();
+  private BlockingQueue<byte[]> queue;
   private LocalMessageService ms;
 
   public AntiEntropy(LocalMessageService ms, String db, long ts, long nts) {
@@ -30,7 +32,6 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
     System.out.println("Verified TS Before: " + _lastVerifiedTS.get());
     this.ms = ms;
     currentTS = (nts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;
-    ;
     dbStore = H2DbStore.getOrCreateStore(db);
   }
 
@@ -52,8 +53,12 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
   @Override
   public void runOneIteration() throws Exception {
     long current = currentTS;
+    long end = _lastVerifiedTS.get();
 
-    while (current > _lastVerifiedTS.get()) {
+    ms.sendEndTS(end);
+    end = Math.min(end, ms.getEndTS());
+
+    while (current > end) {
       Set<byte[]> a = getDigestBlock(current);
       ms.sendBlock(a);
 
@@ -78,16 +83,46 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
   public void flushCache(String id) { // blocking queue
     for (long k : blockCache.keySet()) {
       Set<byte[]> hs = blockCache.get(k);
-      // TODO
-      // request messages with the following digests in hs
-      // save them to database
+      for (byte[] b : hs) {
+        enqueue(b);
+      }
+
+      // insert sentinel
+      byte[] sentinel = ("END:" + k).getBytes();
+      enqueue(sentinel);
+
+      // for debug
       System.out.println("set diff for id = " + id + " " + Arrays.toString(
               hs.stream().map(s -> new String(s, StandardCharsets.UTF_8)).sorted().toArray()));
     }
 
-    _lastVerifiedTS.set(currentTS);
-    System.out.println("Verified TS After: " + _lastVerifiedTS.get());
     blockCache.clear();
+  }
+
+  public void verifyTS(long ts) {
+    _lastVerifiedTS.set(currentTS);
+  }
+
+  public byte[] getOne() {
+    byte[] digest = null;
+
+    try{
+      if(!queue.isEmpty()){
+        return queue.take();
+      }
+    }catch(InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  private void enqueue(byte[] digest) {
+    try {
+      queue.put(digest);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
