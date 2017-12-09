@@ -75,7 +75,7 @@ public class H2DbStore implements DbStore {
   @Override
   public void store(RambleMessage.SignedMessage message) {
     String sql = "INSERT INTO MESSAGES(SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, TIMESTAMP, PUBLICKEY, " +
-            "SIGNATURE) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "SIGNATURE) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
