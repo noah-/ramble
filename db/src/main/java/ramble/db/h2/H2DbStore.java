@@ -220,12 +220,12 @@ public class H2DbStore implements DbStore {
     }
   }
 
-  public FingerPrint getFingerPrint(String key) {
+  public FingerPrint getFingerPrint(byte[] key) {
     String sql = "SELECT SOURCEID, PUBLICKEY, COUNT, TSSTART, TSEND FROM FINGERPRINT WHERE PUBLICKEY = ?";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
-      ps.setBytes(1, key.getBytes());
+      ps.setBytes(1, key);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           return new FingerPrint(rs.getBytes(1), rs.getBytes(2), rs.getInt(3),
@@ -238,18 +238,30 @@ public class H2DbStore implements DbStore {
     }
   }
 
-  public void updateFingerPrint(String source, String key, long ts) {
+  public void updateFingerPrint(byte[] source, byte[] key, long ts) {
     String sql = "INSERT INTO FINGERPRINT (SOURCEID, PUBLICKEY, COUNT, TSSTART, TSEND) VALUES (?, ?, ?, ?, ?) " +
             "ON DUPLICATE KEY UPDATE COUNT = COUNT + 1, TSEND = (?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
-      ps.setBytes(1, source.getBytes());
-      ps.setBytes(2, key.getBytes());
+      ps.setBytes(1, source);
+      ps.setBytes(2, key);
       ps.setInt(3, 1);
       ps.setLong(4, ts);
       ps.setLong(5, ts);
       ps.setLong(6, ts);
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void removeFingerPrint(byte[] key) {
+    String sql = "DELETE FROM FINGERPRINT WHERE PUBLICKEY = (?)";
+
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setBytes(1, key);
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
