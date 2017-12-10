@@ -6,7 +6,7 @@ import ramble.db.h2.H2DbStore;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +21,7 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
 
   private final H2DbStore dbStore;
   private long currentTS;
-  private Map<Long, Set<byte[]>> blockCache = new HashMap<>();
+  private HashSet<byte[]> blockCache = new HashSet<>();
   private BlockingQueue<byte[]> queue;
   private LocalMessageService ms;
 
@@ -70,37 +70,24 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
 
       computeComplement(a, b);
 
-      if (blockCache.containsKey(current)) {
-        blockCache.get(current).addAll(b);
-      } else {
-        blockCache.put(current, b);
+      for (byte[] s : b) {
+        if (blockCache.add(s)) {
+          queue.put(s);
+        }
       }
 
+      byte[] sentinel = ("END:" + current).getBytes();
+      queue.put(sentinel);
       current -= BLOCK_TIME_PERIOD;
     }
   }
 
-  public void flushCache(String id) { // blocking queue
-    for (long k : blockCache.keySet()) {
-      Set<byte[]> hs = blockCache.get(k);
-      for (byte[] b : hs) {
-        enqueue(b);
-      }
-
-      // insert sentinel
-      byte[] sentinel = ("END:" + k).getBytes();
-      enqueue(sentinel);
-
-      // for debug
-      System.out.println("set diff for id = " + id + " " + Arrays.toString(
-              hs.stream().map(s -> new String(s, StandardCharsets.UTF_8)).sorted().toArray()));
-    }
-
+  public void flushCache() {
     blockCache.clear();
   }
 
-  public void verifyTS(long ts) {
-    _lastVerifiedTS.set(currentTS);
+  public void updateVerifiedTS(long ts) {
+    _lastVerifiedTS.set(ts);
   }
 
   public byte[] getOne() {

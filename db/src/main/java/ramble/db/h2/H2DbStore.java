@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
+import ramble.db.BlockInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -190,29 +191,33 @@ public class H2DbStore implements DbStore {
     }
   }
 
-  public void updateBlockConfirmation(long ts) {
-    String sql = "SELECT COUNT FROM BLOCKCONF WHERE TIMESTAMP = ?";
+  public BlockInfo updateBlockConfirmation(long ts) {
+    String sql = "UPDATE BLOCKCONF SET COUNT = COUNT + 1 WHERE TIMESTAMP = ?";
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
-      ps.setObject(1, ts);
+      ps.setLong(1, ts);
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          int count = rs.getInt(1);
-          // TODO: write back updated value or create new if doesn't exist
-          // Look at how to make sure new entry is not made.
-        }
+        return new BlockInfo(rs.getLong(1), rs.getInt(2));
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public void getFingerPrint() {
+  public void getFingerPrint(String key) {
 
   }
 
-  public void updateFingerPrint() {
-
+  public void updateFingerPrint(String key, long ts) {
+    String sql = "UPDATE FINGERPRINT SET COUNT = COUNT + 1, TSEND = ? WHERE PUBLICKEY = ?";
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setLong(1, ts);
+      ps.setBytes(2, key.getBytes());
+      try (ResultSet rs = ps.executeQuery()) {}
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private Set<RambleMessage.SignedMessage> runSelectAllQuery(String sql) {
