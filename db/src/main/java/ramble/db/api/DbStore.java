@@ -25,4 +25,6 @@ public interface DbStore {
   Set<RambleMessage.SignedMessage> getAllMessages();
 
   Set<RambleMessage.SignedMessage> getMessages(byte[] messageDigest);
+
+  long getLastVerifiedTimestamp(int count);
 }

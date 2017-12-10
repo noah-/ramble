@@ -10,6 +10,7 @@ import ramble.core.RambleImpl;
 import ramble.messagesync.api.MessageSyncClient;
 import ramble.messagesync.api.TargetSelector;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -37,11 +38,11 @@ public class SyncAllMessagesService extends AbstractScheduledService implements 
     LOG.info("[id = " + this.id + "] Running message sync protocol");
 
     Set<RambleMember> peers = this.gossipService.getMembers();
-    if (!peers.isEmpty()) {
-      RambleMember target = this.targetSelector.getTarget(peers);
+    Optional<RambleMember> target = this.targetSelector.getTarget(peers);
 
-      MessageSyncClient client = MessageSyncClientFactory.getMessageSyncClient(target.getAddr(),
-              target.getMessageSyncPort(), new MessageQueueMessageClientSyncHandler(this.messageQueue, this.id));
+    if (target.isPresent()) {
+      MessageSyncClient client = MessageSyncClientFactory.getMessageSyncClient(target.get().getAddr(),
+              target.get().getMessageSyncPort(), new MessageQueueMessageClientSyncHandler(this.messageQueue, this.id));
 
       // May need to add an explicit disconnect here in case there is an error while sending the request, but Netty may
       // handle it internally so its ok for now

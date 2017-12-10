@@ -1,11 +1,20 @@
 package ramble.db;
 
 public class BlockInfo {
-    public final long timeStamp;
-    public final int count;
 
-    public BlockInfo(long ts, int c) {
-        timeStamp = ts;
-        count = c;
+    private final long timestamp;
+    private final int count;
+
+    public BlockInfo(long timestamp, int count) {
+        this.timestamp = timestamp;
+        this.count = count;
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    public int getCount() {
+        return this.count;
     }
 }

@@ -220,6 +220,24 @@ public class H2DbStore implements DbStore {
     }
   }
 
+  @Override
+  public long getLastVerifiedTimestamp(int count) {
+    String sql = "SELECT MIN(TIMESTAMP) FROM BLOCKCONF WHERE COUNT < ?";
+
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setLong(1, count);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return rs.getLong(1);
+        }
+        return -1;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public BlockInfo getBlockInfo(long ts) {
     String sql = "SELECT TIMESTAMP, COUNT FROM BLOCKCONF WHERE TIMESTAMP = ?";
 
@@ -228,7 +246,7 @@ public class H2DbStore implements DbStore {
       ps.setLong(1, ts);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          new BlockInfo(rs.getLong(1), rs.getInt(2));
+          return new BlockInfo(rs.getLong(1), rs.getInt(2));
         }
         return null;
       }

@@ -17,6 +17,7 @@ import ramble.messagesync.api.TargetSelector;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -35,8 +36,8 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   private static final Logger LOG = Logger.getLogger(ComputeComplementService.class);
 
+  private static final int MIN_COUNT_FOR_CONFIRM = 3;
   private static final long BLOCK_TIME_PERIOD = 300000; // 5 minutes
-  private static final long NUM_BLOCK_LOOKBACKS = 5; // the number of blocks to iterate through
 
   private final DbStore dbStore;
   private final TargetSelector targetSelector;
@@ -67,61 +68,68 @@ public class ComputeComplementService extends AbstractScheduledService implement
   @Override
   public void runOneIteration() throws InterruptedException {
     // Select the target node to run the protocol against
-    RambleMember target = this.targetSelector.getTarget(this.membershipService.getMembers());
+    Optional<RambleMember> target = this.targetSelector.getTarget(this.membershipService.getMembers());
 
-    // Initialize timestamps to define the range of blocks
+    if (target.isPresent()) {
+      // Initialize timestamps to define the range of blocks
 
-    // The timestamp up to which blocks will be synced
-    long ts = System.currentTimeMillis();
-    long endTimestamp = (long) Math.ceil((double) ts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;
+      // The timestamp up to which blocks will be synced
+      long ts = System.currentTimeMillis();
+      long endTimestamp = (long) Math.ceil((double) ts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;
 
-    // The timestamp that the block sync iteration will start at
-     MutableLong currentTimestamp = new MutableLong(endTimestamp - BLOCK_TIME_PERIOD * NUM_BLOCK_LOOKBACKS);
+      // The timestamp that the block sync iteration will start at
+      long lastVerifiedTimestamp = this.dbStore.getLastVerifiedTimestamp(
+              MIN_COUNT_FOR_CONFIRM); // how does this BLOCKCONF table get updated
+      MutableLong currentTimestamp = new MutableLong(
+              lastVerifiedTimestamp > 0 ? lastVerifiedTimestamp : endTimestamp - BLOCK_TIME_PERIOD);
 
-    CountDownLatch latch = new CountDownLatch(1);
+      CountDownLatch latch = new CountDownLatch(1);
 
-    String idAndTarget = "[id = " + this.id + ", target = " + target.getAddr() + ":" + target.getMessageSyncPort() + "]";
-    LOG.info(idAndTarget + " Compute Complement with currentTs = " + currentTimestamp + " endTs = " + endTimestamp);
+      String idAndTarget = "[id = " + this.id + ", target = " + target.get().getAddr() + ":" +
+              target.get().getMessageSyncPort() + "]";
+      LOG.info(idAndTarget + " Compute Complement with currentTs = " + currentTimestamp + " endTs = " + endTimestamp);
 
-    MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(
-            target.getAddr(),
-            target.getMessageSyncPort(),
-            (myMessageSyncClient, response) -> {
+      MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(
+              target.get().getAddr(),
+              target.get().getMessageSyncPort(),
+              (myMessageSyncClient, response) -> {
 
-              // Add digests to cache
-              this.blocks.put(currentTimestamp.longValue(), new Block(response.getSendMessageDigests()
-                      .getMessageDigestList()
-                      .stream()
-                      .map(ByteString::toByteArray)
-                      .collect(Collectors.toSet()),
-                      target));
+                // Add digests to cache
+                this.blocks.put(currentTimestamp.longValue(), new Block(response.getSendMessageDigests()
+                        .getMessageDigestList()
+                        .stream()
+                        .map(ByteString::toByteArray)
+                        .collect(Collectors.toSet()),
+                        target.get()));
 
-              // Update the current timestamp
-              currentTimestamp.add(BLOCK_TIME_PERIOD);
+                // Update the current timestamp
+                currentTimestamp.add(BLOCK_TIME_PERIOD);
 
-              // If the currentTimestamp has exceed the endTimestamp, then end the protocol
-              if (currentTimestamp.longValue() < endTimestamp) {
-                myMessageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
-                        getDigestBlock(currentTimestamp.longValue(), currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
-                        currentTimestamp.longValue(),
-                        currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
-              } else {
-                LOG.info(idAndTarget + " Compute Complement disconnecting client");
-                myMessageSyncClient.disconnect();
-                latch.countDown();
-              }
-            });
+                // If the currentTimestamp has exceed the endTimestamp, then end the protocol
+                if (currentTimestamp.longValue() < endTimestamp) {
+                  myMessageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
+                          getDigestBlock(currentTimestamp.longValue(),
+                                  currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
+                          currentTimestamp.longValue(),
+                          currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
+                } else {
+                  LOG.info(idAndTarget + " Compute Complement disconnecting client");
+                  myMessageSyncClient.disconnect();
+                  latch.countDown();
+                }
+              });
 
-    messageSyncClient.connect();
-    messageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
-            getDigestBlock(currentTimestamp.longValue(), currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
-            currentTimestamp.longValue(),
-            currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
+      messageSyncClient.connect();
+      messageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
+              getDigestBlock(currentTimestamp.longValue(), currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
+              currentTimestamp.longValue(),
+              currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
 
-    // For now we make this synchronous so that only one iteration of the ComputeComplement protocol can run at once
-    // for a given node
-    latch.await();
-    LOG.info(idAndTarget + " Compute Complement has completed");
+      // For now we make this synchronous so that only one iteration of the ComputeComplement protocol can run at once
+      // for a given node
+      latch.await();
+      LOG.info(idAndTarget + " Compute Complement has completed");
+    }
   }
 
   @Override

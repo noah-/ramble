@@ -7,13 +7,15 @@ import ramble.messagesync.api.TargetSelector;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class RandomTargetSelector implements TargetSelector {
 
   @Override
-  public RambleMember getTarget(Set<RambleMember> members) {
-    return getTargets(members, 1).iterator().next();
+  public Optional<RambleMember> getTarget(Set<RambleMember> members) {
+    Set<RambleMember> targets = getTargets(members, 1);
+    return targets.isEmpty() ? Optional.empty() : Optional.of(targets.iterator().next());
   }
 
   @Override
