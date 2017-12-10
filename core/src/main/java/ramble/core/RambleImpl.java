@@ -2,30 +2,23 @@ package ramble.core;
 
 import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
-import com.google.protobuf.ByteString;
 import org.apache.log4j.Logger;
 import ramble.api.IdGenerator;
 import ramble.api.MembershipService;
 import ramble.api.Ramble;
 import ramble.api.RambleMember;
 import ramble.api.RambleMessage;
-import ramble.crypto.MessageSigner;
 import ramble.db.DbStoreFactory;
 import ramble.db.api.DbStore;
 import ramble.membership.MembershipServiceFactory;
+import ramble.messagesync.ComputeComplementService;
 import ramble.messagesync.MessageBroadcaster;
 import ramble.messagesync.MessageSyncServerFactory;
-import ramble.messagesync.SyncAllMessagesService;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,8 +64,8 @@ public class RambleImpl implements Ramble {
 
     services.add(this.membershipService);
     services.add(MessageSyncServerFactory.getMessageSyncServer(this.dbStore, messageSyncPort, this));
-    services.add(new SyncAllMessagesService(this.membershipService, this.id, this.messageQueue)); // replace with ComputeComplementService when ready
-    services.add(this.messageBroadcaster);
+    services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.id));
+    // services.add(this.messageBroadcaster);
     this.serviceManager = new ServiceManager(services);
   }
 
@@ -83,10 +76,10 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void post(String message) {
-    LOG.info("[id = " + this.id +  " ] Posting message: " + message);
+    LOG.info("[id = " + this.id +  "] Posting message: " + message);
 
     // Create signed message
-    RambleMessage.SignedMessage signedMessage = buildSignedMessage(message);
+    RambleMessage.SignedMessage signedMessage = MessageBuilder.buildSignedMessage(this.id, message, this.publicKey, this.privateKey);
 
     // Store the message in the local db
     DbStoreFactory.getDbStore(this.id).store(signedMessage);
@@ -139,34 +132,13 @@ public class RambleImpl implements Ramble {
     }
   }
 
-  private RambleMessage.SignedMessage buildSignedMessage(String message) {
-    byte[] digest = generateMessageDigest(message);
-
-    RambleMessage.Message rambleMessage = RambleMessage.Message.newBuilder()
-            .setMessage(message)
-            .setTimestamp(System.currentTimeMillis())
-            .setSourceId(this.id)
-            .setMessageDigest(ByteString.copyFrom(digest))
-            .build();
-
-    try {
-      return RambleMessage.SignedMessage.newBuilder()
-              .setMessage(rambleMessage)
-              .setSignature(ByteString.copyFrom(MessageSigner.sign(this.privateKey, rambleMessage.toByteArray())))
-              .setPublicKey(ByteString.copyFrom(this.publicKey.getEncoded()))
-              .build();
-    } catch (InvalidKeyException | SignatureException | NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    }
+  @Override
+  public PublicKey getPublicKey() {
+    return this.publicKey;
   }
 
-  private byte[] generateMessageDigest(String message) {
-    try {
-      MessageDigest md = MessageDigest.getInstance("MD5");
-      md.update(message.getBytes(StandardCharsets.UTF_8));
-      return md.digest();
-    } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    }
+  @Override
+  public PrivateKey getPrivateKey() {
+    return this.privateKey;
   }
 }

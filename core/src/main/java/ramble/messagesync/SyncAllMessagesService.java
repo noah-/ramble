@@ -52,6 +52,6 @@ public class SyncAllMessagesService extends AbstractScheduledService implements 
 
   @Override
   protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(1500, 5000, TimeUnit.MILLISECONDS);
+    return Scheduler.newFixedRateSchedule(1500, 1500, TimeUnit.MILLISECONDS);
   }
 }

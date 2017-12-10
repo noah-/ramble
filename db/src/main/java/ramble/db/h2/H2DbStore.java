@@ -99,6 +99,34 @@ public class H2DbStore implements DbStore {
   }
 
   @Override
+  public void storeIfNotExists(RambleMessage.SignedMessage message) {
+    String sql = "INSERT INTO MESSAGES SELECT ? AS SOURCEID, ? AS MESSAGE, ? AS MESSAGEDIGEST, ? AS PARENTDIGEST, ? AS TIMESTAMP, ? AS PUBLICKEY, ? AS SIGNATURE " +
+            "WHERE NOT EXISTS (SELECT 1 FROM MESSAGES WHERE SOURCEID = ? AND MESSAGEDIGEST = ? AND TIMESTAMP = ?)";
+
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+      ps.setString(1, message.getMessage().getSourceId());
+      ps.setString(2, message.getMessage().getMessage());
+      ps.setBytes(3, message.getMessage().getMessageDigest().toByteArray());
+      // TODO: Implement parentDigest()
+      // ps.setBytes(4, message.getMessage().getParentDigest.toByteArray());
+      ps.setBytes(4, null);
+      ps.setLong(5, message.getMessage().getTimestamp());
+      ps.setBytes(6, message.getPublicKey().toByteArray());
+      ps.setBytes(7, message.getSignature().toByteArray());
+
+      ps.setString(8, message.getMessage().getSourceId());
+      ps.setBytes(9, message.getMessage().getMessageDigest().toByteArray());
+      ps.setLong(10, message.getMessage().getTimestamp());
+
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public void store(RambleMessage.BulkSignedMessage messages) {
     if (!messages.getSignedMessageList().isEmpty()) {
       StringBuilder sql = new StringBuilder("INSERT INTO MESSAGES(SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, " +
@@ -177,13 +205,13 @@ public class H2DbStore implements DbStore {
   }
 
   @Override
-  public Set<RambleMessage.SignedMessage> getMessages(Set<byte[]> messageDigest) {
+  public Set<RambleMessage.SignedMessage> getMessages(byte[] messageDigest) {
     String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, TIMESTAMP, PUBLICKEY, SIGNATURE " +
-            "FROM MESSAGES WHERE MESSAGEDIGEST IN (?)";
+            "FROM MESSAGES WHERE MESSAGEDIGEST = ?";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
-      ps.setObject(1, messageDigest.toArray());
+      ps.setBytes(1, messageDigest);
       try (ResultSet rs = ps.executeQuery()) {
         return resultSetToSignedMessages(rs);
       }

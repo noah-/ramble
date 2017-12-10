@@ -38,7 +38,7 @@ public class StorageMessageSyncHandler extends TypedMessageSyncHandler {
           if (!this.dbStore.exists(signedMessage)) {
             LOG.info("[id = " + this.id + "] Message-sync got new message from " +
                     signedMessage.getMessage().getSourceId() + " - " + signedMessage.getMessage().getMessage());
-            this.dbStore.store(signedMessage);
+            this.dbStore.storeIfNotExists(signedMessage);
           }
         }
       }

@@ -2,11 +2,11 @@ package ramble.cluster;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import ramble.api.Ramble;
+import ramble.api.RambleMessage;
+import ramble.core.MessageBuilder;
 import ramble.core.RambleImpl;
 import ramble.crypto.JavaKeyGenerator;
 import ramble.db.h2.H2DbStore;
@@ -34,7 +34,7 @@ public class RambleCluster {
   @Test
   public void rambleClusterTest() throws InterruptedException, IOException, NoSuchAlgorithmException {
 
-    Logger.getLogger("io.netty").setLevel(Level.OFF);
+    // Logger.getLogger("io.netty").setLevel(Level.OFF);
 
     String addr = InetAddress.getLocalHost().getHostAddress();
 
@@ -70,10 +70,22 @@ public class RambleCluster {
                       node.getPort() + 1000));
     }
 
-    // Setup the db for each instance
+    // Setup the db for each instance and add some dummy rows
     clients.forEach(client -> {
       try {
-        H2DbStore.getOrCreateStore(client.getId()).runInitializeScripts();
+        H2DbStore db = H2DbStore.getOrCreateStore(client.getId());
+        db.runInitializeScripts();
+
+        RambleMessage.SignedMessage msg1 = MessageBuilder.buildSignedMessage(client.getId(),
+                getRandomLoremIpsum(loremIpsum), client.getPublicKey(), client.getPrivateKey());
+        RambleMessage.SignedMessage msg2 = MessageBuilder.buildSignedMessage(client.getId(),
+                getRandomLoremIpsum(loremIpsum), client.getPublicKey(), client.getPrivateKey());
+        RambleMessage.SignedMessage msg3 = MessageBuilder.buildSignedMessage(client.getId(),
+                getRandomLoremIpsum(loremIpsum), client.getPublicKey(), client.getPrivateKey());
+
+        db.store(msg1);
+        db.store(msg2);
+        db.store(msg3);
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -96,13 +108,13 @@ public class RambleCluster {
     }
 
     // Wait for everything to converge
-    Thread.sleep(5000);
+    Thread.sleep(60000);
 
     // Shutdown all instances
     clients.forEach(Ramble::shutdown);
 
     // Make sure each instance has 15 messages in its db
-    clients.forEach(client -> Assert.assertEquals(client.getAllMessages().size(), 15));
+    clients.forEach(client -> Assert.assertEquals(client.getAllMessages().size(), 30));
   }
 
   private String getRandomLoremIpsum(List<String> loremIpsum) {
