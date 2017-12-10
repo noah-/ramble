@@ -8,8 +8,9 @@ public class ClientFilter {
     private final H2DbStore dbStore;
     private final int CLIENT_MAX_MSGS_PER_MIN = 3;
     private final long LENGTH_OF_MIN = 60000;
+    private final long LENGTH_OF_HOUR = LENGTH_OF_MIN*60;
     private final long FILTER_MAX_MSGS = LENGTH_OF_MIN/CLIENT_MAX_MSGS_PER_MIN;
-    private final long CLIENT_OLDEST_MSG_ACCEPTED = 43200000;
+    private final long CLIENT_OLDEST_MSG_ACCEPTED = LENGTH_OF_HOUR*24;
 
     public ClientFilter(String db) {
         dbStore = H2DbStore.getOrCreateStore(db);
@@ -19,16 +20,16 @@ public class ClientFilter {
         FingerPrint bi = dbStore.getFingerPrint(key);
 
         if (bi != null) {
-            if (bi.count > CLIENT_MAX_MSGS_PER_MIN && (System.currentTimeMillis() - bi.tsStart) < 60000) {
+            if (bi.count > CLIENT_MAX_MSGS_PER_MIN && (System.currentTimeMillis() - bi.tsStart) < LENGTH_OF_MIN) {
                 return false;
-            } else if (bi.count > 3) {
+            } else if (bi.count > CLIENT_MAX_MSGS_PER_MIN) {
                 long filter = (System.currentTimeMillis() - bi.tsStart) / CLIENT_MAX_MSGS_PER_MIN;
                 if (filter > FILTER_MAX_MSGS) {
                     return false;
                 }
             }
 
-            if (System.currentTimeMillis() - bi.tsStart > 60*LENGTH_OF_MIN) {
+            if (System.currentTimeMillis() - bi.tsStart > LENGTH_OF_HOUR) {
                 dbStore.removeFingerPrint(key);
             }
         }
