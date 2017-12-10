@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/openjdk/
-FROM  alpine
+FROM ubuntu 
 
 # Copy file to ramble dir.
 COPY . /usr/src/test
@@ -8,9 +8,12 @@ COPY . /usr/src/test
 WORKDIR /usr/src/test
 
 # Install Dependencies.
-RUN apk update
-RUN apk add inotify-tools
-RUN apk add bash
+RUN apt-get update
+RUN apt-get install -y inotify-tools
+RUN apt-get install -y bash
+RUN apt-get -y install iproute2
+RUN apt-get -y install iputils-ping
+RUN apt-get -y install net-tools
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
