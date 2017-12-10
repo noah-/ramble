@@ -54,7 +54,8 @@ public class RambleCluster {
 
     // Randomly select text from lorem-ipsum file
     List<String> loremIpsum = new ArrayList<>();
-    List<String> file = Files.readLines(new File("src/test/resources/lorem-ipsum.txt"), Charset.defaultCharset());
+    List<String> file = Files.readLines(new File("src/test/resources/lorem-ipsum.txt"),
+            Charset.defaultCharset());
     Splitter splitter = Splitter.on(" ").omitEmptyStrings().trimResults();
     file.forEach(f -> loremIpsum.addAll(splitter.splitToList(f)));
 

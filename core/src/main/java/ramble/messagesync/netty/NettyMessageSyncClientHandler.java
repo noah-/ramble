@@ -22,7 +22,6 @@ public class NettyMessageSyncClientHandler extends SimpleChannelInboundHandler<M
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Response msg) {
     this.messageClientSyncHandler.handleResponse(this.messageSyncClient, msg);
-    ctx.close();
   }
 
   @Override
