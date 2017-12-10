@@ -12,10 +12,7 @@ import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
 import ramble.db.api.DbStore;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
-import java.security.spec.InvalidKeySpecException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,13 +35,14 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
         ctx.write(handleGetAllMessagesRequest()).addListener(ChannelFutureListener.CLOSE);
         break;
       case GETMESSAGES:
-        ctx.write(handleGetMessagesRequest(msg.getGetMessages())).addListener(ChannelFutureListener.CLOSE);
+        ctx.write(handleGetMessagesRequest(msg.getGetMessages()));//.addListener(ChannelFutureListener.CLOSE);
         break;
       case BROADCASTMESSAGES:
-        ctx.write(handleSendMessagesRequest(msg.getBroadcastMessages())).addListener(ChannelFutureListener.CLOSE);
+        ctx.write(handleSendMessagesRequest(msg.getBroadcastMessages()));//.addListener(ChannelFutureListener.CLOSE);
         break;
       case GETCOMPLEMENT:
-        ctx.write(handleGetComplementRequest(msg.getGetComplement())).addListener(ChannelFutureListener.CLOSE);
+        ctx.write(handleGetComplementRequest(msg.getGetComplement()));//.addListener(ChannelFutureListener.CLOSE);
+        break;
       case REQUESTTYPE_NOT_SET:
         LOG.error("Got a message with an invalid request type, dropping message");
         break;
@@ -82,7 +80,7 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
       if (MessageSigner.verify(broadcastMessages.getMessages().getSignedMessageList())) {
         for (RambleMessage.SignedMessage signedMessage : broadcastMessages.getMessages().getSignedMessageList()) {
           if (!this.dbStore.exists(signedMessage)) {
-            this.dbStore.store(signedMessage);
+            this.dbStore.storeIfNotExists(signedMessage);
             LOG.info("[id = " + ramble.getId() + "] Ready to re-broadcast message " + signedMessage.getMessage().getMessage());
             this.ramble.broadcast(signedMessage);
           } else {
@@ -92,7 +90,7 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
       } else {
         LOG.error("Verification of signature for message " + broadcastMessages + " failed");
       }
-    } catch (InvalidKeySpecException | NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+    } catch (Exception e) {
       LOG.error("Error while verifying signatures for messages:\n" + broadcastMessages.getMessages(), e);
     }
     return MessageSyncProtocol.Response.newBuilder().setAck(MessageSyncProtocol.Ack.getDefaultInstance()).build();
@@ -101,10 +99,8 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
   private MessageSyncProtocol.Response handleGetMessagesRequest(MessageSyncProtocol.GetMessages getMessagesRequest) {
     MessageSyncProtocol.Response.Builder responseBuilder = MessageSyncProtocol.Response.newBuilder();
 
-    Set<RambleMessage.SignedMessage> messages = this.dbStore.getMessages(getMessagesRequest.getMessageDigestList()
-            .stream()
-            .map(ByteString::toByteArray)
-            .collect(Collectors.toSet()));
+    Set<RambleMessage.SignedMessage> messages = new HashSet<>();
+    getMessagesRequest.getMessageDigestList().forEach(digest -> messages.addAll(this.dbStore.getMessages(digest.toByteArray())));
 
     RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
             .addAllSignedMessage(messages)

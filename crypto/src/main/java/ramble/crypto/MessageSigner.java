@@ -15,12 +15,15 @@ public class MessageSigner {
 
   private static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
 
-  public static boolean verify(Iterable<RambleMessage.SignedMessage> messages) throws InvalidKeySpecException,
-          NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+  public static boolean verify(Iterable<RambleMessage.SignedMessage> messages) {
     for (RambleMessage.SignedMessage message : messages) {
-      if (!verify(message.getPublicKey().toByteArray(), message.getMessage().toByteArray(),
-              message.getSignature().toByteArray())) {
-        return false;
+      try {
+        if (!verify(message.getPublicKey().toByteArray(), message.getMessage().toByteArray(),
+                message.getSignature().toByteArray())) {
+          return false;
+        }
+      } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException | InvalidKeySpecException e) {
+        throw new RuntimeException(e);
       }
     }
     return true;

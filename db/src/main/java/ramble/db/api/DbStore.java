@@ -14,6 +14,8 @@ public interface DbStore {
 
   void store(RambleMessage.SignedMessage message);
 
+  void storeIfNotExists(RambleMessage.SignedMessage message);
+
   void store(RambleMessage.BulkSignedMessage messages);
 
   Set<byte[]> getDigestRange(long startTimestamp, long endTimestamp);
@@ -22,5 +24,5 @@ public interface DbStore {
 
   Set<RambleMessage.SignedMessage> getAllMessages();
 
-  Set<RambleMessage.SignedMessage> getMessages(Set<byte[]> messageDigest);
+  Set<RambleMessage.SignedMessage> getMessages(byte[] messageDigest);
 }

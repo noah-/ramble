@@ -1,5 +1,7 @@
 package ramble.api;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
@@ -38,4 +40,8 @@ public interface Ramble {
   Set<RambleMember> getMembers();
 
   void broadcast(RambleMessage.SignedMessage message);
+
+  PublicKey getPublicKey();
+
+  PrivateKey getPrivateKey();
 }
