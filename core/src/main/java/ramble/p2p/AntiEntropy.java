@@ -93,6 +93,7 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
       if (bi.count > MIN_COUNT_FOR_CONFIRM) {
         _lastVerifiedTS.set(ts);
       }
+    }
   }
 
   public byte[] getOne() {
