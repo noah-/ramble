@@ -68,13 +68,14 @@ public class RambleImpl implements Ramble {
     services.add(this.membershipService);
     services.add(MessageSyncServerFactory.getMessageSyncServer(new DefaultMessageSyncServerHandler(this, this.dbStore),
             messageSyncPort));
-    services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.id));
+    services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.messageQueue, this.id));
     services.add(this.messageBroadcaster);
     this.serviceManager = new ServiceManager(services);
   }
 
   @Override
   public void start() {
+    runBootstrap();
     this.serviceManager.startAsync();
   }
 
@@ -91,12 +92,6 @@ public class RambleImpl implements Ramble {
 
     // Broadcast the message
     broadcast(signedMessage);
-
-    try {
-      this.messageQueue.put(signedMessage.getMessage());
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   @Override
@@ -135,6 +130,11 @@ public class RambleImpl implements Ramble {
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
+    try {
+      this.messageQueue.put(message.getMessage());
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -145,5 +145,9 @@ public class RambleImpl implements Ramble {
   @Override
   public PrivateKey getPrivateKey() {
     return this.privateKey;
+  }
+
+  private void runBootstrap() {
+    // New nodes need to bootstrap their messages some another node
   }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -45,14 +46,18 @@ public class ComputeComplementService extends AbstractScheduledService implement
   private final String id;
   private final Map<Long, Block> blocks;
   private final ServiceManager serviceManager;
+  private final BlockingQueue<RambleMessage.Message> messages;
 
-  public ComputeComplementService(MembershipService membershipService, DbStore dbStore, String id) {
+  public ComputeComplementService(MembershipService membershipService, DbStore dbStore,
+                                  BlockingQueue<RambleMessage.Message> messages, String id) {
     this.dbStore = dbStore;
     this.targetSelector = new RandomTargetSelector();
     this.membershipService = membershipService;
+    this.messages = messages;
     this.id = id;
     this.blocks = new ConcurrentHashMap<>();
-    this.serviceManager = new ServiceManager(ImmutableSet.of(new FlushBlocksService(this.id, this.dbStore, this.blocks)));
+    this.serviceManager = new ServiceManager(ImmutableSet.of(new FlushBlocksService(this.id, this.messages,
+            this.dbStore, this.blocks)));
   }
 
   @Override
@@ -165,11 +170,14 @@ public class ComputeComplementService extends AbstractScheduledService implement
     private final String id;
     private final DbStore dbStore;
     private final Map<Long, Block> blocks;
+    private final BlockingQueue<RambleMessage.Message> messages;
 
-    private FlushBlocksService(String id, DbStore dbStore, Map<Long, Block> blocks) {
+    private FlushBlocksService(String id, BlockingQueue<RambleMessage.Message> messages,
+                               DbStore dbStore, Map<Long, Block> blocks) {
       this.id = id;
       this.dbStore = dbStore;
       this.blocks = blocks;
+      this.messages = messages;
     }
 
     @Override
@@ -187,8 +195,16 @@ public class ComputeComplementService extends AbstractScheduledService implement
                     List<RambleMessage.SignedMessage> messages = response.getSendMessage().getMessages()
                             .getSignedMessageList();
                     if (MessageSigner.verify(messages)) {
-                      response.getSendMessage().getMessages().getSignedMessageList().forEach(
-                              this.dbStore::storeIfNotExists);
+                      response.getSendMessage().getMessages().getSignedMessageList().forEach(message -> {
+                        if (!this.dbStore.exists(message)) {
+                          this.dbStore.storeIfNotExists(message);
+                          try {
+                            this.messages.put(message.getMessage());
+                          } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                          }
+                        }
+                      });
                     }
                     myMessageSyncClient.disconnect();
                   });
