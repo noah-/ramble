@@ -86,11 +86,13 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
 
   public void updateVerifiedTS(long ts) {
     dbStore.updateBlockConfirmation(ts);
-    BlockInfo bi = dbStore.getBlockInfo(ts);
 
-    if (bi.count > MIN_COUNT_FOR_CONFIRM) {
-      _lastVerifiedTS.set(ts);
-    }
+    if (ts > _lastVerifiedTS.get()) {
+      BlockInfo bi = dbStore.getBlockInfo(ts);
+
+      if (bi.count > MIN_COUNT_FOR_CONFIRM) {
+        _lastVerifiedTS.set(ts);
+      }
   }
 
   public byte[] getOne() {
