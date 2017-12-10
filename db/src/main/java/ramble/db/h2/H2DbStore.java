@@ -84,8 +84,8 @@ public class H2DbStore implements DbStore {
       ps.setString(2, message.getMessage().getMessage());
       ps.setBytes(3, message.getMessage().getMessageDigest().toByteArray());
       // TODO: Implement parentDigest()
-      // ps.setLong(4, message.getMessage().getParentDigest.toByteArray());
-      ps.setLong(4, 0);
+      // ps.setBytes(4, message.getMessage().getParentDigest.toByteArray());
+      ps.setBytes(4, null);
       ps.setLong(5, message.getMessage().getTimestamp());
       ps.setBytes(6, message.getPublicKey().toByteArray());
       ps.setBytes(7, message.getSignature().toByteArray());
@@ -170,7 +170,7 @@ public class H2DbStore implements DbStore {
    */
   @Override
   public Set<RambleMessage.SignedMessage> getAllMessages() {
-    return runSelectAllQuery("SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, IPADDRESS, " +
+    return runSelectAllQuery("SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, TIMESTAMP, " +
             "PUBLICKEY, SIGNATURE FROM MESSAGES");
   }
 
