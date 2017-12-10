@@ -148,7 +148,7 @@ public class RambleCli {
           });
           try {
             while ((message = ramble.listen().take()) != null) {
-              writer.write(message.getTimestamp() + ":" +  message.getMessage());
+              writer.write(message.getTimestamp() + ":" + System.currentTimeMillis() + ":" +  message.getMessage());
               writer.write('\n');
               writer.flush(); // Flush the file on every write to making testing easier
             }
