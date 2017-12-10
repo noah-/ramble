@@ -106,6 +106,6 @@ class AntiEntropyRunnable implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ae.flushCache(id);
+        ae.flushCache();
     }
 }

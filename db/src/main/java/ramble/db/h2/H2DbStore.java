@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
 import ramble.db.BlockInfo;
+import ramble.db.FingerPrint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -191,30 +192,65 @@ public class H2DbStore implements DbStore {
     }
   }
 
-  public BlockInfo updateBlockConfirmation(long ts) {
-    String sql = "UPDATE BLOCKCONF SET COUNT = COUNT + 1 WHERE TIMESTAMP = ?";
+  public BlockInfo getBlockInfo(long ts) {
+    String sql = "SELECT TIMESTAMP, COUNT FROM BLOCKCONF WHERE TIMESTAMP = ?";
+
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setLong(1, ts);
       try (ResultSet rs = ps.executeQuery()) {
-        return new BlockInfo(rs.getLong(1), rs.getInt(2));
+        if (rs.next()) {
+          new BlockInfo(rs.getLong(1), rs.getInt(2));
+        }
+        return null;
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public void getFingerPrint(String key) {
-
-  }
-
-  public void updateFingerPrint(String key, long ts) {
-    String sql = "UPDATE FINGERPRINT SET COUNT = COUNT + 1, TSEND = ? WHERE PUBLICKEY = ?";
+  public void updateBlockConfirmation(long ts) {
+    String sql = "UPDATE BLOCKCONF SET COUNT = COUNT + 1 WHERE TIMESTAMP = ?";
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setLong(1, ts);
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public FingerPrint getFingerPrint(String key) {
+    String sql = "SELECT SOURCEID, PUBLICKEY, COUNT, TSSTART, TSEND FROM FINGERPRINT WHERE PUBLICKEY = ?";
+
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setBytes(1, key.getBytes());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return new FingerPrint(rs.getBytes(1), rs.getBytes(2), rs.getInt(3),
+                  rs.getLong(4), rs.getLong(5));
+        }
+        return null;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void updateFingerPrint(String source, String key, long ts) {
+    String sql = "INSERT INTO FINGERPRINT (SOURCEID, PUBLICKEY, COUNT, TSSTART, TSEND) VALUES (?, ?, ?, ?, ?) " +
+            "ON DUPLICATE KEY UPDATE COUNT = COUNT + 1, TSEND = (?)";
+
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+      ps.setBytes(1, source.getBytes());
       ps.setBytes(2, key.getBytes());
-      try (ResultSet rs = ps.executeQuery()) {}
+      ps.setInt(3, 1);
+      ps.setLong(4, ts);
+      ps.setLong(5, ts);
+      ps.setLong(6, ts);
+      ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
