@@ -6,7 +6,7 @@ cd /usr/src/ramble/ramble-distribution
 
 # Create Per Container Folder
 file=/testdata/start.sh
-tc qdisc add dev eth0 root netem delay 20ms
+#tc qdisc add dev eth0 root netem delay 20ms
 
 ./bin/ramble-cli.sh -f /testroot/testresult/ramble-messages-$HOSTNAME.txt -pu /tmp/ramble-key-store/ramble-cli.pub -pr /tmp/ramble-key-store/ramble-cli -p udp://172.20.128.1:5000
 
