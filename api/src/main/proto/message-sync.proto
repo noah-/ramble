@@ -55,6 +55,16 @@ message SendMessageDigests {
   repeated bytes messageDigest = 1;
 }
 
+message SendAllMessages {
+  BulkSignedMessage messages = 1;
+  repeated BlockConf blockConf = 2;
+}
+
+message BlockConf {
+  uint64 timestamp = 1;
+  uint32 count = 2;
+}
+
 message Ack {
 
 }

@@ -1,7 +1,5 @@
 package ramble.messagesync;
 
-import com.google.common.util.concurrent.AbstractScheduledService;
-import com.google.common.util.concurrent.Service;
 import org.apache.log4j.Logger;
 import ramble.api.MembershipService;
 import ramble.api.RambleMember;
@@ -13,10 +11,9 @@ import ramble.messagesync.api.TargetSelector;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 
-public class SyncAllMessagesService extends AbstractScheduledService implements Service {
+public class SyncAllMessagesProtocol {
 
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
 
@@ -25,7 +22,7 @@ public class SyncAllMessagesService extends AbstractScheduledService implements 
   private final TargetSelector targetSelector;
   private final BlockingQueue<RambleMessage.Message> messageQueue;
 
-  public SyncAllMessagesService(MembershipService gossipService, String id,
+  public SyncAllMessagesProtocol(MembershipService gossipService, String id,
                                 BlockingQueue<RambleMessage.Message> messageQueue) {
     this.gossipService = gossipService;
     this.id = id;
@@ -33,8 +30,7 @@ public class SyncAllMessagesService extends AbstractScheduledService implements 
     this.messageQueue = messageQueue;
   }
 
-  @Override
-  protected void runOneIteration() throws InterruptedException {
+  public void run() throws InterruptedException {
     LOG.info("[id = " + this.id + "] Running message sync protocol");
 
     Set<RambleMember> peers = this.gossipService.getMembers();
@@ -49,10 +45,5 @@ public class SyncAllMessagesService extends AbstractScheduledService implements 
       client.connect();
       client.sendRequest(RequestBuilder.buildGetAllMessagesRequest());
     }
-  }
-
-  @Override
-  protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(1500, 1500, TimeUnit.MILLISECONDS);
   }
 }

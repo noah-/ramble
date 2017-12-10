@@ -105,7 +105,7 @@ public class RambleCluster {
     for (int i = 0; i < 3; i++) {
       clients.forEach(gossipService -> gossipService.post(getRandomLoremIpsum(loremIpsum)));
 
-      Thread.sleep(5000);
+      Thread.sleep(10000);
     }
 
     // Wait for everything to converge

@@ -205,6 +205,11 @@ public class H2DbStore implements DbStore {
   }
 
   @Override
+  public Set<RambleMessage.SignedMessage> getAllMessagesAndBlockConf() {
+    return null;
+  }
+
+  @Override
   public Set<RambleMessage.SignedMessage> getMessages(byte[] messageDigest) {
     String sql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, TIMESTAMP, PUBLICKEY, SIGNATURE " +
             "FROM MESSAGES WHERE MESSAGEDIGEST = ?";
