@@ -171,9 +171,8 @@ public class ComputeComplementService extends AbstractScheduledService implement
                     List<RambleMessage.SignedMessage> messages = response.getSendMessage().getMessages()
                             .getSignedMessageList();
                     if (MessageSigner.verify(messages)) {
-                      response.getSendMessage().getMessages().getSignedMessageList().forEach(message -> {
-                        this.dbStore.storeIfNotExists(message);
-                      });
+                      response.getSendMessage().getMessages().getSignedMessageList().forEach(
+                              this.dbStore::storeIfNotExists);
                     }
                     myMessageSyncClient.disconnect();
                   });

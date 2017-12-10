@@ -12,6 +12,7 @@ import ramble.db.DbStoreFactory;
 import ramble.db.api.DbStore;
 import ramble.membership.MembershipServiceFactory;
 import ramble.messagesync.ComputeComplementService;
+import ramble.messagesync.DefaultMessageSyncServerHandler;
 import ramble.messagesync.MessageBroadcaster;
 import ramble.messagesync.MessageSyncServerFactory;
 
@@ -63,7 +64,8 @@ public class RambleImpl implements Ramble {
     this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService, 3); // default fanout to 3
 
     services.add(this.membershipService);
-    services.add(MessageSyncServerFactory.getMessageSyncServer(this.dbStore, messageSyncPort, this));
+    services.add(MessageSyncServerFactory.getMessageSyncServer(new DefaultMessageSyncServerHandler(this, this.dbStore),
+            messageSyncPort));
     services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.id));
     // services.add(this.messageBroadcaster);
     this.serviceManager = new ServiceManager(services);
@@ -79,7 +81,8 @@ public class RambleImpl implements Ramble {
     LOG.info("[id = " + this.id +  "] Posting message: " + message);
 
     // Create signed message
-    RambleMessage.SignedMessage signedMessage = MessageBuilder.buildSignedMessage(this.id, message, this.publicKey, this.privateKey);
+    RambleMessage.SignedMessage signedMessage = MessageBuilder.buildSignedMessage(this.id, message, this.publicKey,
+            this.privateKey);
 
     // Store the message in the local db
     DbStoreFactory.getDbStore(this.id).store(signedMessage);

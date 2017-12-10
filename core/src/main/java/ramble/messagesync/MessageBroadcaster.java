@@ -52,7 +52,7 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
                 broadcastMessages.stream().map(msg -> msg.getMessage().getMessage()).toArray()) + " from id = " + this.id + " to target " + target.getAddr() + ":" + target.getMessageSyncPort());
 
         MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(target.getAddr(),
-                target.getMessageSyncPort(), new AckMessageSyncHandler());
+                target.getMessageSyncPort(), new AckMessageClientSyncHandler());
         messageSyncClient.connect();
         messageSyncClient.sendRequest(RequestBuilder.buildBroadcastMessagesRequest(broadcastMessages));
       }

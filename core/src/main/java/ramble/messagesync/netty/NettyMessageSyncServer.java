@@ -2,15 +2,21 @@ package ramble.messagesync.netty;
 
 import com.google.common.util.concurrent.AbstractIdleService;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.apache.log4j.Logger;
-import ramble.api.Ramble;
-import ramble.db.api.DbStore;
+import ramble.api.MessageSyncProtocol;
 import ramble.messagesync.api.MessageSyncServer;
+import ramble.messagesync.api.MessageSyncServerHandler;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,7 +30,7 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
   private final EventLoopGroup workerGroup;
   private final ServerBootstrap bootStrap;
 
-  public NettyMessageSyncServer(DbStore dbStore, int port, Ramble ramble) {
+  public NettyMessageSyncServer(MessageSyncServerHandler messageSyncServerHandler, int port) {
     this.port = port;
 
     // Create event loop groups. One for incoming connections handling and
@@ -36,14 +42,22 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
     this.bootStrap.group(serverGroup, workerGroup)
             .channel(NioServerSocketChannel.class)
             .handler(new LoggingHandler(LogLevel.INFO))
-            .childHandler(new NettyMessageSyncServerInitializer(dbStore, ramble));
+            .childHandler(new ChannelInitializer<SocketChannel>() {
+              @Override
+              protected void initChannel(SocketChannel ch) {
+                ch.pipeline().addLast(new ProtobufVarint32FrameDecoder(),
+                        new ProtobufDecoder(MessageSyncProtocol.Request.getDefaultInstance()),
+                        new ProtobufVarint32LengthFieldPrepender(), new ProtobufEncoder(),
+                        new NettyMessageSyncServerHandler(messageSyncServerHandler));
+              }
+            });
   }
 
   @Override
   protected void startUp() {
     LOG.info("Starting Message Sync Server on port " + this.port);
 
-    // TODO not sure if running this async is necessary / safe
+    // Not sure if running this async is necessary / safe
     CompletableFuture.runAsync(() -> {
       try {
         bootStrap.bind(this.port).sync().channel().closeFuture().sync();

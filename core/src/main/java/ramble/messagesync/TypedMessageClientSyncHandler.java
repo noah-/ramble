@@ -3,11 +3,11 @@ package ramble.messagesync;
 import org.apache.log4j.Logger;
 import ramble.api.MessageSyncProtocol;
 import ramble.messagesync.api.MessageSyncClient;
-import ramble.messagesync.api.MessageSyncHandler;
+import ramble.messagesync.api.MessageClientSyncHandler;
 
-public class TypedMessageSyncHandler implements MessageSyncHandler {
+public class TypedMessageClientSyncHandler implements MessageClientSyncHandler {
 
-  private static final Logger LOG = Logger.getLogger(TypedMessageSyncHandler.class);
+  private static final Logger LOG = Logger.getLogger(TypedMessageClientSyncHandler.class);
 
   @Override
   public void handleResponse(MessageSyncClient messageSyncClient, MessageSyncProtocol.Response response) {
