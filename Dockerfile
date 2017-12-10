@@ -11,7 +11,7 @@ WORKDIR /usr/src/ramble
 RUN apt-get update
 RUN apt-get -y install openjdk-8-jdk
 # Build ramble.
-RUN ./gradlew clean build
+RUN ./gradlew clean assemble
 RUN tar -xvf ramble-distribution*.gz
 RUN apt-get -y install inotify-tools
 RUN apt-get -y install iproute2
