@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import com.google.protobuf.ByteString;
+import org.apache.commons.lang.mutable.MutableLong;
 import org.apache.log4j.Logger;
 import ramble.api.MembershipService;
 import ramble.api.RambleMember;
@@ -20,7 +21,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 
@@ -35,7 +35,8 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   private static final Logger LOG = Logger.getLogger(ComputeComplementService.class);
 
-  public static final long BLOCK_TIME_PERIOD = 300000; // 5 minutes
+  private static final long BLOCK_TIME_PERIOD = 300000; // 5 minutes
+  private static final long NUM_BLOCK_LOOKBACKS = 5; // the number of blocks to iterate through
 
   private final DbStore dbStore;
   private final TargetSelector targetSelector;
@@ -65,16 +66,22 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   @Override
   public void runOneIteration() throws InterruptedException {
+    // Select the target node to run the protocol against
     RambleMember target = this.targetSelector.getTarget(this.membershipService.getMembers());
-    long currentTs = System.currentTimeMillis();
-    long startTimestamp = currentTs - (ComputeComplementService.BLOCK_TIME_PERIOD);
-    AtomicLong seekTimestamp = new AtomicLong(startTimestamp);
+
+    // Initialize timestamps to define the range of blocks
+
+    // The timestamp up to which blocks will be synced
+    long ts = System.currentTimeMillis();
+    long endTimestamp = (long) Math.ceil((double) ts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;
+
+    // The timestamp that the block sync iteration will start at
+     MutableLong currentTimestamp = new MutableLong(endTimestamp - BLOCK_TIME_PERIOD * NUM_BLOCK_LOOKBACKS);
+
     CountDownLatch latch = new CountDownLatch(1);
 
     String idAndTarget = "[id = " + this.id + ", target = " + target.getAddr() + ":" + target.getMessageSyncPort() + "]";
-
-    LOG.info(idAndTarget + " Compute Complement with startTs = " + startTimestamp + " endTs = " + currentTs +
-            " currentTs = " + seekTimestamp);
+    LOG.info(idAndTarget + " Compute Complement with currentTs = " + currentTimestamp + " endTs = " + endTimestamp);
 
     MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(
             target.getAddr(),
@@ -82,21 +89,22 @@ public class ComputeComplementService extends AbstractScheduledService implement
             (myMessageSyncClient, response) -> {
 
               // Add digests to cache
-              this.blocks.put(seekTimestamp.get(), new Block(response.getSendMessageDigests()
+              this.blocks.put(currentTimestamp.longValue(), new Block(response.getSendMessageDigests()
                       .getMessageDigestList()
                       .stream()
                       .map(ByteString::toByteArray)
                       .collect(Collectors.toSet()),
                       target));
 
-              long newStartTimestamp = seekTimestamp.addAndGet(BLOCK_TIME_PERIOD);
-              long newEndTimestamp = seekTimestamp.get() + BLOCK_TIME_PERIOD;
+              // Update the current timestamp
+              currentTimestamp.add(BLOCK_TIME_PERIOD);
 
-              if (newEndTimestamp <= currentTs) {
+              // If the currentTimestamp has exceed the endTimestamp, then end the protocol
+              if (currentTimestamp.longValue() < endTimestamp) {
                 myMessageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
-                        getDigestBlock(newStartTimestamp, newEndTimestamp),
-                        newStartTimestamp,
-                        newEndTimestamp));
+                        getDigestBlock(currentTimestamp.longValue(), currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
+                        currentTimestamp.longValue(),
+                        currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
               } else {
                 LOG.info(idAndTarget + " Compute Complement disconnecting client");
                 myMessageSyncClient.disconnect();
@@ -106,9 +114,9 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
     messageSyncClient.connect();
     messageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
-            getDigestBlock(startTimestamp, currentTs),
-            startTimestamp,
-            currentTs));
+            getDigestBlock(currentTimestamp.longValue(), currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
+            currentTimestamp.longValue(),
+            currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
 
     // For now we make this synchronous so that only one iteration of the ComputeComplement protocol can run at once
     // for a given node
@@ -118,7 +126,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   @Override
   protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(1500, 5000, TimeUnit.MILLISECONDS);
+    return Scheduler.newFixedRateSchedule(1500, 2500, TimeUnit.MILLISECONDS);
   }
 
   private Set<byte[]> getDigestBlock(long startTimestamp, long endTimestamp) {
@@ -186,7 +194,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
     @Override
     protected Scheduler scheduler() {
-      return Scheduler.newFixedRateSchedule(1500, 15000, TimeUnit.MILLISECONDS);
+      return Scheduler.newFixedRateSchedule(1500, 10000, TimeUnit.MILLISECONDS);
     }
   }
 }

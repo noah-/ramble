@@ -1,6 +1,5 @@
 package ramble.messagesync.netty;
 
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import ramble.api.MessageSyncProtocol;
@@ -18,7 +17,7 @@ public class NettyMessageSyncServerHandler extends SimpleChannelInboundHandler<M
   protected void channelRead0(ChannelHandlerContext ctx, MessageSyncProtocol.Request msg) {
     MessageSyncProtocol.Response response = this.messageSyncServerHandler.handleRequest(msg);
     if (response != null) {
-      ctx.write(response).addListener(ChannelFutureListener.CLOSE);
+      ctx.write(response);
     }
   }
 

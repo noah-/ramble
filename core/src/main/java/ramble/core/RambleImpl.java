@@ -35,6 +35,8 @@ public class RambleImpl implements Ramble {
 
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
 
+  private static final int MESSAGE_BROADCAST_FANOUT = 3;
+
   private final MembershipService membershipService;
   private final ServiceManager serviceManager;
   private final PublicKey publicKey;
@@ -61,13 +63,13 @@ public class RambleImpl implements Ramble {
             messageSyncPort,
             this.id);
     this.messageQueue = new ArrayBlockingQueue<>(1024);
-    this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService, 3); // default fanout to 3
+    this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService, MESSAGE_BROADCAST_FANOUT);
 
     services.add(this.membershipService);
     services.add(MessageSyncServerFactory.getMessageSyncServer(new DefaultMessageSyncServerHandler(this, this.dbStore),
             messageSyncPort));
     services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.id));
-    // services.add(this.messageBroadcaster);
+    services.add(this.messageBroadcaster);
     this.serviceManager = new ServiceManager(services);
   }
 
