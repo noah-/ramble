@@ -2,20 +2,18 @@ package ramble.p2p;
 
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
+import ramble.db.BlockInfo;
 import ramble.db.h2.H2DbStore;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.BlockingQueue;
 
 public class AntiEntropy extends AbstractScheduledService implements Service {
-
+  private static final int MIN_COUNT_FOR_CONFIRM = 3;
   private static final long BLOCK_TIME_PERIOD = 300000; // 5 mins
   private static AtomicLong _lastVerifiedTS = new AtomicLong(0);
 
@@ -87,7 +85,12 @@ public class AntiEntropy extends AbstractScheduledService implements Service {
   }
 
   public void updateVerifiedTS(long ts) {
-    _lastVerifiedTS.set(ts);
+    dbStore.updateBlockConfirmation(ts);
+    BlockInfo bi = dbStore.getBlockInfo(ts);
+
+    if (bi.count > MIN_COUNT_FOR_CONFIRM) {
+      _lastVerifiedTS.set(ts);
+    }
   }
 
   public byte[] getOne() {
