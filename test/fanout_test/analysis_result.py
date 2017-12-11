@@ -22,12 +22,26 @@ for entry in logs:
     else:
         message_to_time[entry[2]] = [entry]
 
+total_cnt = 0 
+total_10 = 0.0
+total_50 = 0.0
+total_100 = 0.0
 for key in message_to_time.keys():
     message_to_time[key].sort(key=lambda entry:entry[1])
     entry = message_to_time[key]
     msg_cnt = len(entry)
+    total_cnt += 1
     print "Result for message: " + key
     print "10% " , (entry[msg_cnt/10][1] - entry[msg_cnt / 10][0]) 
     print "50% " , (entry[msg_cnt/2][1] - entry[msg_cnt/2][0]) 
     print "90% " , (entry[msg_cnt - msg_cnt / 10][1] - entry[msg_cnt - msg_cnt / 10][0]) 
     print "100% " , (entry[-1][1] - entry[-1][0]) 
+    total_10 +=  (entry[msg_cnt/10][1] - entry[msg_cnt / 10][0]) 
+    total_50 +=  (entry[msg_cnt/2][1] - entry[msg_cnt / 2][0]) 
+    total_100 +=  (entry[-1][1] - entry[-1][0]) 
+
+print "Avg result"
+print "10% ", total_10 / total_cnt
+print "50% ", total_50 / total_cnt 
+print "100% ", total_100 / total_cnt 
+
