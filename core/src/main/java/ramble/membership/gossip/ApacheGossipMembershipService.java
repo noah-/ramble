@@ -63,6 +63,8 @@ public class ApacheGossipMembershipService extends AbstractIdleService implement
 
     GossipSettings gossipSettings = new GossipSettings();
     gossipSettings.setDistribution("exponential");
+    gossipSettings.setCleanupInterval(30000);
+    gossipSettings.setConvictThreshold(25);
     gossipSettings.setPathToKeyStore(keyStoreFolder);
 
     Map<String, String> properties = new HashMap<>();

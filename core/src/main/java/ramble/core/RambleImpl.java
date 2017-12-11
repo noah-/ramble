@@ -70,7 +70,7 @@ public class RambleImpl implements Ramble {
     services.add(this.messageBroadcaster);
     services.add(MessageSyncServerFactory.getMessageSyncServer(this.id,
             new DefaultMessageSyncServerHandler(this, this.dbStore), messageSyncPort));
-    services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.messageQueue, this.id));
+    services.add(new ComputeComplementService(this.messageBroadcaster, this.membershipService, this.dbStore, this.messageQueue, this.id));
 
     this.serviceManager = new ServiceManager(services);
   }
