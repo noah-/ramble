@@ -1,0 +1,434 @@
+2017-12-11 04:02:36 INFO  RambleImpl:80 - [id = 172.20.128.21-5000-5001] Starting Ramble service
+2017-12-11 04:02:36 INFO  MessageBroadcaster:43 - [id = 172.20.128.21-5000-5001] Starting broadcast service
+2017-12-11 04:02:36 INFO  NettyMessageSyncServer:60 - [id = 172.20.128.21-5000-5001] Starting Message Sync Server on port 5001
+2017-12-11 04:02:36 INFO  ComputeComplementService:67 - [id = 172.20.128.21-5000-5001] Flush Blocks Service started
+2017-12-11 04:02:36 INFO  ApacheGossipMembershipService:113 - [id = 172.20.128.21-5000-5001] Starting Gossip Membership Service with URI udp://172.20.128.21:5000
+2017-12-11 04:02:36 INFO  LoggingHandler:150 - [id: 0x73e70cee] REGISTERED
+2017-12-11 04:02:36 INFO  LoggingHandler:150 - [id: 0x73e70cee] BIND: 0.0.0.0/0.0.0.0:5001
+2017-12-11 04:02:36 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] ACTIVE
+2017-12-11 04:02:36 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.59:5000, heartbeat=11031708882890, clusterName=ramble, id=172.20.128.59-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:37 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.1:5000, heartbeat=11127148484005, clusterName=ramble, id=172.20.128.1-5000, currentdetect=0.005174213467057146 ] reported status UP
+2017-12-11 04:02:37 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.40:5000, heartbeat=11031985208251, clusterName=ramble, id=172.20.128.40-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:37 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.46:5000, heartbeat=11032438939908, clusterName=ramble, id=172.20.128.46-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:37 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11032704398303, clusterName=ramble, id=172.20.128.43-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:37 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.63:5000, heartbeat=11032689308455, clusterName=ramble, id=172.20.128.63-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:38 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.54:5000, heartbeat=11033314185478, clusterName=ramble, id=172.20.128.54-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:38 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.36:5000, heartbeat=11033286124411, clusterName=ramble, id=172.20.128.36-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:38 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.47:5000, heartbeat=11033315929629, clusterName=ramble, id=172.20.128.47-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:38 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.60:5000, heartbeat=11033690796005, clusterName=ramble, id=172.20.128.60-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.33:5000, heartbeat=11034709534107, clusterName=ramble, id=172.20.128.33-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.34:5000, heartbeat=11034985735943, clusterName=ramble, id=172.20.128.34-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.35:5000, heartbeat=11035410806732, clusterName=ramble, id=172.20.128.35-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.41:5000, heartbeat=11034948234380, clusterName=ramble, id=172.20.128.41-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.42:5000, heartbeat=11035152045339, clusterName=ramble, id=172.20.128.42-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.45:5000, heartbeat=11034509570885, clusterName=ramble, id=172.20.128.45-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.48:5000, heartbeat=11034954268985, clusterName=ramble, id=172.20.128.48-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.49:5000, heartbeat=11035143111619, clusterName=ramble, id=172.20.128.49-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.52:5000, heartbeat=11034935832752, clusterName=ramble, id=172.20.128.52-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11035177973232, clusterName=ramble, id=172.20.128.55-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.57:5000, heartbeat=11035300867603, clusterName=ramble, id=172.20.128.57-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.39:5000, heartbeat=11036994376646, clusterName=ramble, id=172.20.128.39-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.44:5000, heartbeat=11037182294306, clusterName=ramble, id=172.20.128.44-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.62:5000, heartbeat=11036980913907, clusterName=ramble, id=172.20.128.62-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.61:5000, heartbeat=11037315646191, clusterName=ramble, id=172.20.128.61-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.64:5000, heartbeat=11037280811184, clusterName=ramble, id=172.20.128.64-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.50:5000, heartbeat=11037958466124, clusterName=ramble, id=172.20.128.50-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:02:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.53:5000, heartbeat=11037995790836, clusterName=ramble, id=172.20.128.53-5000, currentdetect=Infinity ] reported status DOWN
+2017-12-11 04:05:24 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.33:5000, heartbeat=11199512701682, clusterName=ramble, id=172.20.128.33-5000, currentdetect=1.4475114795314676 ] reported status UP
+2017-12-11 04:05:25 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.34:5000, heartbeat=11200315847351, clusterName=ramble, id=172.20.128.34-5000, currentdetect=1.6684796705231082 ] reported status UP
+2017-12-11 04:05:26 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.35:5000, heartbeat=11201284035526, clusterName=ramble, id=172.20.128.35-5000, currentdetect=1.681767063233318 ] reported status UP
+2017-12-11 04:05:26 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.36:5000, heartbeat=11201966837897, clusterName=ramble, id=172.20.128.36-5000, currentdetect=1.4305312006143545 ] reported status UP
+2017-12-11 04:05:29 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.39:5000, heartbeat=11204821507086, clusterName=ramble, id=172.20.128.39-5000, currentdetect=1.8735199870366275 ] reported status UP
+2017-12-11 04:05:30 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.40:5000, heartbeat=11205537566043, clusterName=ramble, id=172.20.128.40-5000, currentdetect=2.080631734293932 ] reported status UP
+2017-12-11 04:05:31 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.41:5000, heartbeat=11206572372482, clusterName=ramble, id=172.20.128.41-5000, currentdetect=1.6268810813920496 ] reported status UP
+2017-12-11 04:05:32 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.42:5000, heartbeat=11207616122732, clusterName=ramble, id=172.20.128.42-5000, currentdetect=1.3891951803499025 ] reported status UP
+2017-12-11 04:05:33 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11208778632234, clusterName=ramble, id=172.20.128.43-5000, currentdetect=1.8329458972312962 ] reported status UP
+2017-12-11 04:05:34 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.44:5000, heartbeat=11209411719780, clusterName=ramble, id=172.20.128.44-5000, currentdetect=1.8358995426052995 ] reported status UP
+2017-12-11 04:05:35 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.45:5000, heartbeat=11210369172215, clusterName=ramble, id=172.20.128.45-5000, currentdetect=1.5932204114386979 ] reported status UP
+2017-12-11 04:05:35 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.46:5000, heartbeat=11211088733325, clusterName=ramble, id=172.20.128.46-5000, currentdetect=2.232630462076559 ] reported status UP
+2017-12-11 04:05:36 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.47:5000, heartbeat=11211858419782, clusterName=ramble, id=172.20.128.47-5000, currentdetect=1.78836827589058 ] reported status UP
+2017-12-11 04:05:38 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.49:5000, heartbeat=11214111377271, clusterName=ramble, id=172.20.128.49-5000, currentdetect=1.5605349333347012 ] reported status UP
+2017-12-11 04:05:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.53:5000, heartbeat=11217580741323, clusterName=ramble, id=172.20.128.53-5000, currentdetect=1.2790401620450622 ] reported status UP
+2017-12-11 04:05:48 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.48:5000, heartbeat=11223516677123, clusterName=ramble, id=172.20.128.48-5000, currentdetect=1.483357504672422 ] reported status UP
+2017-12-11 04:05:49 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.60:5000, heartbeat=11224332339053, clusterName=ramble, id=172.20.128.60-5000, currentdetect=1.6879833777186837 ] reported status UP
+2017-12-11 04:05:51 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.62:5000, heartbeat=11226330495068, clusterName=ramble, id=172.20.128.62-5000, currentdetect=1.685594432237037 ] reported status UP
+2017-12-11 04:05:51 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.50:5000, heartbeat=11226376316013, clusterName=ramble, id=172.20.128.50-5000, currentdetect=1.229865076637657 ] reported status UP
+2017-12-11 04:05:51 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.57:5000, heartbeat=11226551295937, clusterName=ramble, id=172.20.128.57-5000, currentdetect=1.4667492589722644 ] reported status UP
+2017-12-11 04:05:51 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.63:5000, heartbeat=11227149712562, clusterName=ramble, id=172.20.128.63-5000, currentdetect=2.051474514247036 ] reported status UP
+2017-12-11 04:05:53 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.52:5000, heartbeat=11228781493373, clusterName=ramble, id=172.20.128.52-5000, currentdetect=1.2379178897334588 ] reported status UP
+2017-12-11 04:05:54 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.36:5000, heartbeat=11229295969059, clusterName=ramble, id=172.20.128.36-5000, currentdetect=10.08315286483683 ] reported status DOWN
+2017-12-11 04:05:54 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.54:5000, heartbeat=11229296892890, clusterName=ramble, id=172.20.128.54-5000, currentdetect=1.8374475518539255 ] reported status UP
+2017-12-11 04:05:54 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11229651636642, clusterName=ramble, id=172.20.128.55-5000, currentdetect=1.237311777547728 ] reported status UP
+2017-12-11 04:05:57 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.33:5000, heartbeat=11216365403240, clusterName=ramble, id=172.20.128.33-5000, currentdetect=10.00120946677801 ] reported status DOWN
+2017-12-11 04:05:58 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.33:5000, heartbeat=11233382981699, clusterName=ramble, id=172.20.128.33-5000, currentdetect=9.899931909784657 ] reported status UP
+2017-12-11 04:05:58 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.59:5000, heartbeat=11233856196354, clusterName=ramble, id=172.20.128.59-5000, currentdetect=2.22123019633871 ] reported status UP
+2017-12-11 04:05:59 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.33:5000, heartbeat=11234389092092, clusterName=ramble, id=172.20.128.33-5000, currentdetect=10.01505654050363 ] reported status DOWN
+2017-12-11 04:06:00 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.61:5000, heartbeat=11235299314596, clusterName=ramble, id=172.20.128.61-5000, currentdetect=1.1856303901570948 ] reported status UP
+2017-12-11 04:06:03 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.64:5000, heartbeat=11238554067914, clusterName=ramble, id=172.20.128.64-5000, currentdetect=1.3836458221258476 ] reported status UP
+2017-12-11 04:06:03 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.34:5000, heartbeat=11232401588360, clusterName=ramble, id=172.20.128.34-5000, currentdetect=10.001273778154355 ] reported status DOWN
+2017-12-11 04:06:09 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.42:5000, heartbeat=11242657480456, clusterName=ramble, id=172.20.128.42-5000, currentdetect=10.008073151827151 ] reported status DOWN
+2017-12-11 04:06:09 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.38:5000, heartbeat=11244857961896, clusterName=ramble, id=172.20.128.38-5000, currentdetect=10.01384922320886 ] reported status DOWN
+2017-12-11 04:06:12 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.37:5000, heartbeat=11245018650577, clusterName=ramble, id=172.20.128.37-5000, currentdetect=10.001465318061094 ] reported status DOWN
+2017-12-11 04:06:13 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.37:5000, heartbeat=11248493819851, clusterName=ramble, id=172.20.128.37-5000, currentdetect=9.932869302356416 ] reported status UP
+2017-12-11 04:06:14 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.37:5000, heartbeat=11245018650577, clusterName=ramble, id=172.20.128.37-5000, currentdetect=10.002054009535922 ] reported status DOWN
+2017-12-11 04:06:14 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.35:5000, heartbeat=11244322234965, clusterName=ramble, id=172.20.128.35-5000, currentdetect=10.002929322457836 ] reported status DOWN
+2017-12-11 04:06:15 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.35:5000, heartbeat=11250223719654, clusterName=ramble, id=172.20.128.35-5000, currentdetect=9.725991046847092 ] reported status UP
+2017-12-11 04:06:15 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.41:5000, heartbeat=11245033470816, clusterName=ramble, id=172.20.128.41-5000, currentdetect=10.001146131798311 ] reported status DOWN
+2017-12-11 04:06:16 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.35:5000, heartbeat=11251817833739, clusterName=ramble, id=172.20.128.35-5000, currentdetect=10.027220433854096 ] reported status DOWN
+2017-12-11 04:06:16 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.40:5000, heartbeat=11251838556226, clusterName=ramble, id=172.20.128.40-5000, currentdetect=10.102645655563101 ] reported status DOWN
+2017-12-11 04:06:18 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.41:5000, heartbeat=11253675206277, clusterName=ramble, id=172.20.128.41-5000, currentdetect=9.964131478642539 ] reported status UP
+2017-12-11 04:06:19 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.41:5000, heartbeat=11245033470816, clusterName=ramble, id=172.20.128.41-5000, currentdetect=10.000263787723696 ] reported status DOWN
+2017-12-11 04:06:34 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11265911084381, clusterName=ramble, id=172.20.128.55-5000, currentdetect=10.002195976453368 ] reported status DOWN
+2017-12-11 04:06:39 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.39:5000, heartbeat=11272545718020, clusterName=ramble, id=172.20.128.39-5000, currentdetect=10.000561565562284 ] reported status DOWN
+2017-12-11 04:06:39 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.57:5000, heartbeat=11272274816783, clusterName=ramble, id=172.20.128.57-5000, currentdetect=10.004371490590438 ] reported status DOWN
+2017-12-11 04:06:39 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.39:5000, heartbeat=11274895001287, clusterName=ramble, id=172.20.128.39-5000, currentdetect=9.899575925033636 ] reported status UP
+2017-12-11 04:06:39 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11274954527341, clusterName=ramble, id=172.20.128.55-5000, currentdetect=9.427535658813964 ] reported status UP
+2017-12-11 04:06:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.39:5000, heartbeat=11272545718020, clusterName=ramble, id=172.20.128.39-5000, currentdetect=10.002580925705649 ] reported status DOWN
+2017-12-11 04:06:41 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.57:5000, heartbeat=11276274407104, clusterName=ramble, id=172.20.128.57-5000, currentdetect=9.874668321291676 ] reported status UP
+2017-12-11 04:06:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.57:5000, heartbeat=11272274816783, clusterName=ramble, id=172.20.128.57-5000, currentdetect=10.001670978905963 ] reported status DOWN
+2017-12-11 04:06:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11272378329698, clusterName=ramble, id=172.20.128.43-5000, currentdetect=10.000107499882331 ] reported status DOWN
+2017-12-11 04:06:42 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11277555066517, clusterName=ramble, id=172.20.128.43-5000, currentdetect=9.469097473192281 ] reported status UP
+2017-12-11 04:06:43 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.57:5000, heartbeat=11278369786798, clusterName=ramble, id=172.20.128.57-5000, currentdetect=9.97494262065891 ] reported status UP
+2017-12-11 04:06:43 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.57:5000, heartbeat=11278369786798, clusterName=ramble, id=172.20.128.57-5000, currentdetect=10.002139765571211 ] reported status DOWN
+2017-12-11 04:06:44 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.46:5000, heartbeat=11272214426055, clusterName=ramble, id=172.20.128.46-5000, currentdetect=10.140015244490714 ] reported status DOWN
+2017-12-11 04:06:45 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11265911084381, clusterName=ramble, id=172.20.128.55-5000, currentdetect=10.00065620224214 ] reported status DOWN
+2017-12-11 04:06:48 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11280311563564, clusterName=ramble, id=172.20.128.43-5000, currentdetect=10.001221554655796 ] reported status DOWN
+2017-12-11 04:06:48 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11283427860932, clusterName=ramble, id=172.20.128.43-5000, currentdetect=9.893928185498748 ] reported status UP
+2017-12-11 04:06:49 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11284362529709, clusterName=ramble, id=172.20.128.55-5000, currentdetect=9.890897712803255 ] reported status UP
+2017-12-11 04:06:49 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11280311563564, clusterName=ramble, id=172.20.128.43-5000, currentdetect=10.00010557075423 ] reported status DOWN
+2017-12-11 04:06:50 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11265911084381, clusterName=ramble, id=172.20.128.55-5000, currentdetect=10.002369015952977 ] reported status DOWN
+2017-12-11 04:06:50 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11285652735832, clusterName=ramble, id=172.20.128.43-5000, currentdetect=9.948027466434965 ] reported status UP
+2017-12-11 04:06:50 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.43:5000, heartbeat=11280311563564, clusterName=ramble, id=172.20.128.43-5000, currentdetect=10.000052040867374 ] reported status DOWN
+2017-12-11 04:06:53 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.52:5000, heartbeat=11285740826320, clusterName=ramble, id=172.20.128.52-5000, currentdetect=10.000151872193952 ] reported status DOWN
+2017-12-11 04:06:54 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xf3527115, L:/172.20.128.21:5001 - R:/172.20.128.1:47552]
+2017-12-11 04:06:54 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:54 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.21-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message1
+2017-12-11 04:06:54 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.59:5001
+2017-12-11 04:06:54 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.59 port 5001
+2017-12-11 04:06:54 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.48:5001
+2017-12-11 04:06:54 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.48 port 5001
+2017-12-11 04:06:55 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.19:5001
+2017-12-11 04:06:55 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.19 port 5001
+2017-12-11 04:06:55 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.2:5001
+2017-12-11 04:06:55 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.2 port 5001
+2017-12-11 04:06:55 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.12:5001
+2017-12-11 04:06:55 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.12 port 5001
+2017-12-11 04:06:55 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.58:5001
+2017-12-11 04:06:55 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.58 port 5001
+2017-12-11 04:06:55 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.18:5001
+2017-12-11 04:06:55 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.18 port 5001
+2017-12-11 04:06:55 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message1] to target 172.20.128.6:5001
+2017-12-11 04:06:55 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.6 port 5001
+2017-12-11 04:06:55 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.52:5000, heartbeat=11290754555234, clusterName=ramble, id=172.20.128.52-5000, currentdetect=9.946232786258273 ] reported status UP
+2017-12-11 04:06:55 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11290958892625, clusterName=ramble, id=172.20.128.55-5000, currentdetect=9.945234922735532 ] reported status UP
+2017-12-11 04:06:55 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x351250f0, L:/172.20.128.21:5001 - R:/172.20.128.12:56068]
+2017-12-11 04:06:55 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:55 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:56 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.52:5000, heartbeat=11291163906566, clusterName=ramble, id=172.20.128.52-5000, currentdetect=10.070955585742164 ] reported status DOWN
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x41aa8c4a, L:/172.20.128.21:5001 - R:/172.20.128.58:52772]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.55:5000, heartbeat=11291105256442, clusterName=ramble, id=172.20.128.55-5000, currentdetect=10.111548946560127 ] reported status DOWN
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x8bbb0403, L:/172.20.128.21:5001 - R:/172.20.128.10:38424]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x7d2bc205, L:/172.20.128.21:5001 - R:/172.20.128.39:55206]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xca908d42, L:/172.20.128.21:5001 - R:/172.20.128.36:53078]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x9b4068dc, L:/172.20.128.21:5001 - R:/172.20.128.29:41976]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x8fba4abe, L:/172.20.128.21:5001 - R:/172.20.128.12:56326]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.21-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message2
+2017-12-11 04:06:56 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.64:5001
+2017-12-11 04:06:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.64 port 5001
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x590ecac5, L:/172.20.128.21:5001 - R:/172.20.128.3:53966]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.61:5001
+2017-12-11 04:06:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.61 port 5001
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xf2e55453, L:/172.20.128.21:5001 - R:/172.20.128.14:40662]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:56 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.14:5001
+2017-12-11 04:06:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.14 port 5001
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x05355c08, L:/172.20.128.21:5001 - R:/172.20.128.10:38644]
+2017-12-11 04:06:56 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:56 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.7:5001
+2017-12-11 04:06:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.7 port 5001
+2017-12-11 04:06:56 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:56 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.24:5001
+2017-12-11 04:06:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.27:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.27 port 5001
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.32:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.32 port 5001
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message2] to target 172.20.128.26:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.26 port 5001
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x51a3754d, L:/172.20.128.21:5001 - R:/172.20.128.23:55862]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xce0988fd, L:/172.20.128.21:5001 - R:/172.20.128.15:60744]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x852a6692, L:/172.20.128.21:5001 - R:/172.20.128.6:37590]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xf0783904, L:/172.20.128.21:5001 - R:/172.20.128.58:53178]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x39c22657, L:/172.20.128.21:5001 - R:/172.20.128.61:53368]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xd1df1bfc, L:/172.20.128.21:5001 - R:/172.20.128.28:51806]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x59cf4517, L:/172.20.128.21:5001 - R:/172.20.128.19:34990]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x5f5b8c31, L:/172.20.128.21:5001 - R:/172.20.128.52:44700]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x88ce7add, L:/172.20.128.21:5001 - R:/172.20.128.33:37060]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.50:5000, heartbeat=11292805826556, clusterName=ramble, id=172.20.128.50-5000, currentdetect=10.046494182396888 ] reported status DOWN
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xef54bf07, L:/172.20.128.21:5001 - R:/172.20.128.25:53680]
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xf661856b, L:/172.20.128.21:5001 - R:/172.20.128.43:52678]
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xa4d12430, L:/172.20.128.21:5001 - R:/172.20.128.35:57740]
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x590c2e9f, L:/172.20.128.21:5001 - R:/172.20.128.42:49660]
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.47:5000, heartbeat=11286244834236, clusterName=ramble, id=172.20.128.47-5000, currentdetect=10.0008382910006 ] reported status DOWN
+2017-12-11 04:07:00 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.48:5000, heartbeat=11294613082574, clusterName=ramble, id=172.20.128.48-5000, currentdetect=10.002429135444897 ] reported status DOWN
+2017-12-11 04:07:02 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.53:5000, heartbeat=11297652983664, clusterName=ramble, id=172.20.128.53-5000, currentdetect=10.112194610645155 ] reported status DOWN
+2017-12-11 04:07:03 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.58:5000, heartbeat=11298616381139, clusterName=ramble, id=172.20.128.58-5000, currentdetect=10.087413480986179 ] reported status DOWN
+2017-12-11 04:07:03 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.49:5000, heartbeat=11291936833716, clusterName=ramble, id=172.20.128.49-5000, currentdetect=10.001038821848617 ] reported status DOWN
+2017-12-11 04:07:05 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.56:5000, heartbeat=11293560847207, clusterName=ramble, id=172.20.128.56-5000, currentdetect=10.000009607447247 ] reported status DOWN
+2017-12-11 04:07:05 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.60:5000, heartbeat=11300353566742, clusterName=ramble, id=172.20.128.60-5000, currentdetect=10.017172188713866 ] reported status DOWN
+2017-12-11 04:07:06 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.44:5000, heartbeat=11301503795241, clusterName=ramble, id=172.20.128.44-5000, currentdetect=10.014678830843232 ] reported status DOWN
+2017-12-11 04:07:07 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.54:5000, heartbeat=11295958045998, clusterName=ramble, id=172.20.128.54-5000, currentdetect=10.000063132103813 ] reported status DOWN
+2017-12-11 04:07:07 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.54:5000, heartbeat=11302447682331, clusterName=ramble, id=172.20.128.54-5000, currentdetect=9.907675341481 ] reported status UP
+2017-12-11 04:07:07 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.54:5000, heartbeat=11302971877518, clusterName=ramble, id=172.20.128.54-5000, currentdetect=10.037687545318992 ] reported status DOWN
+2017-12-11 04:07:07 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.62:5000, heartbeat=11303164565173, clusterName=ramble, id=172.20.128.62-5000, currentdetect=10.13775544997762 ] reported status DOWN
+2017-12-11 04:07:12 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.61:5000, heartbeat=11305100143229, clusterName=ramble, id=172.20.128.61-5000, currentdetect=10.00074796156989 ] reported status DOWN
+2017-12-11 04:07:13 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.59:5000, heartbeat=11294810305073, clusterName=ramble, id=172.20.128.59-5000, currentdetect=10.000159589580516 ] reported status DOWN
+2017-12-11 04:07:13 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.45:5000, heartbeat=11296098324514, clusterName=ramble, id=172.20.128.45-5000, currentdetect=10.00030045597973 ] reported status DOWN
+2017-12-11 04:07:14 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.63:5000, heartbeat=11307796594726, clusterName=ramble, id=172.20.128.63-5000, currentdetect=10.00051280675194 ] reported status DOWN
+2017-12-11 04:07:15 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.51:5000, heartbeat=11307786787287, clusterName=ramble, id=172.20.128.51-5000, currentdetect=10.00045005594364 ] reported status DOWN
+2017-12-11 04:07:16 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.51:5000, heartbeat=11311364180146, clusterName=ramble, id=172.20.128.51-5000, currentdetect=9.84256555655541 ] reported status UP
+2017-12-11 04:07:16 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.51:5000, heartbeat=11312127066847, clusterName=ramble, id=172.20.128.51-5000, currentdetect=10.071148660535084 ] reported status DOWN
+2017-12-11 04:07:22 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.64:5000, heartbeat=11317471600531, clusterName=ramble, id=172.20.128.64-5000, currentdetect=10.061933731668612 ] reported status DOWN
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x5f9720e6, L:/172.20.128.21:5001 - R:/172.20.128.13:33486]
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.21-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message3
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.22:5001
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.22 port 5001
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.10:5001
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.10 port 5001
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.6:5001
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.6 port 5001
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xbaf1c3c9, L:/172.20.128.21:5001 - R:/172.20.128.14:41226]
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.25:5001
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.25 port 5001
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x8b6b25c6, L:/172.20.128.21:5001 - R:/172.20.128.31:53490]
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x980dfd0a, L:/172.20.128.21:5001 - R:/172.20.128.10:39298]
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xd3ab5ef6, L:/172.20.128.21:5001 - R:/172.20.128.24:41646]
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xaf47f54b, L:/172.20.128.21:5001 - R:/172.20.128.7:44324]
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.31:5001
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x2d1b26db, L:/172.20.128.21:5001 - R:/172.20.128.9:34244]
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.31 port 5001
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.27:5001
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x67b2949d, L:/172.20.128.21:5001 - R:/172.20.128.12:57212]
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.27 port 5001
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.13:5001
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.13 port 5001
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xbe7b65ff, L:/172.20.128.21:5001 - R:/172.20.128.20:36652]
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message3] to target 172.20.128.1:5001
+2017-12-11 04:07:35 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.1 port 5001
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x4af97ad2, L:/172.20.128.21:5001 - R:/172.20.128.27:49312]
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xe7efb909, L:/172.20.128.21:5001 - R:/172.20.128.3:54958]
+2017-12-11 04:07:35 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:35 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message3
+2017-12-11 04:07:36 INFO  ComputeComplementService:111 - [id = 172.20.128.21-5000-5001, target = 172.20.128.10:5001] Running Compute Complement for block range (1512965100000, 1512965400000)
+2017-12-11 04:07:36 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.10 port 5001
+2017-12-11 04:07:36 INFO  ComputeComplementService:129 - [id = 172.20.128.21-5000-5001, target = 172.20.128.10:5001] Compute Complement round has completed
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xc774e4aa, L:/172.20.128.21:5001 - R:/172.20.128.28:52556]
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:38 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.21-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message4
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.15:5001
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.15 port 5001
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.29:5001
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.29 port 5001
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.18:5001
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.18 port 5001
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x7c817d08, L:/172.20.128.21:5001 - R:/172.20.128.32:45854]
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:38 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message4
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.1:5001
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.1 port 5001
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.13:5001
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.13 port 5001
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.30:5001
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xcfe30d74, L:/172.20.128.21:5001 - R:/172.20.128.9:34712]
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.30 port 5001
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.32:5001
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.32 port 5001
+2017-12-11 04:07:38 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message4] to target 172.20.128.24:5001
+2017-12-11 04:07:38 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message4
+2017-12-11 04:07:38 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x349eeb43, L:/172.20.128.21:5001 - R:/172.20.128.10:39998]
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:38 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message4
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x51a16f0e, L:/172.20.128.21:5001 - R:/172.20.128.31:54310]
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:38 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message4
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xba800364, L:/172.20.128.21:5001 - R:/172.20.128.29:43516]
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x2740f510, L:/172.20.128.21:5001 - R:/172.20.128.1:49572]
+2017-12-11 04:07:38 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:38 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message4
+2017-12-11 04:07:38 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message4
+2017-12-11 04:07:39 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x96b83187, L:/172.20.128.21:5001 - R:/172.20.128.9:34968]
+2017-12-11 04:07:39 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:07:39 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message4
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x8ac52851, L:/172.20.128.21:5001 - R:/172.20.128.18:56196]
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:01 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.21-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message5
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.5:5001
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.19:5001
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.19 port 5001
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.26:5001
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.26 port 5001
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.13:5001
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.13 port 5001
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.11:5001
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.11 port 5001
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.28:5001
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.28 port 5001
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.16:5001
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.16 port 5001
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xf034fff8, L:/172.20.128.21:5001 - R:/172.20.128.13:34634]
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x613664ff, L:/172.20.128.21:5001 - R:/172.20.128.31:54610]
+2017-12-11 04:08:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message5
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x1c7927a2, L:/172.20.128.21:5001 - R:/172.20.128.5:37448]
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message5] to target 172.20.128.24:5001
+2017-12-11 04:08:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message5
+2017-12-11 04:08:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 04:08:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message5
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x2935e9e9, L:/172.20.128.21:5001 - R:/172.20.128.6:39202]
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xbd70eaed, L:/172.20.128.21:5001 - R:/172.20.128.28:53406]
+2017-12-11 04:08:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message5
+2017-12-11 04:08:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message5
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xead823fe, L:/172.20.128.21:5001 - R:/172.20.128.17:56598]
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xca6f5337, L:/172.20.128.21:5001 - R:/172.20.128.14:42982]
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:59 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.21-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message6
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.5:5001
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.20:5001
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xb3144a94, L:/172.20.128.21:5001 - R:/172.20.128.16:37376]
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.20 port 5001
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xe2e68477, L:/172.20.128.21:5001 - R:/172.20.128.12:58832]
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.30:5001
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.30 port 5001
+2017-12-11 04:08:59 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message6
+2017-12-11 04:08:59 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message6
+2017-12-11 04:08:59 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message6
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.4:5001
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.4 port 5001
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.1:5001
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.1 port 5001
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.27:5001
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.27 port 5001
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.11:5001
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.11 port 5001
+2017-12-11 04:08:59 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message6] to target 172.20.128.17:5001
+2017-12-11 04:08:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.17 port 5001
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x967a2254, L:/172.20.128.21:5001 - R:/172.20.128.8:49436]
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:59 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message6
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x2fc15dcf, L:/172.20.128.21:5001 - R:/172.20.128.26:51940]
+2017-12-11 04:08:59 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:08:59 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message6
+2017-12-11 04:09:00 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xae8ea325, L:/172.20.128.21:5001 - R:/172.20.128.6:39866]
+2017-12-11 04:09:00 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:00 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message6
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x82155ec7, L:/172.20.128.21:5001 - R:/172.20.128.3:56642]
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:01 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.21-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message7
+2017-12-11 04:09:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.1:5001
+2017-12-11 04:09:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.1 port 5001
+2017-12-11 04:09:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.30:5001
+2017-12-11 04:09:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.30 port 5001
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x4860e44d, L:/172.20.128.21:5001 - R:/172.20.128.32:47370]
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.5:5001
+2017-12-11 04:09:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message7
+2017-12-11 04:09:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x5808068d, L:/172.20.128.21:5001 - R:/172.20.128.11:36406]
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message7
+2017-12-11 04:09:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.11:5001
+2017-12-11 04:09:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.11 port 5001
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0xa73f4eea, L:/172.20.128.21:5001 - R:/172.20.128.16:37660]
+2017-12-11 04:09:01 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:01 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message7
+2017-12-11 04:09:01 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.18:5001
+2017-12-11 04:09:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.18 port 5001
+2017-12-11 04:09:02 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x6343e24a, L:/172.20.128.21:5001 - R:/172.20.128.24:43740]
+2017-12-11 04:09:02 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:02 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message7
+2017-12-11 04:09:02 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.16:5001
+2017-12-11 04:09:02 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.16 port 5001
+2017-12-11 04:09:02 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.20:5001
+2017-12-11 04:09:02 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.20 port 5001
+2017-12-11 04:09:02 INFO  MessageBroadcaster:56 - [id = 172.20.128.21-5000-5001] Broadcasting messages: [message7] to target 172.20.128.7:5001
+2017-12-11 04:09:02 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.7 port 5001
+2017-12-11 04:09:02 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x49577c8c, L:/172.20.128.21:5001 - R:/172.20.128.18:57608]
+2017-12-11 04:09:02 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:02 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message7
+2017-12-11 04:09:02 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ: [id: 0x7a252844, L:/172.20.128.21:5001 - R:/172.20.128.20:38846]
+2017-12-11 04:09:02 INFO  LoggingHandler:150 - [id: 0x73e70cee, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:09:02 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.21-5000-5001] Received broadcasted message but it exists locally so dropping it: message7
+2017-12-11 04:12:36 INFO  ComputeComplementService:211 - [id = 172.20.128.21-5000-5001, target = 172.20.128.10:5001] Running Flush Blocks
+2017-12-11 04:12:36 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.21-5000-5001] Netty client connecting to host 172.20.128.10 port 5001
