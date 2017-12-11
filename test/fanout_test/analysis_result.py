@@ -29,4 +29,5 @@ for key in message_to_time.keys():
     print "Result for message: " + key
     print "10% " , (entry[msg_cnt/10][1] - entry[msg_cnt / 10][0]) 
     print "50% " , (entry[msg_cnt/2][1] - entry[msg_cnt/2][0]) 
+    print "90% " , (entry[msg_cnt - msg_cnt / 10][1] - entry[msg_cnt - msg_cnt / 10][0]) 
     print "100% " , (entry[-1][1] - entry[-1][0]) 
