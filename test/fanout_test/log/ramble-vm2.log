@@ -1,0 +1,69 @@
+2017-12-11 04:05:31 INFO  RambleImpl:80 - [id = 172.20.128.41-5000-5001] Starting Ramble service
+2017-12-11 04:05:31 INFO  MessageBroadcaster:43 - [id = 172.20.128.41-5000-5001] Starting broadcast service
+2017-12-11 04:05:31 INFO  NettyMessageSyncServer:60 - [id = 172.20.128.41-5000-5001] Starting Message Sync Server on port 5001
+2017-12-11 04:05:31 INFO  ComputeComplementService:67 - [id = 172.20.128.41-5000-5001] Flush Blocks Service started
+2017-12-11 04:05:31 INFO  ApacheGossipMembershipService:113 - [id = 172.20.128.41-5000-5001] Starting Gossip Membership Service with URI udp://172.20.128.41:5000
+2017-12-11 04:05:31 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8] REGISTERED
+2017-12-11 04:05:31 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8] BIND: 0.0.0.0/0.0.0.0:5001
+2017-12-11 04:05:31 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] ACTIVE
+2017-12-11 04:05:32 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.1:5000, heartbeat=11302190924867, clusterName=ramble, id=172.20.128.1-5000, currentdetect=-0.0 ] reported status UP
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0x39007552, L:/172.20.128.41:5001 - R:/172.20.128.59:59028]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.41-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message2
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.3:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.3 port 5001
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.20:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.20 port 5001
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0xf2cb2f94, L:/172.20.128.41:5001 - R:/172.20.128.43:58898]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:84 - [id = 172.20.128.41-5000-5001] Received broadcasted message and it does not exist locally so will re-broadcast it: message1
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.57:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.57 port 5001
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.1:5001
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0xb4ec742c, L:/172.20.128.41:5001 - R:/172.20.128.46:41444]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.1 port 5001
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.41-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0x12cfc89a, L:/172.20.128.41:5001 - R:/172.20.128.35:56718]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.41-5000-5001] Received broadcasted message but it exists locally so dropping it: message1
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.41-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.39:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.39 port 5001
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0x5cc5170c, L:/172.20.128.41:5001 - R:/172.20.128.54:41818]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.23:5001
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.41-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.23 port 5001
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0x0f2cda18, L:/172.20.128.41:5001 - R:/172.20.128.61:47210]
+2017-12-11 04:06:57 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:57 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.41-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:57 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.17:5001
+2017-12-11 04:06:57 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.17 port 5001
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message2] to target 172.20.128.16:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.16 port 5001
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0x7127d4ab, L:/172.20.128.41:5001 - R:/172.20.128.34:32846]
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.41-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.32:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.32 port 5001
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.46:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.46 port 5001
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.13:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.13 port 5001
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ: [id: 0xa885df24, L:/172.20.128.41:5001 - R:/172.20.128.43:59204]
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.27:5001
+2017-12-11 04:06:58 INFO  LoggingHandler:150 - [id: 0x1a4d4bc8, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.27 port 5001
+2017-12-11 04:06:58 INFO  DefaultMessageSyncServerHandler:88 - [id = 172.20.128.41-5000-5001] Received broadcasted message but it exists locally so dropping it: message2
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.15:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.15 port 5001
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.23:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.23 port 5001
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.19:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.19 port 5001
+2017-12-11 04:06:58 INFO  MessageBroadcaster:56 - [id = 172.20.128.41-5000-5001] Broadcasting messages: [message1] to target 172.20.128.24:5001
+2017-12-11 04:06:58 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 04:10:31 INFO  ComputeComplementService:111 - [id = 172.20.128.41-5000-5001, target = 172.20.128.26:5001] Running Compute Complement for block range (1512965400000, 1512965700000)
+2017-12-11 04:10:31 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.41-5000-5001] Netty client connecting to host 172.20.128.26 port 5001
+2017-12-11 04:10:31 INFO  ComputeComplementService:129 - [id = 172.20.128.41-5000-5001, target = 172.20.128.26:5001] Compute Complement round has completed
