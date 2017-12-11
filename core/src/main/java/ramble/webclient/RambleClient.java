@@ -109,7 +109,7 @@ public class RambleClient {
     PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(skpath));
 
     // Create the RAMBLE service
-    this.ramble = new RambleImpl(peers, publicKey, privateKey, gossipPort, messageSyncPort);
+    this.ramble = new RambleImpl(null, peers, publicKey, privateKey, gossipPort, messageSyncPort);
     this.dumpFile = new File(cmd.getOptionValue('f'));
 
   }
@@ -124,7 +124,7 @@ public class RambleClient {
     return ret;
   }
 
-  private void run() {
+  private void run() throws InterruptedException {
     this.ramble.start();
     Runtime.getRuntime().addShutdownHook(new Thread(){
       @Override
@@ -163,7 +163,7 @@ public class RambleClient {
   }
 
   public static void main(String args[]) throws IOException, ParseException, NoSuchAlgorithmException,
-          InvalidKeySpecException {
+          InvalidKeySpecException, InterruptedException {
     new RambleClient(args).run();
   }
 }

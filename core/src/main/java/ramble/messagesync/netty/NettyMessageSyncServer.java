@@ -25,12 +25,14 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
   private static final Logger LOG = Logger.getLogger(NettyMessageSyncServer.class);
 
   private final int port;
+  private final String id;
 
   private final EventLoopGroup serverGroup;
   private final EventLoopGroup workerGroup;
   private final ServerBootstrap bootStrap;
 
-  public NettyMessageSyncServer(MessageSyncServerHandler messageSyncServerHandler, int port) {
+  public NettyMessageSyncServer(String id, MessageSyncServerHandler messageSyncServerHandler, int port) {
+    this.id = id;
     this.port = port;
 
     // Create event loop groups. One for incoming connections handling and
@@ -55,7 +57,7 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
 
   @Override
   protected void startUp() {
-    LOG.info("Starting Message Sync Server on port " + this.port);
+    LOG.info("[id = " + this.id + "] Starting Message Sync Server on port " + this.port);
 
     // Not sure if running this async is necessary / safe
     CompletableFuture.runAsync(() -> {
@@ -72,6 +74,8 @@ public class NettyMessageSyncServer extends AbstractIdleService implements Messa
 
   @Override
   protected void shutDown() {
+    LOG.info("[id = " + this.id + "] Shutting down Message Sync Server");
+
     this.serverGroup.shutdownGracefully();
     this.workerGroup.shutdownGracefully();
   }

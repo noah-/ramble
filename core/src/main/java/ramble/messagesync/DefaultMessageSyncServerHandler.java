@@ -7,9 +7,11 @@ import ramble.api.MessageSyncProtocol;
 import ramble.api.Ramble;
 import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
+import ramble.db.BlockInfo;
 import ramble.db.api.DbStore;
 import ramble.messagesync.api.MessageSyncServerHandler;
 
+import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -79,11 +81,11 @@ public class DefaultMessageSyncServerHandler implements MessageSyncServerHandler
         for (RambleMessage.SignedMessage signedMessage : broadcastMessages.getMessages().getSignedMessageList()) {
           if (!this.dbStore.exists(signedMessage)) {
             this.dbStore.storeIfNotExists(signedMessage);
-            LOG.info("[id = " + ramble.getId() + "] Ready to re-broadcast message "
-                    + signedMessage.getMessage().getMessage());
+            LOG.info("[id = " + ramble.getId() + "] Received broadcasted message and it does not exist locally so " +
+                    "will re-broadcast it: " + signedMessage.getMessage().getMessage());
             this.ramble.broadcast(signedMessage);
           } else {
-            LOG.info("[id = " + ramble.getId() + "] Message exists so dropping it "
+            LOG.info("[id = " + ramble.getId() + "] Received broadcasted message but it exists locally so dropping it: "
                     + signedMessage.getMessage().getMessage());
           }
         }
@@ -114,11 +116,24 @@ public class DefaultMessageSyncServerHandler implements MessageSyncServerHandler
   private MessageSyncProtocol.Response handleGetAllMessagesRequest() {
     MessageSyncProtocol.Response.Builder responseBuilder = MessageSyncProtocol.Response.newBuilder();
 
+    AbstractMap.SimpleEntry<Set<RambleMessage.SignedMessage>, Set<BlockInfo>> messagesAndBlockConf =
+            this.dbStore.getAllMessagesAndBlockConf();
+
     RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
-            .addAllSignedMessage(this.dbStore.getAllMessages())
+            .addAllSignedMessage(messagesAndBlockConf.getKey())
             .build();
 
-    return responseBuilder.setSendMessage(
-            MessageSyncProtocol.SendMessages.newBuilder().setMessages(bulkMessage)).build();
+    MessageSyncProtocol.SendAllMessages sendAllMessages = MessageSyncProtocol.SendAllMessages.newBuilder()
+            .setMessages(bulkMessage)
+            .addAllBlockConf(messagesAndBlockConf.getValue()
+                    .stream()
+                    .map(blockInfo -> MessageSyncProtocol.BlockConf.newBuilder()
+                            .setCount(blockInfo.getCount())
+                            .setTimestamp(blockInfo.getTimestamp())
+                            .build())
+                    .collect(Collectors.toSet()))
+            .build();
+
+    return responseBuilder.setSendAllMessages(sendAllMessages).build();
   }
 }

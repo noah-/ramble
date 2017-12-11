@@ -8,10 +8,12 @@ import com.google.protobuf.ByteString;
 import org.apache.commons.lang.mutable.MutableLong;
 import org.apache.log4j.Logger;
 import ramble.api.MembershipService;
+import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMember;
 import ramble.api.RambleMessage;
 import ramble.crypto.MessageSigner;
 import ramble.db.api.DbStore;
+import ramble.messagesync.api.MessageClientSyncHandler;
 import ramble.messagesync.api.MessageSyncClient;
 import ramble.messagesync.api.TargetSelector;
 
@@ -22,15 +24,16 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
 /**
- * An anti-entropy protocol iteratively syncs its messages with a target random node. This is done by dividing all local
- * messages into logical blocks that are bound by a time window. THe initiating starts at the most recent block, and
- * sends all messages digests in the block to the target node. The target node responds with a list of messages that the
- * source node is missing from the block in question. The source node then adds all these messages to its local db, and
+ * An anti-entropy protocol iteratively syncs its messageQueue with a target random node. This is done by dividing all local
+ * messageQueue into logical blocks that are bound by a time window. THe initiating starts at the most recent block, and
+ * sends all messageQueue digests in the block to the target node. The target node responds with a list of messageQueue that the
+ * source node is missing from the block in question. The source node then adds all these messageQueue to its local db, and
  * then moves to the next block.
  */
 public class ComputeComplementService extends AbstractScheduledService implements Service {
@@ -46,18 +49,31 @@ public class ComputeComplementService extends AbstractScheduledService implement
   private final String id;
   private final Map<Long, Block> blocks;
   private final ServiceManager serviceManager;
-  private final BlockingQueue<RambleMessage.Message> messages;
+  private final BlockingQueue<RambleMessage.Message> messageQueue;
 
   public ComputeComplementService(MembershipService membershipService, DbStore dbStore,
-                                  BlockingQueue<RambleMessage.Message> messages, String id) {
+                                  BlockingQueue<RambleMessage.Message> messageQueue, String id) {
     this.dbStore = dbStore;
     this.targetSelector = new RandomTargetSelector();
     this.membershipService = membershipService;
-    this.messages = messages;
+    this.messageQueue = messageQueue;
     this.id = id;
     this.blocks = new ConcurrentHashMap<>();
-    this.serviceManager = new ServiceManager(ImmutableSet.of(new FlushBlocksService(this.id, this.messages,
-            this.dbStore, this.blocks)));
+
+    FlushBlocksService flushBlocksService = new FlushBlocksService();
+    flushBlocksService.addListener(new Listener() {
+      @Override
+      public void starting() {
+        LOG.info("[id = " + id + "] Flush Blocks Service started");
+      }
+
+      @Override
+      public void terminated(Service.State from) {
+        LOG.info("[id = " + id + "] Flush Blocks Service terminated");
+      }
+    }, ForkJoinPool.commonPool());
+
+    this.serviceManager = new ServiceManager(ImmutableSet.of(flushBlocksService));
   }
 
   @Override
@@ -92,48 +108,25 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
       String idAndTarget = "[id = " + this.id + ", target = " + target.get().getAddr() + ":" +
               target.get().getMessageSyncPort() + "]";
-      LOG.info(idAndTarget + " Compute Complement with currentTs = " + currentTimestamp + " endTs = " + endTimestamp);
+      LOG.info(idAndTarget + " Running Compute Complement for block range (" + currentTimestamp + ", " + endTimestamp +
+              ")");
 
-      MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(
+      MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(this.id,
               target.get().getAddr(),
               target.get().getMessageSyncPort(),
-              (myMessageSyncClient, response) -> {
-
-                // Add digests to cache
-                this.blocks.put(currentTimestamp.longValue(), new Block(response.getSendMessageDigests()
-                        .getMessageDigestList()
-                        .stream()
-                        .map(ByteString::toByteArray)
-                        .collect(Collectors.toSet()),
-                        target.get()));
-
-                // Update the current timestamp
-                currentTimestamp.add(BLOCK_TIME_PERIOD);
-
-                // If the currentTimestamp has exceed the endTimestamp, then end the protocol
-                if (currentTimestamp.longValue() < endTimestamp) {
-                  myMessageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
-                          getDigestBlock(currentTimestamp.longValue(),
-                                  currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
-                          currentTimestamp.longValue(),
-                          currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
-                } else {
-                  LOG.info(idAndTarget + " Compute Complement disconnecting client");
-                  myMessageSyncClient.disconnect();
-                  latch.countDown();
-                }
-              });
+              new ComputeComplementHandler(target.get(), latch, currentTimestamp, endTimestamp));
 
       messageSyncClient.connect();
+
+      long nextTimestamp = currentTimestamp.longValue() + BLOCK_TIME_PERIOD;
       messageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
-              getDigestBlock(currentTimestamp.longValue(), currentTimestamp.longValue() + BLOCK_TIME_PERIOD),
-              currentTimestamp.longValue(),
-              currentTimestamp.longValue() + BLOCK_TIME_PERIOD));
+              getDigestBlock(currentTimestamp.longValue(), nextTimestamp),
+              currentTimestamp.longValue(), nextTimestamp));
 
       // For now we make this synchronous so that only one iteration of the ComputeComplement protocol can run at once
       // for a given node
       latch.await();
-      LOG.info(idAndTarget + " Compute Complement has completed");
+      LOG.info(idAndTarget + " Compute Complement round has completed");
     }
   }
 
@@ -144,6 +137,49 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   private Set<byte[]> getDigestBlock(long startTimestamp, long endTimestamp) {
     return this.dbStore.getDigestRange(startTimestamp, endTimestamp);
+  }
+
+  private class ComputeComplementHandler implements MessageClientSyncHandler {
+
+    private final RambleMember target;
+    private final CountDownLatch latch;
+    private final MutableLong currentTimestamp;
+    private final long endTimestamp;
+
+    private ComputeComplementHandler(RambleMember target, CountDownLatch latch,
+                                     MutableLong currentTimestamp, long endTimestamp) {
+      this.target = target;
+      this.latch = latch;
+      this.currentTimestamp = currentTimestamp;
+      this.endTimestamp = endTimestamp;
+    }
+
+    @Override
+    public void handleResponse(MessageSyncClient messageSyncClient, MessageSyncProtocol.Response response) {
+      // Add digests to cache
+      blocks.put(this.currentTimestamp.longValue(), new Block(response.getSendMessageDigests()
+              .getMessageDigestList()
+              .stream()
+              .map(ByteString::toByteArray)
+              .collect(Collectors.toSet()),
+              this.target));
+
+      // Update the current timestamp
+      this.currentTimestamp.add(BLOCK_TIME_PERIOD);
+
+      // If the currentTimestamp has exceed the endTimestamp, then end the protocol
+      if (this.currentTimestamp.longValue() < this.endTimestamp) {
+
+        long nextTimestamp = this.currentTimestamp.longValue() + BLOCK_TIME_PERIOD;
+        messageSyncClient.sendRequest(RequestBuilder.buildGetComplementRequest(
+                getDigestBlock(this.currentTimestamp.longValue(), nextTimestamp),
+                this.currentTimestamp.longValue(), nextTimestamp));
+
+      } else {
+        messageSyncClient.disconnect();
+        this.latch.countDown();
+      }
+    }
   }
 
   private static class Block {
@@ -165,60 +201,54 @@ public class ComputeComplementService extends AbstractScheduledService implement
     }
   }
 
-  private static class FlushBlocksService extends AbstractScheduledService implements Service {
-
-    private final String id;
-    private final DbStore dbStore;
-    private final Map<Long, Block> blocks;
-    private final BlockingQueue<RambleMessage.Message> messages;
-
-    private FlushBlocksService(String id, BlockingQueue<RambleMessage.Message> messages,
-                               DbStore dbStore, Map<Long, Block> blocks) {
-      this.id = id;
-      this.dbStore = dbStore;
-      this.blocks = blocks;
-      this.messages = messages;
-    }
+  private class FlushBlocksService extends AbstractScheduledService implements Service {
 
     @Override
     protected void runOneIteration() throws InterruptedException {
-      for (Block block : this.blocks.values()) {
+      for (Block block : blocks.values()) {
 
         if (!block.getBlock().isEmpty()) {
           LOG.info("[id = " + id + ", target = " + block.getSource().getAddr() + ":" +
                   block.getSource().getMessageSyncPort() + "] Running Flush Blocks");
 
-          MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(
+          MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(id,
                   block.getSource().getAddr(),
                   block.getSource().getMessageSyncPort(),
-                  (myMessageSyncClient, response) -> {
-                    List<RambleMessage.SignedMessage> messages = response.getSendMessage().getMessages()
-                            .getSignedMessageList();
-                    if (MessageSigner.verify(messages)) {
-                      response.getSendMessage().getMessages().getSignedMessageList().forEach(message -> {
-                        if (!this.dbStore.exists(message)) {
-                          this.dbStore.storeIfNotExists(message);
-                          try {
-                            this.messages.put(message.getMessage());
-                          } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                          }
-                        }
-                      });
-                    }
-                    myMessageSyncClient.disconnect();
-                  });
+                  new FlushBlockHandler());
 
           messageSyncClient.connect();
           messageSyncClient.sendRequest(RequestBuilder.buildGetMessagesRequest(block.getBlock()));
         }
       }
-      this.blocks.clear();
+      blocks.clear();
     }
 
     @Override
     protected Scheduler scheduler() {
       return Scheduler.newFixedRateSchedule(1500, 10000, TimeUnit.MILLISECONDS);
+    }
+  }
+
+  private final class FlushBlockHandler implements MessageClientSyncHandler {
+
+    @Override
+    public void handleResponse(MessageSyncClient messageSyncClient, MessageSyncProtocol.Response response) {
+      List<RambleMessage.SignedMessage> messages = response.getSendMessage().getMessages()
+              .getSignedMessageList();
+      if (MessageSigner.verify(messages)) {
+        response.getSendMessage().getMessages().getSignedMessageList().forEach(message -> {
+          if (!dbStore.exists(message)) {
+            LOG.info("[id = " + id + "] Dumping flush blocks message: " + message.getMessage().getMessage());
+            dbStore.storeIfNotExists(message);
+            try {
+              messageQueue.put(message.getMessage());
+            } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        });
+      }
+      messageSyncClient.disconnect();
     }
   }
 }

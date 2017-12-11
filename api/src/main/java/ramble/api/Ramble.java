@@ -13,18 +13,12 @@ public interface Ramble {
   /**
    * Start the RAMBLE service
    */
-  void start();
+  void start() throws InterruptedException;
 
   /**
    * Post a message to RAMBLE
    */
-  void post(String message);
-
-//  void post(List<String> messages);
-//
-//  void getLatestMessage();
-//
-//  void importKey(String key);
+  void post(String message) throws InterruptedException;
 
   BlockingQueue<RambleMessage.Message> listen();
 
@@ -39,7 +33,7 @@ public interface Ramble {
 
   Set<RambleMember> getMembers();
 
-  void broadcast(RambleMessage.SignedMessage message);
+  void broadcast(RambleMessage.SignedMessage message) throws InterruptedException;
 
   PublicKey getPublicKey();
 

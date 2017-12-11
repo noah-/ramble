@@ -3,6 +3,7 @@ package ramble.db.h2;
 import com.google.protobuf.ByteString;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
 import ramble.db.api.DbStore;
 import ramble.db.BlockInfo;
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -205,8 +207,48 @@ public class H2DbStore implements DbStore {
   }
 
   @Override
-  public Set<RambleMessage.SignedMessage> getAllMessagesAndBlockConf() {
-    return null;
+  public AbstractMap.SimpleEntry<Set<RambleMessage.SignedMessage>, Set<BlockInfo>> getAllMessagesAndBlockConf() {
+    String messagesSql = "SELECT SOURCEID, MESSAGE, MESSAGEDIGEST, PARENTDIGEST, TIMESTAMP, PUBLICKEY, SIGNATURE " +
+            "FROM MESSAGES";
+    String blockInfoSql = "SELECT TIMESTAMP, COUNT FROM BLOCKCONF";
+
+    try (Connection con = this.hikariDataSource.getConnection()) {
+
+      Set<RambleMessage.SignedMessage> messages = new HashSet<>();
+      Set<BlockInfo> blockInfos = new HashSet<>();
+
+      try (PreparedStatement ps = con.prepareStatement(messagesSql)) {
+        try (ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+            RambleMessage.Message message = RambleMessage.Message.newBuilder()
+                    .setSourceId(rs.getString(1))
+                    .setMessage(rs.getString(2))
+                    .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
+                    // TODO: implement setParentDigest
+                    //.setParentDigest(ByteString.copyFrom(rs.getBytes(4)))
+                    .setTimestamp(rs.getLong(5))
+                    .build();
+
+            messages.add(RambleMessage.SignedMessage.newBuilder()
+                    .setMessage(message)
+                    .setPublicKey(ByteString.copyFrom(rs.getBytes(6)))
+                    .setSignature(ByteString.copyFrom(rs.getBytes(7)))
+                    .build());
+          }
+        }
+      }
+
+      try (PreparedStatement ps = con.prepareStatement(blockInfoSql)) {
+        try (ResultSet rs = ps.executeQuery()) {
+          while (rs.next()) {
+            blockInfos.add(new BlockInfo(rs.getLong(1), rs.getInt(2)));
+          }
+        }
+      }
+      return new AbstractMap.SimpleEntry<>(messages, blockInfos);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -238,6 +280,22 @@ public class H2DbStore implements DbStore {
         }
         return -1;
       }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void store(MessageSyncProtocol.BlockConf blockConf) {
+    String sql = "INSERT INTO BLOCKCONF(TIMESTAMP, COUNT) VALUES (?, ?)";
+
+    try (Connection con = this.hikariDataSource.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+      ps.setLong(1, blockConf.getTimestamp());
+      ps.setInt(2, blockConf.getCount());
+
+      ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
