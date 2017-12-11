@@ -36,7 +36,7 @@ public class RambleImpl implements Ramble {
 
   private static final Logger LOG = Logger.getLogger(RambleImpl.class);
 
-  private static final int MESSAGE_BROADCAST_FANOUT = 4;
+  private static final int MESSAGE_BROADCAST_FANOUT = 2;
 
   private final MembershipService membershipService;
   private final PublicKey publicKey;
