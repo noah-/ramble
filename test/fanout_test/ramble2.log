@@ -1,0 +1,273 @@
+2017-12-11 03:31:40 INFO  RambleImpl:82 - [id = 172.20.128.45-5000-5001] Starting Ramble service
+2017-12-11 03:31:40 INFO  MessageBroadcaster:43 - [id = 172.20.128.45-5000-5001] Starting broadcast service
+2017-12-11 03:31:40 INFO  NettyMessageSyncServer:60 - [id = 172.20.128.45-5000-5001] Starting Message Sync Server on port 5001
+2017-12-11 03:31:40 INFO  ComputeComplementService:67 - [id = 172.20.128.45-5000-5001] Flush Blocks Service started
+2017-12-11 03:31:40 INFO  ApacheGossipMembershipService:113 - [id = 172.20.128.45-5000-5001] Starting Gossip Membership Service with URI udp://172.20.128.45:5000
+2017-12-11 03:31:40 INFO  LoggingHandler:150 - [id: 0x66eb0bcf] REGISTERED
+2017-12-11 03:31:40 INFO  LoggingHandler:150 - [id: 0x66eb0bcf] BIND: 0.0.0.0/0.0.0.0:5001
+2017-12-11 03:31:40 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] ACTIVE
+2017-12-11 03:31:40 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.1:5000, heartbeat=9270905156919, clusterName=ramble, id=172.20.128.1-5000, currentdetect=-0.0 ] reported status UP
+2017-12-11 03:31:41 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.38:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:41 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.38 port 5001
+2017-12-11 03:31:41 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.38:5001] Compute Complement round has completed
+2017-12-11 03:31:44 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.6:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:44 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.6 port 5001
+2017-12-11 03:31:44 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.6:5001] Compute Complement round has completed
+2017-12-11 03:31:45 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.44:5000, heartbeat=9175812408553, clusterName=ramble, id=172.20.128.44-5000, currentdetect=10.666727601420025 ] reported status DOWN
+2017-12-11 03:31:46 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x21edd449, L:/172.20.128.45:5001 - R:/172.20.128.23:58394]
+2017-12-11 03:31:46 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:31:46 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.18:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:46 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.18 port 5001
+2017-12-11 03:31:46 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.18:5001] Compute Complement round has completed
+2017-12-11 03:31:49 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.26:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:49 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.26 port 5001
+2017-12-11 03:31:49 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.26:5001] Compute Complement round has completed
+2017-12-11 03:31:49 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.44:5000, heartbeat=9184473425138, clusterName=ramble, id=172.20.128.44-5000, currentdetect=0.49033825654480334 ] reported status UP
+2017-12-11 03:31:50 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xbe1993b4, L:/172.20.128.45:5001 - R:/172.20.128.22:58280]
+2017-12-11 03:31:50 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:31:51 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.28:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:51 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.28 port 5001
+2017-12-11 03:31:51 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.28:5001] Compute Complement round has completed
+2017-12-11 03:31:53 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x2b4cd49d, L:/172.20.128.45:5001 - R:/172.20.128.52:44476]
+2017-12-11 03:31:53 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:31:54 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.12:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:54 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.12 port 5001
+2017-12-11 03:31:54 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.12:5001] Compute Complement round has completed
+2017-12-11 03:31:55 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x7e5d8f39, L:/172.20.128.45:5001 - R:/172.20.128.46:33026]
+2017-12-11 03:31:55 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:31:56 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.2:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.2 port 5001
+2017-12-11 03:31:56 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.2:5001] Compute Complement round has completed
+2017-12-11 03:31:59 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.57:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:31:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.57 port 5001
+2017-12-11 03:31:59 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.57:5001] Compute Complement round has completed
+2017-12-11 03:32:01 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.44:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.44 port 5001
+2017-12-11 03:32:01 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.44:5001] Compute Complement round has completed
+2017-12-11 03:32:04 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.23:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:04 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.23 port 5001
+2017-12-11 03:32:04 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.23:5001] Compute Complement round has completed
+2017-12-11 03:32:06 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x8088749d, L:/172.20.128.45:5001 - R:/172.20.128.42:37642]
+2017-12-11 03:32:06 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:06 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.58:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:06 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.58 port 5001
+2017-12-11 03:32:06 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.58:5001] Compute Complement round has completed
+2017-12-11 03:32:08 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x868d548f, L:/172.20.128.45:5001 - R:/172.20.128.36:43712]
+2017-12-11 03:32:08 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:09 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.8:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:09 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.8 port 5001
+2017-12-11 03:32:09 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.8:5001] Compute Complement round has completed
+2017-12-11 03:32:11 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.62:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:11 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.62 port 5001
+2017-12-11 03:32:11 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.62:5001] Compute Complement round has completed
+2017-12-11 03:32:12 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xd85ee167, L:/172.20.128.45:5001 - R:/172.20.128.38:47710]
+2017-12-11 03:32:12 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:12 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.44:5000, heartbeat=9206526262400, clusterName=ramble, id=172.20.128.44-5000, currentdetect=10.300159081530074 ] reported status DOWN
+2017-12-11 03:32:13 INFO  ApacheGossipMembershipService:78 - Member LocalGossipMember [uri=udp://172.20.128.44:5000, heartbeat=9208339659482, clusterName=ramble, id=172.20.128.44-5000, currentdetect=0.35725155251120166 ] reported status UP
+2017-12-11 03:32:14 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.59:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:14 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.59 port 5001
+2017-12-11 03:32:14 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.59:5001] Compute Complement round has completed
+2017-12-11 03:32:16 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.61:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:16 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.61 port 5001
+2017-12-11 03:32:16 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.61:5001] Compute Complement round has completed
+2017-12-11 03:32:17 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x931a6f45, L:/172.20.128.45:5001 - R:/172.20.128.64:57882]
+2017-12-11 03:32:17 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:19 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.12:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:19 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.12 port 5001
+2017-12-11 03:32:19 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.12:5001] Compute Complement round has completed
+2017-12-11 03:32:21 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.54:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:21 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.54 port 5001
+2017-12-11 03:32:21 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.54:5001] Compute Complement round has completed
+2017-12-11 03:32:24 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.20:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:24 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.20 port 5001
+2017-12-11 03:32:24 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.20:5001] Compute Complement round has completed
+2017-12-11 03:32:25 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x23b93bf6, L:/172.20.128.45:5001 - R:/172.20.128.46:33796]
+2017-12-11 03:32:25 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:26 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.42:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:26 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.42 port 5001
+2017-12-11 03:32:26 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.42:5001] Compute Complement round has completed
+2017-12-11 03:32:29 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.33:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:29 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.33 port 5001
+2017-12-11 03:32:29 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.33:5001] Compute Complement round has completed
+2017-12-11 03:32:31 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.63:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:31 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.63 port 5001
+2017-12-11 03:32:31 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.63:5001] Compute Complement round has completed
+2017-12-11 03:32:34 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:34 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 03:32:34 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Compute Complement round has completed
+2017-12-11 03:32:34 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x0eb7d358, L:/172.20.128.45:5001 - R:/172.20.128.64:58334]
+2017-12-11 03:32:34 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:36 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.12:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:36 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.12 port 5001
+2017-12-11 03:32:36 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.12:5001] Compute Complement round has completed
+2017-12-11 03:32:39 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.33:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:39 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.33 port 5001
+2017-12-11 03:32:39 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.33:5001] Compute Complement round has completed
+2017-12-11 03:32:41 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.42:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:41 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.42 port 5001
+2017-12-11 03:32:41 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.42:5001] Compute Complement round has completed
+2017-12-11 03:32:43 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x047d63e7, L:/172.20.128.45:5001 - R:/172.20.128.41:50732]
+2017-12-11 03:32:43 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:44 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:44 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 03:32:44 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Compute Complement round has completed
+2017-12-11 03:32:45 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x5ba1a994, L:/172.20.128.45:5001 - R:/172.20.128.52:45818]
+2017-12-11 03:32:45 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:46 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:46 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 03:32:46 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Compute Complement round has completed
+2017-12-11 03:32:49 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.15:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:49 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.15 port 5001
+2017-12-11 03:32:49 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.15:5001] Compute Complement round has completed
+2017-12-11 03:32:51 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.21:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:51 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.21 port 5001
+2017-12-11 03:32:51 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.21:5001] Compute Complement round has completed
+2017-12-11 03:32:53 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xfcdac87b, L:/172.20.128.45:5001 - R:/172.20.128.47:47576]
+2017-12-11 03:32:53 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:54 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.50:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:54 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.50 port 5001
+2017-12-11 03:32:54 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.50:5001] Compute Complement round has completed
+2017-12-11 03:32:56 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 03:32:56 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Compute Complement round has completed
+2017-12-11 03:32:57 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xbbcb534c, L:/172.20.128.45:5001 - R:/172.20.128.35:52566]
+2017-12-11 03:32:57 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:32:59 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.13:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:32:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.13 port 5001
+2017-12-11 03:32:59 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.13:5001] Compute Complement round has completed
+2017-12-11 03:33:01 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:01 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.13:5001] Running Flush Blocks
+2017-12-11 03:33:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 03:33:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.13 port 5001
+2017-12-11 03:33:01 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Compute Complement round has completed
+2017-12-11 03:33:01 INFO  ComputeComplementService:241 - [id = 172.20.128.45-5000-5001] Dumping flush blocks message: message1
+2017-12-11 03:33:01 INFO  ComputeComplementService:241 - [id = 172.20.128.45-5000-5001] Dumping flush blocks message: message2
+2017-12-11 03:33:04 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.23:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:04 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.23 port 5001
+2017-12-11 03:33:04 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x33a67693, L:/172.20.128.45:5001 - R:/172.20.128.58:37540]
+2017-12-11 03:33:04 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:04 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.23:5001] Compute Complement round has completed
+2017-12-11 03:33:06 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.27:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:06 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.27 port 5001
+2017-12-11 03:33:06 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.27:5001] Compute Complement round has completed
+2017-12-11 03:33:09 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.22:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:09 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.22 port 5001
+2017-12-11 03:33:09 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.22:5001] Compute Complement round has completed
+2017-12-11 03:33:11 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.22:5001] Running Flush Blocks
+2017-12-11 03:33:11 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.10:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:11 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.22 port 5001
+2017-12-11 03:33:11 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.10 port 5001
+2017-12-11 03:33:11 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.10:5001] Compute Complement round has completed
+2017-12-11 03:33:14 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.58:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:14 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.58 port 5001
+2017-12-11 03:33:14 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.58:5001] Compute Complement round has completed
+2017-12-11 03:33:16 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x1d32b032, L:/172.20.128.45:5001 - R:/172.20.128.63:39558]
+2017-12-11 03:33:16 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:16 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:16 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 03:33:16 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Compute Complement round has completed
+2017-12-11 03:33:19 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xaa224d3c, L:/172.20.128.45:5001 - R:/172.20.128.63:39640]
+2017-12-11 03:33:19 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:19 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.61:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:19 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.61 port 5001
+2017-12-11 03:33:19 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.61:5001] Compute Complement round has completed
+2017-12-11 03:33:21 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.61:5001] Running Flush Blocks
+2017-12-11 03:33:21 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.1:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:21 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.61 port 5001
+2017-12-11 03:33:21 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.1 port 5001
+2017-12-11 03:33:21 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.1:5001] Compute Complement round has completed
+2017-12-11 03:33:24 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.43:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:24 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.43 port 5001
+2017-12-11 03:33:24 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.43:5001] Compute Complement round has completed
+2017-12-11 03:33:26 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xe12d8259, L:/172.20.128.45:5001 - R:/172.20.128.63:39880]
+2017-12-11 03:33:26 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:26 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.10:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:26 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.10 port 5001
+2017-12-11 03:33:26 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.10:5001] Compute Complement round has completed
+2017-12-11 03:33:29 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xe6316aa3, L:/172.20.128.45:5001 - R:/172.20.128.63:39960]
+2017-12-11 03:33:29 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:29 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.59:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:29 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.59 port 5001
+2017-12-11 03:33:29 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.59:5001] Compute Complement round has completed
+2017-12-11 03:33:31 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.59:5001] Running Flush Blocks
+2017-12-11 03:33:31 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.21:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:31 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.21 port 5001
+2017-12-11 03:33:31 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.59 port 5001
+2017-12-11 03:33:31 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.21:5001] Compute Complement round has completed
+2017-12-11 03:33:31 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xabb4390c, L:/172.20.128.45:5001 - R:/172.20.128.40:45118]
+2017-12-11 03:33:31 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:34 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.10:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:34 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.10 port 5001
+2017-12-11 03:33:34 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.10:5001] Compute Complement round has completed
+2017-12-11 03:33:36 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.35:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:36 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.35 port 5001
+2017-12-11 03:33:36 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.35:5001] Compute Complement round has completed
+2017-12-11 03:33:39 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.42:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:39 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.42 port 5001
+2017-12-11 03:33:39 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.42:5001] Compute Complement round has completed
+2017-12-11 03:33:40 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x80c8979a, L:/172.20.128.45:5001 - R:/172.20.128.59:47240]
+2017-12-11 03:33:40 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:41 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.42:5001] Running Flush Blocks
+2017-12-11 03:33:41 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.47:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:41 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.42 port 5001
+2017-12-11 03:33:41 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.47 port 5001
+2017-12-11 03:33:41 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.47:5001] Compute Complement round has completed
+2017-12-11 03:33:44 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.33:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:44 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.33 port 5001
+2017-12-11 03:33:44 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.33:5001] Compute Complement round has completed
+2017-12-11 03:33:46 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.17:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:46 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.17 port 5001
+2017-12-11 03:33:46 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.17:5001] Compute Complement round has completed
+2017-12-11 03:33:49 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.32:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:49 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.32 port 5001
+2017-12-11 03:33:49 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.32:5001] Compute Complement round has completed
+2017-12-11 03:33:51 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.32:5001] Running Flush Blocks
+2017-12-11 03:33:51 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.41:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:51 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.32 port 5001
+2017-12-11 03:33:51 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.41 port 5001
+2017-12-11 03:33:51 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.41:5001] Compute Complement round has completed
+2017-12-11 03:33:54 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:54 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 03:33:54 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Compute Complement round has completed
+2017-12-11 03:33:55 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xdcde560b, L:/172.20.128.45:5001 - R:/172.20.128.49:35892]
+2017-12-11 03:33:55 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:56 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x1a707f1e, L:/172.20.128.45:5001 - R:/172.20.128.39:54884]
+2017-12-11 03:33:56 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:33:56 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:56 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.24 port 5001
+2017-12-11 03:33:56 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.24:5001] Compute Complement round has completed
+2017-12-11 03:33:59 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.46:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:33:59 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.46 port 5001
+2017-12-11 03:33:59 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.46:5001] Compute Complement round has completed
+2017-12-11 03:34:01 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.46:5001] Running Flush Blocks
+2017-12-11 03:34:01 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.23:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:34:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.46 port 5001
+2017-12-11 03:34:01 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.23 port 5001
+2017-12-11 03:34:01 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xa7b75f62, L:/172.20.128.45:5001 - R:/172.20.128.58:39370]
+2017-12-11 03:34:01 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:34:01 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.23:5001] Compute Complement round has completed
+2017-12-11 03:34:02 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x470a3aae, L:/172.20.128.45:5001 - R:/172.20.128.54:33098]
+2017-12-11 03:34:02 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:34:04 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.15:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:34:04 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.15 port 5001
+2017-12-11 03:34:04 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x2ca731cf, L:/172.20.128.45:5001 - R:/172.20.128.58:39448]
+2017-12-11 03:34:04 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:34:04 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.15:5001] Compute Complement round has completed
+2017-12-11 03:34:06 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:34:06 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 03:34:06 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Compute Complement round has completed
+2017-12-11 03:34:09 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.19:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:34:09 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.19 port 5001
+2017-12-11 03:34:11 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0xa06b2982, L:/172.20.128.45:5001 - R:/172.20.128.42:41310]
+2017-12-11 03:34:11 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:34:11 INFO  ComputeComplementService:211 - [id = 172.20.128.45-5000-5001, target = 172.20.128.5:5001] Running Flush Blocks
+2017-12-11 03:34:11 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.5 port 5001
+2017-12-11 03:34:12 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.19:5001] Compute Complement round has completed
+2017-12-11 03:34:12 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.56:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:34:12 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.56 port 5001
+2017-12-11 03:34:12 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.56:5001] Compute Complement round has completed
+2017-12-11 03:34:12 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ: [id: 0x22fcdf63, L:/172.20.128.45:5001 - R:/172.20.128.35:54934]
+2017-12-11 03:34:12 INFO  LoggingHandler:150 - [id: 0x66eb0bcf, L:/0.0.0.0:5001] READ COMPLETE
+2017-12-11 03:34:14 INFO  ComputeComplementService:111 - [id = 172.20.128.45-5000-5001, target = 172.20.128.58:5001] Running Compute Complement for block range (1512963000000, 1512963300000)
+2017-12-11 03:34:14 INFO  NettyMessageSyncClient:55 - [id = 172.20.128.45-5000-5001] Netty client connecting to host 172.20.128.58 port 5001
+2017-12-11 03:34:14 INFO  ComputeComplementService:129 - [id = 172.20.128.45-5000-5001, target = 172.20.128.58:5001] Compute Complement round has completed
