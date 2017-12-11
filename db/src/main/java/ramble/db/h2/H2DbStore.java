@@ -56,14 +56,12 @@ public class H2DbStore implements DbStore {
 
   @Override
   public boolean exists(RambleMessage.SignedMessage message) {
-    String sql = "SELECT EXISTS (SELECT * FROM MESSAGES WHERE SOURCEID = ? AND MESSAGEDIGEST = ? AND TIMESTAMP = ?)";
+    String sql = "SELECT EXISTS (SELECT * FROM MESSAGES WHERE MESSAGEDIGEST = ?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
 
-      ps.setString(1, message.getMessage().getSourceId());
-      ps.setBytes(2,  message.getMessage().getMessageDigest().toByteArray());
-      ps.setLong(3, message.getMessage().getTimestamp());
+      ps.setBytes(1,  message.getMessage().getMessageDigest().toByteArray());
 
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next() && rs.getBoolean(1)) {
@@ -103,7 +101,7 @@ public class H2DbStore implements DbStore {
   @Override
   public void storeIfNotExists(RambleMessage.SignedMessage message) {
     String sql = "INSERT INTO MESSAGES SELECT ? AS SOURCEID, ? AS MESSAGE, ? AS MESSAGEDIGEST, ? AS PARENTDIGEST, ? AS TIMESTAMP, ? AS PUBLICKEY, ? AS SIGNATURE " +
-            "WHERE NOT EXISTS (SELECT 1 FROM MESSAGES WHERE SOURCEID = ? AND MESSAGEDIGEST = ? AND TIMESTAMP = ?)";
+            "WHERE NOT EXISTS (SELECT 1 FROM MESSAGES WHERE MESSAGEDIGEST = ?)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -118,9 +116,7 @@ public class H2DbStore implements DbStore {
       ps.setBytes(6, message.getPublicKey().toByteArray());
       ps.setBytes(7, message.getSignature().toByteArray());
 
-      ps.setString(8, message.getMessage().getSourceId());
-      ps.setBytes(9, message.getMessage().getMessageDigest().toByteArray());
-      ps.setLong(10, message.getMessage().getTimestamp());
+      ps.setBytes(8, message.getMessage().getMessageDigest().toByteArray());
 
       ps.executeUpdate();
     } catch (SQLException e) {
