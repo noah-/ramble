@@ -50,8 +50,9 @@ public class ComputeComplementService extends AbstractScheduledService implement
   private final Map<Long, Block> blocks;
   private final ServiceManager serviceManager;
   private final BlockingQueue<RambleMessage.Message> messageQueue;
+  private final MessageBroadcaster messageBroadcaster;
 
-  public ComputeComplementService(MembershipService membershipService, DbStore dbStore,
+  public ComputeComplementService(MessageBroadcaster messageBroadcaster, MembershipService membershipService, DbStore dbStore,
                                   BlockingQueue<RambleMessage.Message> messageQueue, String id) {
     this.dbStore = dbStore;
     this.targetSelector = new RandomTargetSelector();
@@ -59,6 +60,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
     this.messageQueue = messageQueue;
     this.id = id;
     this.blocks = new ConcurrentHashMap<>();
+    this.messageBroadcaster = messageBroadcaster;
 
     FlushBlocksService flushBlocksService = new FlushBlocksService();
     flushBlocksService.addListener(new Listener() {
@@ -132,7 +134,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   @Override
   protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(5, 10, TimeUnit.MINUTES);
+    return Scheduler.newFixedRateSchedule(2500, 30000, TimeUnit.MILLISECONDS);
   }
 
   private Set<byte[]> getDigestBlock(long startTimestamp, long endTimestamp) {
@@ -225,7 +227,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
     @Override
     protected Scheduler scheduler() {
-      return Scheduler.newFixedRateSchedule(10, 15, TimeUnit.MINUTES);
+      return Scheduler.newFixedRateSchedule(5000, 60000, TimeUnit.MILLISECONDS);
     }
   }
 
@@ -240,6 +242,11 @@ public class ComputeComplementService extends AbstractScheduledService implement
           if (!dbStore.exists(message)) {
             LOG.info("[id = " + id + "] Dumping flush blocks message: " + message.getMessage().getMessage());
             dbStore.storeIfNotExists(message);
+            try {
+              messageBroadcaster.broadcastMessage(message);
+            } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+            }
             try {
               messageQueue.put(message.getMessage());
             } catch (InterruptedException e) {
