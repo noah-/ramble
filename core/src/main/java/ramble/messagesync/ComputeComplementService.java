@@ -132,7 +132,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   @Override
   protected Scheduler scheduler() {
-    return Scheduler.newFixedRateSchedule(1500, 2500, TimeUnit.MILLISECONDS);
+    return Scheduler.newFixedRateSchedule(5, 10, TimeUnit.MINUTES);
   }
 
   private Set<byte[]> getDigestBlock(long startTimestamp, long endTimestamp) {
@@ -225,7 +225,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
     @Override
     protected Scheduler scheduler() {
-      return Scheduler.newFixedRateSchedule(1500, 10000, TimeUnit.MILLISECONDS);
+      return Scheduler.newFixedRateSchedule(10, 15, TimeUnit.MINUTES);
     }
   }
 

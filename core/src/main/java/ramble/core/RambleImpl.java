@@ -38,7 +38,6 @@ public class RambleImpl implements Ramble {
 
   private static final int MESSAGE_BROADCAST_FANOUT = 8;
 
-  private final List<URI> peers;
   private final MembershipService membershipService;
   private final PublicKey publicKey;
   private final PrivateKey privateKey;
@@ -53,7 +52,6 @@ public class RambleImpl implements Ramble {
                     int messageSyncPort) throws IOException {
 
     this.bootstrapTarget = bootstrapTarget;
-    this.peers = peers;
     this.privateKey = privateKey;
     this.publicKey = publicKey;
     this.id = IdGenerator.createId(gossipPort, messageSyncPort);
