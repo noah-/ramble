@@ -20,7 +20,8 @@ message Response {
   oneof response_type {
     SendMessages sendMessage = 1;
     SendMessageDigests sendMessageDigests = 2;
-    Ack ack = 3;
+    SendAllMessages sendAllMessages = 3;
+    Ack ack = 4;
   }
 }
 

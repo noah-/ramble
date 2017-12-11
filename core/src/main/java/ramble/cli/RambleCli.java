@@ -50,13 +50,14 @@ public class RambleCli {
 
     // Parse the CLI options
     Options options = new Options();
-    options.addOption("p", "peers", true, "Comma-separated list of initial peers to connect to");
+    options.addOption("p", "peers", true, "Comma-separated list of initial Gossip peers to connect to, of the form ramble://[target-ip-address]:[target-gossip-port]");
     options.addOption("u", "gossip-port", true, "URI for Gossip service");
     options.addOption("m", "message-sync-port", true, "URI for Message Sync service");
     options.addOption("f", "dumpfile", true, "File to dump all received messages into");
     options.addOption("h", "help", false, "Prints out CLI options");
     options.addOption("pu", "publickey", true, "Path to public key file");
     options.addOption("pr", "privatekey", true, "Path to private key file");
+    options.addOption("b", "bootstrap-node", true, "The node to bootstrap against of the form ramble://[target-ip-address]:[target-message-sync-port]");
 
     CommandLineParser parser = new BasicParser();
     CommandLine cmd = parser.parse(options, args);
@@ -110,16 +111,21 @@ public class RambleCli {
       peers = new ArrayList<>();
     }
 
+    URI bootstrapTarget = null;
+    if (cmd.hasOption('b')) {
+      bootstrapTarget = URI.create(cmd.getOptionValue("b"));
+    }
+
     KeyReader keyReader = new KeyReader();
     PublicKey publicKey = keyReader.getPublicKey(Paths.get(pkpath));
     PrivateKey privateKey = keyReader.getPrivateKey(Paths.get(skpath));
 
     // Create the RAMBLE service
-    this.ramble = new RambleImpl(peers, publicKey, privateKey, gossipPort, messageSyncPort);
+    this.ramble = new RambleImpl(bootstrapTarget, peers, publicKey, privateKey, gossipPort, messageSyncPort);
     this.dumpFile = new File(cmd.getOptionValue('f'));
   }
 
-  private void run() {
+  private void run() throws InterruptedException {
     this.ramble.start();
 
     Runtime.getRuntime().addShutdownHook(new Thread(){
@@ -173,7 +179,7 @@ public class RambleCli {
   }
 
   public static void main(String args[]) throws IOException, ParseException, NoSuchAlgorithmException,
-          InvalidKeySpecException {
+          InvalidKeySpecException, InterruptedException {
     new RambleCli(args).run();
   }
 }
