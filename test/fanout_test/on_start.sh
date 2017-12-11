@@ -8,7 +8,10 @@ cd /usr/src/ramble/ramble-distribution
 file=/testdata/start.sh
 #tc qdisc add dev eth0 root netem delay 20ms
 
-./bin/ramble-cli.sh -f /testroot/testresult/ramble-messages-$HOSTNAME.txt -pu /tmp/ramble-key-store/ramble-cli.pub -pr /tmp/ramble-key-store/ramble-cli -p udp://172.20.128.1:5000
+./bin/ramble-cli.sh -f /testroot/testresult/ramble-messages-$HOSTNAME.txt -pu /tmp/ramble-key-store/ramble-cli.pub -pr /tmp/ramble-key-store/ramble-cli -p udp://172.20.128.1:5000,udp://172.20.128.2:5000,udp://172.20.128.62:5000,udp://172.20.128.63:5000
+
+
+
 
 #while [ ! -f "$file" ]
 #do
