@@ -1368,15 +1368,28 @@ public final class MessageSyncProtocol {
     ramble.api.MessageSyncProtocol.SendMessageDigestsOrBuilder getSendMessageDigestsOrBuilder();
 
     /**
-     * <code>.ramble.api.Ack ack = 3;</code>
+     * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+     */
+    boolean hasSendAllMessages();
+    /**
+     * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+     */
+    ramble.api.MessageSyncProtocol.SendAllMessages getSendAllMessages();
+    /**
+     * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+     */
+    ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder getSendAllMessagesOrBuilder();
+
+    /**
+     * <code>.ramble.api.Ack ack = 4;</code>
      */
     boolean hasAck();
     /**
-     * <code>.ramble.api.Ack ack = 3;</code>
+     * <code>.ramble.api.Ack ack = 4;</code>
      */
     ramble.api.MessageSyncProtocol.Ack getAck();
     /**
-     * <code>.ramble.api.Ack ack = 3;</code>
+     * <code>.ramble.api.Ack ack = 4;</code>
      */
     ramble.api.MessageSyncProtocol.AckOrBuilder getAckOrBuilder();
 
@@ -1454,8 +1467,22 @@ public final class MessageSyncProtocol {
               break;
             }
             case 26: {
-              ramble.api.MessageSyncProtocol.Ack.Builder subBuilder = null;
+              ramble.api.MessageSyncProtocol.SendAllMessages.Builder subBuilder = null;
               if (responseTypeCase_ == 3) {
+                subBuilder = ((ramble.api.MessageSyncProtocol.SendAllMessages) responseType_).toBuilder();
+              }
+              responseType_ =
+                  input.readMessage(ramble.api.MessageSyncProtocol.SendAllMessages.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((ramble.api.MessageSyncProtocol.SendAllMessages) responseType_);
+                responseType_ = subBuilder.buildPartial();
+              }
+              responseTypeCase_ = 3;
+              break;
+            }
+            case 34: {
+              ramble.api.MessageSyncProtocol.Ack.Builder subBuilder = null;
+              if (responseTypeCase_ == 4) {
                 subBuilder = ((ramble.api.MessageSyncProtocol.Ack) responseType_).toBuilder();
               }
               responseType_ =
@@ -1464,7 +1491,7 @@ public final class MessageSyncProtocol {
                 subBuilder.mergeFrom((ramble.api.MessageSyncProtocol.Ack) responseType_);
                 responseType_ = subBuilder.buildPartial();
               }
-              responseTypeCase_ = 3;
+              responseTypeCase_ = 4;
               break;
             }
           }
@@ -1497,7 +1524,8 @@ public final class MessageSyncProtocol {
         implements com.google.protobuf.Internal.EnumLite {
       SENDMESSAGE(1),
       SENDMESSAGEDIGESTS(2),
-      ACK(3),
+      SENDALLMESSAGES(3),
+      ACK(4),
       RESPONSETYPE_NOT_SET(0);
       private final int value;
       private ResponseTypeCase(int value) {
@@ -1515,7 +1543,8 @@ public final class MessageSyncProtocol {
         switch (value) {
           case 1: return SENDMESSAGE;
           case 2: return SENDMESSAGEDIGESTS;
-          case 3: return ACK;
+          case 3: return SENDALLMESSAGES;
+          case 4: return ACK;
           case 0: return RESPONSETYPE_NOT_SET;
           default: return null;
         }
@@ -1583,27 +1612,53 @@ public final class MessageSyncProtocol {
       return ramble.api.MessageSyncProtocol.SendMessageDigests.getDefaultInstance();
     }
 
-    public static final int ACK_FIELD_NUMBER = 3;
+    public static final int SENDALLMESSAGES_FIELD_NUMBER = 3;
     /**
-     * <code>.ramble.api.Ack ack = 3;</code>
+     * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
      */
-    public boolean hasAck() {
+    public boolean hasSendAllMessages() {
       return responseTypeCase_ == 3;
     }
     /**
-     * <code>.ramble.api.Ack ack = 3;</code>
+     * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+     */
+    public ramble.api.MessageSyncProtocol.SendAllMessages getSendAllMessages() {
+      if (responseTypeCase_ == 3) {
+         return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+      }
+      return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+    }
+    /**
+     * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+     */
+    public ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder getSendAllMessagesOrBuilder() {
+      if (responseTypeCase_ == 3) {
+         return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+      }
+      return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+    }
+
+    public static final int ACK_FIELD_NUMBER = 4;
+    /**
+     * <code>.ramble.api.Ack ack = 4;</code>
+     */
+    public boolean hasAck() {
+      return responseTypeCase_ == 4;
+    }
+    /**
+     * <code>.ramble.api.Ack ack = 4;</code>
      */
     public ramble.api.MessageSyncProtocol.Ack getAck() {
-      if (responseTypeCase_ == 3) {
+      if (responseTypeCase_ == 4) {
          return (ramble.api.MessageSyncProtocol.Ack) responseType_;
       }
       return ramble.api.MessageSyncProtocol.Ack.getDefaultInstance();
     }
     /**
-     * <code>.ramble.api.Ack ack = 3;</code>
+     * <code>.ramble.api.Ack ack = 4;</code>
      */
     public ramble.api.MessageSyncProtocol.AckOrBuilder getAckOrBuilder() {
-      if (responseTypeCase_ == 3) {
+      if (responseTypeCase_ == 4) {
          return (ramble.api.MessageSyncProtocol.Ack) responseType_;
       }
       return ramble.api.MessageSyncProtocol.Ack.getDefaultInstance();
@@ -1628,7 +1683,10 @@ public final class MessageSyncProtocol {
         output.writeMessage(2, (ramble.api.MessageSyncProtocol.SendMessageDigests) responseType_);
       }
       if (responseTypeCase_ == 3) {
-        output.writeMessage(3, (ramble.api.MessageSyncProtocol.Ack) responseType_);
+        output.writeMessage(3, (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_);
+      }
+      if (responseTypeCase_ == 4) {
+        output.writeMessage(4, (ramble.api.MessageSyncProtocol.Ack) responseType_);
       }
       unknownFields.writeTo(output);
     }
@@ -1648,7 +1706,11 @@ public final class MessageSyncProtocol {
       }
       if (responseTypeCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (ramble.api.MessageSyncProtocol.Ack) responseType_);
+          .computeMessageSize(3, (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_);
+      }
+      if (responseTypeCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, (ramble.api.MessageSyncProtocol.Ack) responseType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1679,6 +1741,10 @@ public final class MessageSyncProtocol {
               .equals(other.getSendMessageDigests());
           break;
         case 3:
+          result = result && getSendAllMessages()
+              .equals(other.getSendAllMessages());
+          break;
+        case 4:
           result = result && getAck()
               .equals(other.getAck());
           break;
@@ -1706,6 +1772,10 @@ public final class MessageSyncProtocol {
           hash = (53 * hash) + getSendMessageDigests().hashCode();
           break;
         case 3:
+          hash = (37 * hash) + SENDALLMESSAGES_FIELD_NUMBER;
+          hash = (53 * hash) + getSendAllMessages().hashCode();
+          break;
+        case 4:
           hash = (37 * hash) + ACK_FIELD_NUMBER;
           hash = (53 * hash) + getAck().hashCode();
           break;
@@ -1880,6 +1950,13 @@ public final class MessageSyncProtocol {
           }
         }
         if (responseTypeCase_ == 3) {
+          if (sendAllMessagesBuilder_ == null) {
+            result.responseType_ = responseType_;
+          } else {
+            result.responseType_ = sendAllMessagesBuilder_.build();
+          }
+        }
+        if (responseTypeCase_ == 4) {
           if (ackBuilder_ == null) {
             result.responseType_ = responseType_;
           } else {
@@ -1935,6 +2012,10 @@ public final class MessageSyncProtocol {
           }
           case SENDMESSAGEDIGESTS: {
             mergeSendMessageDigests(other.getSendMessageDigests());
+            break;
+          }
+          case SENDALLMESSAGES: {
+            mergeSendAllMessages(other.getSendAllMessages());
             break;
           }
           case ACK: {
@@ -2260,31 +2341,167 @@ public final class MessageSyncProtocol {
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          ramble.api.MessageSyncProtocol.Ack, ramble.api.MessageSyncProtocol.Ack.Builder, ramble.api.MessageSyncProtocol.AckOrBuilder> ackBuilder_;
+          ramble.api.MessageSyncProtocol.SendAllMessages, ramble.api.MessageSyncProtocol.SendAllMessages.Builder, ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder> sendAllMessagesBuilder_;
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
        */
-      public boolean hasAck() {
+      public boolean hasSendAllMessages() {
         return responseTypeCase_ == 3;
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      public ramble.api.MessageSyncProtocol.SendAllMessages getSendAllMessages() {
+        if (sendAllMessagesBuilder_ == null) {
+          if (responseTypeCase_ == 3) {
+            return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+          }
+          return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+        } else {
+          if (responseTypeCase_ == 3) {
+            return sendAllMessagesBuilder_.getMessage();
+          }
+          return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      public Builder setSendAllMessages(ramble.api.MessageSyncProtocol.SendAllMessages value) {
+        if (sendAllMessagesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          responseType_ = value;
+          onChanged();
+        } else {
+          sendAllMessagesBuilder_.setMessage(value);
+        }
+        responseTypeCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      public Builder setSendAllMessages(
+          ramble.api.MessageSyncProtocol.SendAllMessages.Builder builderForValue) {
+        if (sendAllMessagesBuilder_ == null) {
+          responseType_ = builderForValue.build();
+          onChanged();
+        } else {
+          sendAllMessagesBuilder_.setMessage(builderForValue.build());
+        }
+        responseTypeCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      public Builder mergeSendAllMessages(ramble.api.MessageSyncProtocol.SendAllMessages value) {
+        if (sendAllMessagesBuilder_ == null) {
+          if (responseTypeCase_ == 3 &&
+              responseType_ != ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance()) {
+            responseType_ = ramble.api.MessageSyncProtocol.SendAllMessages.newBuilder((ramble.api.MessageSyncProtocol.SendAllMessages) responseType_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            responseType_ = value;
+          }
+          onChanged();
+        } else {
+          if (responseTypeCase_ == 3) {
+            sendAllMessagesBuilder_.mergeFrom(value);
+          }
+          sendAllMessagesBuilder_.setMessage(value);
+        }
+        responseTypeCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      public Builder clearSendAllMessages() {
+        if (sendAllMessagesBuilder_ == null) {
+          if (responseTypeCase_ == 3) {
+            responseTypeCase_ = 0;
+            responseType_ = null;
+            onChanged();
+          }
+        } else {
+          if (responseTypeCase_ == 3) {
+            responseTypeCase_ = 0;
+            responseType_ = null;
+          }
+          sendAllMessagesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      public ramble.api.MessageSyncProtocol.SendAllMessages.Builder getSendAllMessagesBuilder() {
+        return getSendAllMessagesFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      public ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder getSendAllMessagesOrBuilder() {
+        if ((responseTypeCase_ == 3) && (sendAllMessagesBuilder_ != null)) {
+          return sendAllMessagesBuilder_.getMessageOrBuilder();
+        } else {
+          if (responseTypeCase_ == 3) {
+            return (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_;
+          }
+          return ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.ramble.api.SendAllMessages sendAllMessages = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ramble.api.MessageSyncProtocol.SendAllMessages, ramble.api.MessageSyncProtocol.SendAllMessages.Builder, ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder> 
+          getSendAllMessagesFieldBuilder() {
+        if (sendAllMessagesBuilder_ == null) {
+          if (!(responseTypeCase_ == 3)) {
+            responseType_ = ramble.api.MessageSyncProtocol.SendAllMessages.getDefaultInstance();
+          }
+          sendAllMessagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              ramble.api.MessageSyncProtocol.SendAllMessages, ramble.api.MessageSyncProtocol.SendAllMessages.Builder, ramble.api.MessageSyncProtocol.SendAllMessagesOrBuilder>(
+                  (ramble.api.MessageSyncProtocol.SendAllMessages) responseType_,
+                  getParentForChildren(),
+                  isClean());
+          responseType_ = null;
+        }
+        responseTypeCase_ = 3;
+        onChanged();;
+        return sendAllMessagesBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ramble.api.MessageSyncProtocol.Ack, ramble.api.MessageSyncProtocol.Ack.Builder, ramble.api.MessageSyncProtocol.AckOrBuilder> ackBuilder_;
+      /**
+       * <code>.ramble.api.Ack ack = 4;</code>
+       */
+      public boolean hasAck() {
+        return responseTypeCase_ == 4;
+      }
+      /**
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       public ramble.api.MessageSyncProtocol.Ack getAck() {
         if (ackBuilder_ == null) {
-          if (responseTypeCase_ == 3) {
+          if (responseTypeCase_ == 4) {
             return (ramble.api.MessageSyncProtocol.Ack) responseType_;
           }
           return ramble.api.MessageSyncProtocol.Ack.getDefaultInstance();
         } else {
-          if (responseTypeCase_ == 3) {
+          if (responseTypeCase_ == 4) {
             return ackBuilder_.getMessage();
           }
           return ramble.api.MessageSyncProtocol.Ack.getDefaultInstance();
         }
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       public Builder setAck(ramble.api.MessageSyncProtocol.Ack value) {
         if (ackBuilder_ == null) {
@@ -2296,11 +2513,11 @@ public final class MessageSyncProtocol {
         } else {
           ackBuilder_.setMessage(value);
         }
-        responseTypeCase_ = 3;
+        responseTypeCase_ = 4;
         return this;
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       public Builder setAck(
           ramble.api.MessageSyncProtocol.Ack.Builder builderForValue) {
@@ -2310,15 +2527,15 @@ public final class MessageSyncProtocol {
         } else {
           ackBuilder_.setMessage(builderForValue.build());
         }
-        responseTypeCase_ = 3;
+        responseTypeCase_ = 4;
         return this;
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       public Builder mergeAck(ramble.api.MessageSyncProtocol.Ack value) {
         if (ackBuilder_ == null) {
-          if (responseTypeCase_ == 3 &&
+          if (responseTypeCase_ == 4 &&
               responseType_ != ramble.api.MessageSyncProtocol.Ack.getDefaultInstance()) {
             responseType_ = ramble.api.MessageSyncProtocol.Ack.newBuilder((ramble.api.MessageSyncProtocol.Ack) responseType_)
                 .mergeFrom(value).buildPartial();
@@ -2327,26 +2544,26 @@ public final class MessageSyncProtocol {
           }
           onChanged();
         } else {
-          if (responseTypeCase_ == 3) {
+          if (responseTypeCase_ == 4) {
             ackBuilder_.mergeFrom(value);
           }
           ackBuilder_.setMessage(value);
         }
-        responseTypeCase_ = 3;
+        responseTypeCase_ = 4;
         return this;
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       public Builder clearAck() {
         if (ackBuilder_ == null) {
-          if (responseTypeCase_ == 3) {
+          if (responseTypeCase_ == 4) {
             responseTypeCase_ = 0;
             responseType_ = null;
             onChanged();
           }
         } else {
-          if (responseTypeCase_ == 3) {
+          if (responseTypeCase_ == 4) {
             responseTypeCase_ = 0;
             responseType_ = null;
           }
@@ -2355,32 +2572,32 @@ public final class MessageSyncProtocol {
         return this;
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       public ramble.api.MessageSyncProtocol.Ack.Builder getAckBuilder() {
         return getAckFieldBuilder().getBuilder();
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       public ramble.api.MessageSyncProtocol.AckOrBuilder getAckOrBuilder() {
-        if ((responseTypeCase_ == 3) && (ackBuilder_ != null)) {
+        if ((responseTypeCase_ == 4) && (ackBuilder_ != null)) {
           return ackBuilder_.getMessageOrBuilder();
         } else {
-          if (responseTypeCase_ == 3) {
+          if (responseTypeCase_ == 4) {
             return (ramble.api.MessageSyncProtocol.Ack) responseType_;
           }
           return ramble.api.MessageSyncProtocol.Ack.getDefaultInstance();
         }
       }
       /**
-       * <code>.ramble.api.Ack ack = 3;</code>
+       * <code>.ramble.api.Ack ack = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ramble.api.MessageSyncProtocol.Ack, ramble.api.MessageSyncProtocol.Ack.Builder, ramble.api.MessageSyncProtocol.AckOrBuilder> 
           getAckFieldBuilder() {
         if (ackBuilder_ == null) {
-          if (!(responseTypeCase_ == 3)) {
+          if (!(responseTypeCase_ == 4)) {
             responseType_ = ramble.api.MessageSyncProtocol.Ack.getDefaultInstance();
           }
           ackBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -2390,7 +2607,7 @@ public final class MessageSyncProtocol {
                   isClean());
           responseType_ = null;
         }
-        responseTypeCase_ = 3;
+        responseTypeCase_ = 4;
         onChanged();;
         return ackBuilder_;
       }
@@ -7657,24 +7874,26 @@ public final class MessageSyncProtocol {
       "ssagesH\000\022:\n\021broadcastMessages\030\003 \001(\0132\035.ra" +
       "mble.api.BroadcastMessagesH\000\0222\n\rgetCompl" +
       "ement\030\004 \001(\0132\031.ramble.api.GetComplementH\000" +
-      "B\016\n\014request_type\"\252\001\n\010Response\022/\n\013sendMes" +
+      "B\016\n\014request_type\"\342\001\n\010Response\022/\n\013sendMes" +
       "sage\030\001 \001(\0132\030.ramble.api.SendMessagesH\000\022<" +
       "\n\022sendMessageDigests\030\002 \001(\0132\036.ramble.api.",
-      "SendMessageDigestsH\000\022\036\n\003ack\030\003 \001(\0132\017.ramb" +
-      "le.api.AckH\000B\017\n\rresponse_type\"\020\n\016GetAllM" +
-      "essages\"$\n\013GetMessages\022\025\n\rmessageDigest\030" +
-      "\001 \003(\014\"D\n\021BroadcastMessages\022/\n\010messages\030\001" +
-      " \001(\0132\035.ramble.api.BulkSignedMessage\"T\n\rG" +
-      "etComplement\022\025\n\rmessageDigest\030\001 \003(\014\022\026\n\016b" +
-      "lockStartTime\030\002 \001(\004\022\024\n\014blockEndTime\030\003 \001(" +
-      "\004\"?\n\014SendMessages\022/\n\010messages\030\001 \001(\0132\035.ra" +
-      "mble.api.BulkSignedMessage\"+\n\022SendMessag" +
-      "eDigests\022\025\n\rmessageDigest\030\001 \003(\014\"l\n\017SendA",
-      "llMessages\022/\n\010messages\030\001 \001(\0132\035.ramble.ap" +
-      "i.BulkSignedMessage\022(\n\tblockConf\030\002 \003(\0132\025" +
-      ".ramble.api.BlockConf\"-\n\tBlockConf\022\021\n\tti" +
-      "mestamp\030\001 \001(\004\022\r\n\005count\030\002 \001(\r\"\005\n\003AckB!\n\nr" +
-      "amble.apiB\023MessageSyncProtocolb\006proto3"
+      "SendMessageDigestsH\000\0226\n\017sendAllMessages\030" +
+      "\003 \001(\0132\033.ramble.api.SendAllMessagesH\000\022\036\n\003" +
+      "ack\030\004 \001(\0132\017.ramble.api.AckH\000B\017\n\rresponse" +
+      "_type\"\020\n\016GetAllMessages\"$\n\013GetMessages\022\025" +
+      "\n\rmessageDigest\030\001 \003(\014\"D\n\021BroadcastMessag" +
+      "es\022/\n\010messages\030\001 \001(\0132\035.ramble.api.BulkSi" +
+      "gnedMessage\"T\n\rGetComplement\022\025\n\rmessageD" +
+      "igest\030\001 \003(\014\022\026\n\016blockStartTime\030\002 \001(\004\022\024\n\014b" +
+      "lockEndTime\030\003 \001(\004\"?\n\014SendMessages\022/\n\010mes" +
+      "sages\030\001 \001(\0132\035.ramble.api.BulkSignedMessa",
+      "ge\"+\n\022SendMessageDigests\022\025\n\rmessageDiges" +
+      "t\030\001 \003(\014\"l\n\017SendAllMessages\022/\n\010messages\030\001" +
+      " \001(\0132\035.ramble.api.BulkSignedMessage\022(\n\tb" +
+      "lockConf\030\002 \003(\0132\025.ramble.api.BlockConf\"-\n" +
+      "\tBlockConf\022\021\n\ttimestamp\030\001 \001(\004\022\r\n\005count\030\002" +
+      " \001(\r\"\005\n\003AckB!\n\nramble.apiB\023MessageSyncPr" +
+      "otocolb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -7700,7 +7919,7 @@ public final class MessageSyncProtocol {
     internal_static_ramble_api_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_Response_descriptor,
-        new java.lang.String[] { "SendMessage", "SendMessageDigests", "Ack", "ResponseType", });
+        new java.lang.String[] { "SendMessage", "SendMessageDigests", "SendAllMessages", "Ack", "ResponseType", });
     internal_static_ramble_api_GetAllMessages_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_ramble_api_GetAllMessages_fieldAccessorTable = new

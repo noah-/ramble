@@ -39,18 +39,21 @@ public class ApacheGossipMembershipService extends AbstractIdleService implement
   private static final Logger LOG = Logger.getLogger(ApacheGossipMembershipService.class);
 
   private final GossipManager gossipManager;
+  private final URI uri;
+  private final String id;
 
   @SuppressWarnings("unchecked")
   public ApacheGossipMembershipService(List<URI> peers, PublicKey publicKey, PrivateKey privateKey,
                                        int gossipPort, int messageSyncPort, String id) throws IOException {
 
     List<Member> gossipMembers = peers.stream()
-            .map(uri -> new RemoteMember(GOSSIP_CLUSTER_NAME, uri, uriToGossipId(uri)))
+            .map(uri -> new RemoteMember(GOSSIP_CLUSTER_NAME,
+                    URI.create("udp://" + uri.getHost() + ":" + uri.getPort()),
+                    uriToGossipId(uri)))
             .collect(Collectors.toList());
 
-    URI uri = URI.create("udp://" + InetAddress.getLocalHost().getHostAddress() + ":" + gossipPort);
-
-    LOG.info("Using URI " + uri + " for Gossip Service");
+    this.id = id;
+    this.uri = URI.create("udp://" + InetAddress.getLocalHost().getHostAddress() + ":" + gossipPort);
 
     // There seems to be a bug in Apache Gossip where it only accepts ids of a certain form, so we can't use the id we
     // use everywhere else, we have to use one in the below format
@@ -107,6 +110,7 @@ public class ApacheGossipMembershipService extends AbstractIdleService implement
 
   @Override
   protected void startUp() {
+    LOG.info("[id = " + this.id + "] Starting Gossip Membership Service with URI " + this.uri);
     this.gossipManager.init();
   }
 

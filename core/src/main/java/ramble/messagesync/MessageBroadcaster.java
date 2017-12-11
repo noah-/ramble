@@ -39,6 +39,11 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
   }
 
   @Override
+  public void startUp() {
+    LOG.info("[id = " + this.id + "] Starting broadcast service");
+  }
+
+  @Override
   protected void run() throws InterruptedException {
     while (isRunning()) {
       Set<RambleMessage.SignedMessage> broadcastMessages = new HashSet<>();
@@ -48,14 +53,21 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
       Set<RambleMember> targets = this.targetSelector.getTargets(this.membershipService.getMembers(), this.fanout);
 
       for (RambleMember target : targets) {
-        LOG.info("Broadcasting messages: " + Arrays.toString(
-                broadcastMessages.stream().map(msg -> msg.getMessage().getMessage()).toArray()) + " from id = " + this.id + " to target " + target.getAddr() + ":" + target.getMessageSyncPort());
+        LOG.info("[id = " + this.id + "] Broadcasting messages: " + Arrays.toString(broadcastMessages
+                .stream()
+                .map(msg -> msg.getMessage().getMessage()).toArray()) + " to target " + target.getAddr() + ":" +
+                target.getMessageSyncPort());
 
-        MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(target.getAddr(),
+        MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(this.id, target.getAddr(),
                 target.getMessageSyncPort(), new AckMessageClientSyncHandler());
         messageSyncClient.connect();
         messageSyncClient.sendRequest(RequestBuilder.buildBroadcastMessagesRequest(broadcastMessages));
       }
     }
+  }
+
+  @Override
+  public void shutDown() {
+    LOG.info("[id = " + this.id + "] Shutting down broadcast service");
   }
 }

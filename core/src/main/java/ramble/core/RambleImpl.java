@@ -11,6 +11,7 @@ import ramble.api.RambleMessage;
 import ramble.db.DbStoreFactory;
 import ramble.db.api.DbStore;
 import ramble.membership.MembershipServiceFactory;
+import ramble.messagesync.BootstrapProtocol;
 import ramble.messagesync.ComputeComplementService;
 import ramble.messagesync.DefaultMessageSyncServerHandler;
 import ramble.messagesync.MessageBroadcaster;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -37,20 +38,22 @@ public class RambleImpl implements Ramble {
 
   private static final int MESSAGE_BROADCAST_FANOUT = 3;
 
+  private final List<URI> peers;
   private final MembershipService membershipService;
-  private final ServiceManager serviceManager;
   private final PublicKey publicKey;
   private final PrivateKey privateKey;
   private final String id;
   private final DbStore dbStore;
   private final BlockingQueue<RambleMessage.Message> messageQueue;
   private final MessageBroadcaster messageBroadcaster;
+  private final ServiceManager serviceManager;
+  private final URI bootstrapTarget;
 
-  public RambleImpl(List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort, int messageSyncPort)
-          throws IOException {
+  public RambleImpl(URI bootstrapTarget, List<URI> peers, PublicKey publicKey, PrivateKey privateKey, int gossipPort,
+                    int messageSyncPort) throws IOException {
 
-    Set<Service> services = new HashSet<>();
-
+    this.bootstrapTarget = bootstrapTarget;
+    this.peers = peers;
     this.privateKey = privateKey;
     this.publicKey = publicKey;
     this.id = IdGenerator.createId(gossipPort, messageSyncPort);
@@ -65,22 +68,33 @@ public class RambleImpl implements Ramble {
     this.messageQueue = new ArrayBlockingQueue<>(1024);
     this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService, MESSAGE_BROADCAST_FANOUT);
 
-    services.add(this.membershipService);
-    services.add(MessageSyncServerFactory.getMessageSyncServer(new DefaultMessageSyncServerHandler(this, this.dbStore),
-            messageSyncPort));
-    services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.messageQueue, this.id));
+    List<Service> services = new ArrayList<>();
     services.add(this.messageBroadcaster);
+    services.add(MessageSyncServerFactory.getMessageSyncServer(this.id,
+            new DefaultMessageSyncServerHandler(this, this.dbStore), messageSyncPort));
+    services.add(new ComputeComplementService(this.membershipService, this.dbStore, this.messageQueue, this.id));
+
     this.serviceManager = new ServiceManager(services);
   }
 
   @Override
-  public void start() {
-    runBootstrap();
-    this.serviceManager.startAsync();
+  public void start() throws InterruptedException {
+    LOG.info("[id = " + this.id + "] Starting Ramble service");
+
+    // Start all services before joining the membership service so that external nodes don't fail to connect to any
+    // local services before they have started
+    this.serviceManager.startAsync().awaitHealthy();
+
+    // Run the boostrap protocol before joining the cluster
+    if (this.bootstrapTarget != null) runBootstrap();
+
+    // Once all services are up and running, start the membership service so that other nodes can start communicating
+    // with all local services
+    this.membershipService.startAsync().awaitRunning();
   }
 
   @Override
-  public void post(String message) {
+  public void post(String message) throws InterruptedException {
     LOG.info("[id = " + this.id +  "] Posting message: " + message);
 
     // Create signed message
@@ -101,7 +115,13 @@ public class RambleImpl implements Ramble {
 
   @Override
   public void shutdown() {
-    this.serviceManager.stopAsync();
+    LOG.info("[id = " + this.id + "] Shutting down Ramble service");
+
+    // Leave the membership cluster
+    this.membershipService.stopAsync();//.awaitTerminated();
+
+    // Once the membership cluster has stopped, then shutdown the rest of the services
+    this.serviceManager.stopAsync();//.awaitStopped();
   }
 
   @Override
@@ -124,17 +144,9 @@ public class RambleImpl implements Ramble {
   }
 
   @Override
-  public void broadcast(RambleMessage.SignedMessage message) {
-    try {
-      this.messageBroadcaster.broadcastMessage(message);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      this.messageQueue.put(message.getMessage());
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+  public void broadcast(RambleMessage.SignedMessage message) throws InterruptedException {
+    this.messageBroadcaster.broadcastMessage(message);
+    this.messageQueue.put(message.getMessage());
   }
 
   @Override
@@ -147,7 +159,7 @@ public class RambleImpl implements Ramble {
     return this.privateKey;
   }
 
-  private void runBootstrap() {
-    // New nodes need to bootstrap their messages some another node
+  private void runBootstrap() throws InterruptedException {
+    new BootstrapProtocol(this.bootstrapTarget, this.id, this.dbStore, this.messageQueue).run();
   }
 }

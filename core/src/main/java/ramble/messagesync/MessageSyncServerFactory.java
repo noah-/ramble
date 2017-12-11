@@ -6,7 +6,7 @@ import ramble.messagesync.netty.NettyMessageSyncServer;
 
 public class MessageSyncServerFactory {
 
-  public static MessageSyncServer getMessageSyncServer(MessageSyncServerHandler messageSyncServerHandler, int port) {
-    return new NettyMessageSyncServer(messageSyncServerHandler, port);
+  public static MessageSyncServer getMessageSyncServer(String id, MessageSyncServerHandler messageSyncServerHandler, int port) {
+    return new NettyMessageSyncServer(id, messageSyncServerHandler, port);
   }
 }

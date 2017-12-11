@@ -20,6 +20,7 @@ public class NettyMessageSyncClient implements MessageSyncClient {
 
   private static final Logger LOG = Logger.getLogger(NettyMessageSyncClient.class);
 
+  private final String id;
   private final String host;
   private final int port;
   private final EventLoopGroup group;
@@ -27,7 +28,8 @@ public class NettyMessageSyncClient implements MessageSyncClient {
 
   private Channel channel;
 
-  public NettyMessageSyncClient(String host, int port, MessageClientSyncHandler messageClientSyncHandler) {
+  public NettyMessageSyncClient(String id, String host, int port, MessageClientSyncHandler messageClientSyncHandler) {
+    this.id = id;
     this.host = host;
     this.port = port;
     this.group = new NioEventLoopGroup();
@@ -50,7 +52,7 @@ public class NettyMessageSyncClient implements MessageSyncClient {
               }
             });
 
-    LOG.info("Netty client connecting to host " + this.host + " port " + this.port);
+    LOG.info("[id = " + this.id + "] Netty client connecting to host " + this.host + " port " + this.port);
     this.channel = bootstrap.connect(this.host, this.port).sync().channel();
 
   }

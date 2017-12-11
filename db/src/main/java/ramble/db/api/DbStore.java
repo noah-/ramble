@@ -1,7 +1,10 @@
 package ramble.db.api;
 
+import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
+import ramble.db.BlockInfo;
 
+import java.util.AbstractMap;
 import java.util.Set;
 
 
@@ -24,9 +27,11 @@ public interface DbStore {
 
   Set<RambleMessage.SignedMessage> getAllMessages();
 
-  Set<RambleMessage.SignedMessage> getAllMessagesAndBlockConf();
+  AbstractMap.SimpleEntry<Set<RambleMessage.SignedMessage>, Set<BlockInfo>> getAllMessagesAndBlockConf();
 
   Set<RambleMessage.SignedMessage> getMessages(byte[] messageDigest);
 
   long getLastVerifiedTimestamp(int count);
+
+  void store(MessageSyncProtocol.BlockConf blockConf);
 }
