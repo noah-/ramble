@@ -87,9 +87,7 @@ public class H2DbStore implements DbStore {
       ps.setString(1, message.getMessage().getSourceId());
       ps.setString(2, message.getMessage().getMessage());
       ps.setBytes(3, message.getMessage().getMessageDigest().toByteArray());
-      // TODO: Implement parentDigest()
-      // ps.setBytes(4, message.getMessage().getParentDigest.toByteArray());
-      ps.setBytes(4, null);
+      ps.setBytes(4, message.getMessage().getParentDigest().toByteArray());
       ps.setLong(5, message.getMessage().getTimestamp());
       ps.setBytes(6, message.getPublicKey().toByteArray());
       ps.setBytes(7, message.getSignature().toByteArray());
@@ -111,9 +109,7 @@ public class H2DbStore implements DbStore {
       ps.setString(1, message.getMessage().getSourceId());
       ps.setString(2, message.getMessage().getMessage());
       ps.setBytes(3, message.getMessage().getMessageDigest().toByteArray());
-      // TODO: Implement parentDigest()
-      // ps.setBytes(4, message.getMessage().getParentDigest.toByteArray());
-      ps.setBytes(4, null);
+      ps.setBytes(4, message.getMessage().getParentDigest().toByteArray());
       ps.setLong(5, message.getMessage().getTimestamp());
       ps.setBytes(6, message.getPublicKey().toByteArray());
       ps.setBytes(7, message.getSignature().toByteArray());
@@ -224,8 +220,7 @@ public class H2DbStore implements DbStore {
                     .setSourceId(rs.getString(1))
                     .setMessage(rs.getString(2))
                     .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
-                    // TODO: implement setParentDigest
-                    //.setParentDigest(ByteString.copyFrom(rs.getBytes(4)))
+                    .setParentDigest(ByteString.copyFrom(rs.getBytes(4)))
                     .setTimestamp(rs.getLong(5))
                     .build();
 
@@ -396,8 +391,7 @@ public class H2DbStore implements DbStore {
               .setSourceId(rs.getString(1))
               .setMessage(rs.getString(2))
               .setMessageDigest(ByteString.copyFrom(rs.getBytes(3)))
-              // TODO: implement setParentDigest
-              //.setParentDigest(ByteString.copyFrom(rs.getBytes(4)))
+              .setParentDigest(ByteString.copyFrom(rs.getBytes(4)))
               .setTimestamp(rs.getLong(5))
               .build();
 
