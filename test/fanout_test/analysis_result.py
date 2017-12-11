@@ -12,7 +12,7 @@ for fname in onlyfiles:
         content = f.readlines();
         all_content.extend([x.strip() for x in content])
 
-logs = [ [int(t.split(":")[0]), int(t.split(":")[1]), t.split(":")[2]] for t in all_content]
+logs = [[int(t.split(":")[0]), int(t.split(":")[1]), t.split(":")[2]] for t in all_content]
 
 message_to_time = {}
 
