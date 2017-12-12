@@ -309,6 +309,7 @@ public class H2DbStore implements DbStore {
     }
   }
 
+  @Override
   public void updateBlockConfirmation(long ts) {
     String sql = "UPDATE BLOCKCONF SET COUNT = COUNT + 1 WHERE TIMESTAMP = ?";
     try (Connection con = this.hikariDataSource.getConnection();

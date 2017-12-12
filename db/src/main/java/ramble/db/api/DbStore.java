@@ -40,5 +40,7 @@ public interface DbStore {
 
   void updateFingerPrint(byte[] source, byte[] key, long ts);
 
+  void updateBlockConfirmation(long ts);
+
   FingerPrint getFingerPrint(byte[] key);
 }

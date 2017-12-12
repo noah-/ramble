@@ -101,8 +101,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
       long endTimestamp = (long) Math.ceil((double) ts / BLOCK_TIME_PERIOD) * BLOCK_TIME_PERIOD;
 
       // The timestamp that the block sync iteration will start at
-      long lastVerifiedTimestamp = this.dbStore.getLastVerifiedTimestamp(
-              MIN_COUNT_FOR_CONFIRM); // how does this BLOCKCONF table get updated
+      long lastVerifiedTimestamp = this.dbStore.getLastVerifiedTimestamp(MIN_COUNT_FOR_CONFIRM);
       MutableLong currentTimestamp = new MutableLong(
               lastVerifiedTimestamp > 0 ? lastVerifiedTimestamp : endTimestamp - BLOCK_TIME_PERIOD);
 
@@ -207,7 +206,10 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
     @Override
     protected void runOneIteration() throws InterruptedException {
-      for (Block block : blocks.values()) {
+      for (Map.Entry<Long, Block> entry : blocks.entrySet()) {
+
+        Block block = entry.getValue();
+        long blockTs = entry.getKey();
 
         if (!block.getBlock().isEmpty()) {
           LOG.info("[id = " + id + ", target = " + block.getSource().getAddr() + ":" +
@@ -216,7 +218,7 @@ public class ComputeComplementService extends AbstractScheduledService implement
           MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(id,
                   block.getSource().getAddr(),
                   block.getSource().getMessageSyncPort(),
-                  new FlushBlockHandler());
+                  new FlushBlockHandler(blockTs));
 
           messageSyncClient.connect();
           messageSyncClient.sendRequest(RequestBuilder.buildGetMessagesRequest(block.getBlock()));
@@ -233,8 +235,17 @@ public class ComputeComplementService extends AbstractScheduledService implement
 
   private final class FlushBlockHandler implements MessageClientSyncHandler {
 
+    private final long blockTs;
+
+    private FlushBlockHandler(long blockTs) {
+      this.blockTs = blockTs;
+    }
+
     @Override
     public void handleResponse(MessageSyncClient messageSyncClient, MessageSyncProtocol.Response response) {
+      LOG.info("[id = " + id + "] Updating count for block " + this.blockTs);
+      dbStore.updateBlockConfirmation(this.blockTs);
+
       List<RambleMessage.SignedMessage> messages = response.getSendMessage().getMessages()
               .getSignedMessageList();
       if (MessageSigner.verify(messages)) {
