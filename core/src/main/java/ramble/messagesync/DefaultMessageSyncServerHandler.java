@@ -10,6 +10,7 @@ import ramble.crypto.MessageSigner;
 import ramble.db.BlockInfo;
 import ramble.db.api.DbStore;
 import ramble.messagesync.api.MessageSyncServerHandler;
+import ramble.p2p.ClientFilter;
 
 import java.util.AbstractMap;
 import java.util.HashSet;
@@ -22,10 +23,12 @@ public class DefaultMessageSyncServerHandler implements MessageSyncServerHandler
 
   private final Ramble ramble;
   private final DbStore dbStore;
+  private final ClientFilter clientFilter;
 
   public DefaultMessageSyncServerHandler(Ramble ramble, DbStore dbStore) {
     this.ramble = ramble;
     this.dbStore = dbStore;
+    this.clientFilter = new ClientFilter(dbStore);
   }
 
   @Override
@@ -75,25 +78,36 @@ public class DefaultMessageSyncServerHandler implements MessageSyncServerHandler
 
   private MessageSyncProtocol.Response handleSendMessagesRequest(
           MessageSyncProtocol.BroadcastMessages broadcastMessages) {
-    try {
-      // Verify messages have valid signatures and store them in the DB
-      if (MessageSigner.verify(broadcastMessages.getMessages().getSignedMessageList())) {
-        for (RambleMessage.SignedMessage signedMessage : broadcastMessages.getMessages().getSignedMessageList()) {
-          if (!this.dbStore.exists(signedMessage)) {
-            this.dbStore.storeIfNotExists(signedMessage);
-            LOG.info("[id = " + ramble.getId() + "] Received broadcasted message and it does not exist locally so " +
-                    "will re-broadcast it: " + signedMessage.getMessage().getMessage());
-            this.ramble.broadcast(signedMessage);
-          } else {
-            LOG.info("[id = " + ramble.getId() + "] Received broadcasted message but it exists locally so dropping it: "
-                    + signedMessage.getMessage().getMessage());
+
+    if (this.clientFilter.isValidClient(broadcastMessages.getPublicKey().toByteArray())) {
+      try {
+        // Verify messages have valid signatures and store them in the DB
+        if (MessageSigner.verify(broadcastMessages.getMessages().getSignedMessageList())) {
+          for (RambleMessage.SignedMessage signedMessage : broadcastMessages.getMessages().getSignedMessageList()) {
+            if (this.clientFilter.isValidMessage(signedMessage)) {
+              if (!this.dbStore.exists(signedMessage)) {
+                this.dbStore.storeIfNotExists(signedMessage);
+                LOG.info(
+                        "[id = " + ramble.getId() + "] Received broadcasted message and it does not exist locally so " +
+                                "will re-broadcast it: " + signedMessage.getMessage().getMessage());
+                this.ramble.broadcast(signedMessage);
+              } else {
+                LOG.info(
+                        "[id = " + ramble.getId() + "] Received broadcasted message but it exists locally so dropping it: "
+                                + signedMessage.getMessage().getMessage());
+              }
+            } else {
+              LOG.error("Filtering out message due to client filter: " + signedMessage.getMessage());
+            }
           }
+        } else {
+          LOG.error("Verification of signature for message " + broadcastMessages + " failed");
         }
-      } else {
-        LOG.error("Verification of signature for message " + broadcastMessages + " failed");
+      } catch (Exception e) {
+        LOG.error("Error while verifying signatures for messages:\n" + broadcastMessages.getMessages(), e);
       }
-    } catch (Exception e) {
-      LOG.error("Error while verifying signatures for messages:\n" + broadcastMessages.getMessages(), e);
+    } else {
+      LOG.error("Received message from an invalid client");
     }
     return MessageSyncProtocol.Response.newBuilder().setAck(MessageSyncProtocol.Ack.getDefaultInstance()).build();
   }

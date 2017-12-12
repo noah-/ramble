@@ -37,6 +37,7 @@ message GetMessages {
 
 message BroadcastMessages {
   BulkSignedMessage messages = 1;
+  bytes publicKey = 2;
 }
 
 

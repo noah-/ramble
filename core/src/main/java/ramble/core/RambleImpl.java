@@ -64,7 +64,7 @@ public class RambleImpl implements Ramble {
             messageSyncPort,
             this.id);
     this.messageQueue = new ArrayBlockingQueue<>(1024);
-    this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService, MESSAGE_BROADCAST_FANOUT);
+    this.messageBroadcaster = new MessageBroadcaster(this.id, this.membershipService, this.publicKey, MESSAGE_BROADCAST_FANOUT);
 
     List<Service> services = new ArrayList<>();
     services.add(this.messageBroadcaster);

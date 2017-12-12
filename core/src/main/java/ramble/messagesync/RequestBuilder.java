@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
 
+import java.security.PublicKey;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,13 +29,14 @@ public class RequestBuilder {
             .build();
   }
 
-  public static MessageSyncProtocol.Request buildBroadcastMessagesRequest(Set<RambleMessage.SignedMessage> messages) {
+  public static MessageSyncProtocol.Request buildBroadcastMessagesRequest(Set<RambleMessage.SignedMessage> messages, PublicKey publicKey) {
     RambleMessage.BulkSignedMessage bulkMessage = RambleMessage.BulkSignedMessage.newBuilder()
             .addAllSignedMessage(messages)
             .build();
 
     MessageSyncProtocol.BroadcastMessages broadcastMessages = MessageSyncProtocol.BroadcastMessages.newBuilder()
             .setMessages(bulkMessage)
+            .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
             .build();
 
     return MessageSyncProtocol.Request.newBuilder()

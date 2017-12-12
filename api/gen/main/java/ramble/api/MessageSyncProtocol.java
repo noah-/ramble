@@ -3601,6 +3601,11 @@ public final class MessageSyncProtocol {
      * <code>.ramble.api.BulkSignedMessage messages = 1;</code>
      */
     ramble.api.RambleMessage.BulkSignedMessageOrBuilder getMessagesOrBuilder();
+
+    /**
+     * <code>bytes publicKey = 2;</code>
+     */
+    com.google.protobuf.ByteString getPublicKey();
   }
   /**
    * Protobuf type {@code ramble.api.BroadcastMessages}
@@ -3615,6 +3620,7 @@ public final class MessageSyncProtocol {
       super(builder);
     }
     private BroadcastMessages() {
+      publicKey_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -3656,6 +3662,11 @@ public final class MessageSyncProtocol {
                 messages_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            case 18: {
+
+              publicKey_ = input.readBytes();
               break;
             }
           }
@@ -3703,6 +3714,15 @@ public final class MessageSyncProtocol {
       return getMessages();
     }
 
+    public static final int PUBLICKEY_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString publicKey_;
+    /**
+     * <code>bytes publicKey = 2;</code>
+     */
+    public com.google.protobuf.ByteString getPublicKey() {
+      return publicKey_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3718,6 +3738,9 @@ public final class MessageSyncProtocol {
       if (messages_ != null) {
         output.writeMessage(1, getMessages());
       }
+      if (!publicKey_.isEmpty()) {
+        output.writeBytes(2, publicKey_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3729,6 +3752,10 @@ public final class MessageSyncProtocol {
       if (messages_ != null) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getMessages());
+      }
+      if (!publicKey_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, publicKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3751,6 +3778,8 @@ public final class MessageSyncProtocol {
         result = result && getMessages()
             .equals(other.getMessages());
       }
+      result = result && getPublicKey()
+          .equals(other.getPublicKey());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3766,6 +3795,8 @@ public final class MessageSyncProtocol {
         hash = (37 * hash) + MESSAGES_FIELD_NUMBER;
         hash = (53 * hash) + getMessages().hashCode();
       }
+      hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
+      hash = (53 * hash) + getPublicKey().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3901,6 +3932,8 @@ public final class MessageSyncProtocol {
           messages_ = null;
           messagesBuilder_ = null;
         }
+        publicKey_ = com.google.protobuf.ByteString.EMPTY;
+
         return this;
       }
 
@@ -3928,6 +3961,7 @@ public final class MessageSyncProtocol {
         } else {
           result.messages_ = messagesBuilder_.build();
         }
+        result.publicKey_ = publicKey_;
         onBuilt();
         return result;
       }
@@ -3971,6 +4005,9 @@ public final class MessageSyncProtocol {
         if (other == ramble.api.MessageSyncProtocol.BroadcastMessages.getDefaultInstance()) return this;
         if (other.hasMessages()) {
           mergeMessages(other.getMessages());
+        }
+        if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
+          setPublicKey(other.getPublicKey());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4114,6 +4151,35 @@ public final class MessageSyncProtocol {
           messages_ = null;
         }
         return messagesBuilder_;
+      }
+
+      private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes publicKey = 2;</code>
+       */
+      public com.google.protobuf.ByteString getPublicKey() {
+        return publicKey_;
+      }
+      /**
+       * <code>bytes publicKey = 2;</code>
+       */
+      public Builder setPublicKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        publicKey_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes publicKey = 2;</code>
+       */
+      public Builder clearPublicKey() {
+        
+        publicKey_ = getDefaultInstance().getPublicKey();
+        onChanged();
+        return this;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -7881,19 +7947,19 @@ public final class MessageSyncProtocol {
       "\003 \001(\0132\033.ramble.api.SendAllMessagesH\000\022\036\n\003" +
       "ack\030\004 \001(\0132\017.ramble.api.AckH\000B\017\n\rresponse" +
       "_type\"\020\n\016GetAllMessages\"$\n\013GetMessages\022\025" +
-      "\n\rmessageDigest\030\001 \003(\014\"D\n\021BroadcastMessag" +
+      "\n\rmessageDigest\030\001 \003(\014\"W\n\021BroadcastMessag" +
       "es\022/\n\010messages\030\001 \001(\0132\035.ramble.api.BulkSi" +
-      "gnedMessage\"T\n\rGetComplement\022\025\n\rmessageD" +
-      "igest\030\001 \003(\014\022\026\n\016blockStartTime\030\002 \001(\004\022\024\n\014b" +
-      "lockEndTime\030\003 \001(\004\"?\n\014SendMessages\022/\n\010mes" +
-      "sages\030\001 \001(\0132\035.ramble.api.BulkSignedMessa",
-      "ge\"+\n\022SendMessageDigests\022\025\n\rmessageDiges" +
-      "t\030\001 \003(\014\"l\n\017SendAllMessages\022/\n\010messages\030\001" +
-      " \001(\0132\035.ramble.api.BulkSignedMessage\022(\n\tb" +
-      "lockConf\030\002 \003(\0132\025.ramble.api.BlockConf\"-\n" +
-      "\tBlockConf\022\021\n\ttimestamp\030\001 \001(\004\022\r\n\005count\030\002" +
-      " \001(\r\"\005\n\003AckB!\n\nramble.apiB\023MessageSyncPr" +
-      "otocolb\006proto3"
+      "gnedMessage\022\021\n\tpublicKey\030\002 \001(\014\"T\n\rGetCom" +
+      "plement\022\025\n\rmessageDigest\030\001 \003(\014\022\026\n\016blockS" +
+      "tartTime\030\002 \001(\004\022\024\n\014blockEndTime\030\003 \001(\004\"?\n\014" +
+      "SendMessages\022/\n\010messages\030\001 \001(\0132\035.ramble.",
+      "api.BulkSignedMessage\"+\n\022SendMessageDige" +
+      "sts\022\025\n\rmessageDigest\030\001 \003(\014\"l\n\017SendAllMes" +
+      "sages\022/\n\010messages\030\001 \001(\0132\035.ramble.api.Bul" +
+      "kSignedMessage\022(\n\tblockConf\030\002 \003(\0132\025.ramb" +
+      "le.api.BlockConf\"-\n\tBlockConf\022\021\n\ttimesta" +
+      "mp\030\001 \001(\004\022\r\n\005count\030\002 \001(\r\"\005\n\003AckB!\n\nramble" +
+      ".apiB\023MessageSyncProtocolb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -7937,7 +8003,7 @@ public final class MessageSyncProtocol {
     internal_static_ramble_api_BroadcastMessages_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ramble_api_BroadcastMessages_descriptor,
-        new java.lang.String[] { "Messages", });
+        new java.lang.String[] { "Messages", "PublicKey", });
     internal_static_ramble_api_GetComplement_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_ramble_api_GetComplement_fieldAccessorTable = new

@@ -2,48 +2,50 @@ package ramble.p2p;
 
 import ramble.api.RambleMessage;
 import ramble.db.FingerPrint;
-import ramble.db.h2.H2DbStore;
+import ramble.db.api.DbStore;
 
 public class ClientFilter {
-    private final H2DbStore dbStore;
-    private final int CLIENT_MAX_MSGS_PER_MIN = 3;
-    private final long LENGTH_OF_MIN = 60000;
-    private final long LENGTH_OF_HOUR = LENGTH_OF_MIN*60;
-    private final long FILTER_MAX_MSGS = LENGTH_OF_MIN/CLIENT_MAX_MSGS_PER_MIN;
-    private final long CLIENT_OLDEST_MSG_ACCEPTED = LENGTH_OF_HOUR*24;
 
-    public ClientFilter(String db) {
-        dbStore = H2DbStore.getOrCreateStore(db);
-    }
+  private final static int CLIENT_MAX_MSGS_PER_MIN = 600; // set to a high value for testing purposes
+  private final static long LENGTH_OF_MIN = 60000;
+  private final static long LENGTH_OF_HOUR = LENGTH_OF_MIN * 60;
+  private final static long FILTER_MAX_MSGS = LENGTH_OF_MIN / CLIENT_MAX_MSGS_PER_MIN;
+  private final static long CLIENT_OLDEST_MSG_ACCEPTED = LENGTH_OF_HOUR * 24;
 
-    public boolean isValidClient(byte[] key) {
-        FingerPrint bi = dbStore.getFingerPrint(key);
+  private final DbStore dbStore;
 
-        if (bi != null) {
-            if (bi.count > CLIENT_MAX_MSGS_PER_MIN && (System.currentTimeMillis() - bi.tsStart) < LENGTH_OF_MIN) {
-                return false;
-            } else if (bi.count > CLIENT_MAX_MSGS_PER_MIN) {
-                long filter = (System.currentTimeMillis() - bi.tsStart) / CLIENT_MAX_MSGS_PER_MIN;
-                if (filter > FILTER_MAX_MSGS) {
-                    return false;
-                }
-            }
+  public ClientFilter(DbStore dbStore) {
+    this.dbStore = dbStore;
+  }
 
-            if (System.currentTimeMillis() - bi.tsStart > LENGTH_OF_HOUR) {
-                dbStore.removeFingerPrint(key);
-            }
+  public boolean isValidClient(byte[] key) {
+    FingerPrint bi = dbStore.getFingerPrint(key);
+
+    if (bi != null) {
+      if (bi.count > CLIENT_MAX_MSGS_PER_MIN && (System.currentTimeMillis() - bi.tsStart) < LENGTH_OF_MIN) {
+        return false;
+      } else if (bi.count > CLIENT_MAX_MSGS_PER_MIN) {
+        long filter = (System.currentTimeMillis() - bi.tsStart) / CLIENT_MAX_MSGS_PER_MIN;
+        if (filter > FILTER_MAX_MSGS) {
+          return false;
         }
+      }
 
-        return true;
+      if (System.currentTimeMillis() - bi.tsStart > LENGTH_OF_HOUR) {
+        dbStore.removeFingerPrint(key);
+      }
     }
 
-    public boolean isValidMessage(RambleMessage.SignedMessage sm) {
-        if (sm.getMessage().getTimestamp() < (System.currentTimeMillis() - CLIENT_OLDEST_MSG_ACCEPTED))
-            return false;
+    return true;
+  }
 
-        dbStore.updateFingerPrint(sm.getMessage().getSourceId().getBytes(), sm.getPublicKey().toByteArray(),
-                sm.getMessage().getTimestamp());
+  public boolean isValidMessage(RambleMessage.SignedMessage sm) {
+    if (sm.getMessage().getTimestamp() < (System.currentTimeMillis() - CLIENT_OLDEST_MSG_ACCEPTED))
+      return false;
 
-        return true;
-    }
+    dbStore.updateFingerPrint(sm.getMessage().getSourceId().getBytes(), sm.getPublicKey().toByteArray(),
+            sm.getMessage().getTimestamp());
+
+    return true;
+  }
 }

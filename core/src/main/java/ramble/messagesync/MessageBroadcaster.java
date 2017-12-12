@@ -9,6 +9,7 @@ import ramble.api.RambleMessage;
 import ramble.messagesync.api.MessageSyncClient;
 import ramble.messagesync.api.TargetSelector;
 
+import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,12 +26,14 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
   private final TargetSelector targetSelector;
   private final String id;
   private final int fanout;
+  private final PublicKey publicKey;
 
-  public MessageBroadcaster(String id, MembershipService membershipService, int fanout) {
+  public MessageBroadcaster(String id, MembershipService membershipService, PublicKey publicKey, int fanout) {
     this.id = id;
     this.messages = new ArrayBlockingQueue<>(1024);
     this.membershipService = membershipService;
     this.fanout = fanout;
+    this.publicKey = publicKey;
     this.targetSelector = new RandomTargetSelector();
   }
 
@@ -61,7 +64,7 @@ public class MessageBroadcaster extends AbstractExecutionThreadService implement
         MessageSyncClient messageSyncClient = MessageSyncClientFactory.getMessageSyncClient(this.id, target.getAddr(),
                 target.getMessageSyncPort(), new AckMessageClientSyncHandler());
         messageSyncClient.connect();
-        messageSyncClient.sendRequest(RequestBuilder.buildBroadcastMessagesRequest(broadcastMessages));
+        messageSyncClient.sendRequest(RequestBuilder.buildBroadcastMessagesRequest(broadcastMessages, this.publicKey));
       }
     }
   }

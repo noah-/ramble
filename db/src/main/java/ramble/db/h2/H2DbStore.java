@@ -36,7 +36,7 @@ public class H2DbStore implements DbStore {
   private H2DbStore(String id) {
     HikariConfig hikariConfig = new HikariConfig();
     hikariConfig.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
-    hikariConfig.addDataSourceProperty("URL", "jdbc:h2:" + getDbFromId(id));
+    hikariConfig.addDataSourceProperty("URL", "jdbc:h2:" + getDbFromId(id) + ";mode=mysql");
     hikariConfig.addDataSourceProperty("user", "sa");
     hikariConfig.addDataSourceProperty("password", "");
     this.hikariDataSource = new HikariDataSource(hikariConfig);
@@ -320,6 +320,7 @@ public class H2DbStore implements DbStore {
     }
   }
 
+  @Override
   public FingerPrint getFingerPrint(byte[] key) {
     String sql = "SELECT SOURCEID, PUBLICKEY, COUNT, TSSTART, TSEND FROM FINGERPRINT WHERE PUBLICKEY = ?";
 
@@ -338,9 +339,10 @@ public class H2DbStore implements DbStore {
     }
   }
 
+  @Override
   public void updateFingerPrint(byte[] source, byte[] key, long ts) {
-    String sql = "INSERT INTO FINGERPRINT (SOURCEID, PUBLICKEY, COUNT, TSSTART, TSEND) VALUES (?, ?, ?, ?, ?) " +
-            "ON DUPLICATE KEY UPDATE COUNT = COUNT + 1, TSEND = (?)";
+    String sql = "INSERT INTO FINGERPRINT(SOURCEID, PUBLICKEY, COUNT, TSSTART, TSEND) VALUES (?, ?, ?, ?, ?) " +
+            "ON DUPLICATE KEY UPDATE COUNT = COUNT + 1, TSEND = VALUES(TSEND)";
 
     try (Connection con = this.hikariDataSource.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -349,13 +351,13 @@ public class H2DbStore implements DbStore {
       ps.setInt(3, 1);
       ps.setLong(4, ts);
       ps.setLong(5, ts);
-      ps.setLong(6, ts);
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
+  @Override
   public void removeFingerPrint(byte[] key) {
     String sql = "DELETE FROM FINGERPRINT WHERE PUBLICKEY = (?)";
 

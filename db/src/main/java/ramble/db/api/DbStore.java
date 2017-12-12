@@ -3,6 +3,7 @@ package ramble.db.api;
 import ramble.api.MessageSyncProtocol;
 import ramble.api.RambleMessage;
 import ramble.db.BlockInfo;
+import ramble.db.FingerPrint;
 
 import java.util.AbstractMap;
 import java.util.Set;
@@ -34,4 +35,10 @@ public interface DbStore {
   long getLastVerifiedTimestamp(int count);
 
   void store(MessageSyncProtocol.BlockConf blockConf);
+
+  void removeFingerPrint(byte[] key);
+
+  void updateFingerPrint(byte[] source, byte[] key, long ts);
+
+  FingerPrint getFingerPrint(byte[] key);
 }
